@@ -2,6 +2,24 @@
 
 This file contains a list of suggested changes from the recommended-changes.md document that should be implemented for our fork.
 
+## Implemented Changes
+
+1. **Version Update:**
+   - Updated version to 1.0.0 in build.gradle
+   - Maintained version code for compatibility
+
+2. **New Hero Class - Artificer:**
+   - Added Artificer hero class based on Huntress but with additional features:
+     - Has both bow (from Huntress) and broken seal (from Warrior)
+     - Starts with 2 potions of strength
+     - Starts with 2 scrolls of upgrade
+     - Starts with a random ring
+   - Created two subclasses:
+     - Inventor: Enhanced scrolls and special gadgets
+     - Machinist: Equipment enhancements and increased durability
+   - Added necessary badge support for the class
+   - Currently using Huntress sprites (placeholder)
+
 ## Application Icon and Title Screen
 - Update the title screen graphics located at `/core/src/main/assets/interfaces/banners.png`
 - Update icons for each platform:

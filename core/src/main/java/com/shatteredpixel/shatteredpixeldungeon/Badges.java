@@ -68,6 +68,7 @@ public class Badges {
 		MASTERY_HUNTRESS,
 		MASTERY_DUELIST,
 		MASTERY_CLERIC,
+		MASTERY_ARTIFICER,
 		FOUND_RATMOGRIFY,
 
 		//bronze
@@ -76,6 +77,7 @@ public class Badges {
 		UNLOCK_HUNTRESS             ( 3 ),
 		UNLOCK_DUELIST              ( 4 ),
 		UNLOCK_CLERIC               ( 5 ),
+		UNLOCK_ARTIFICER            ( 6 ),
 		MONSTERS_SLAIN_1            ( 6 ),
 		MONSTERS_SLAIN_2            ( 7 ),
 		GOLD_COLLECTED_1            ( 8 ),
@@ -127,6 +129,7 @@ public class Badges {
 		BOSS_SLAIN_1_HUNTRESS,
 		BOSS_SLAIN_1_DUELIST,
 		BOSS_SLAIN_1_CLERIC,
+		BOSS_SLAIN_1_ARTIFICER,
 		BOSS_SLAIN_1_ALL_CLASSES    ( 54, BadgeType.GLOBAL ),
 		RESEARCHER_2                ( 55, BadgeType.JOURNAL ),
 		GAMES_PLAYED_2              ( 56, BadgeType.GLOBAL ),
@@ -179,6 +182,7 @@ public class Badges {
 		VICTORY_HUNTRESS,
 		VICTORY_DUELIST,
 		VICTORY_CLERIC,
+		VICTORY_ARTIFICER,
 		VICTORY_ALL_CLASSES         ( 101, BadgeType.GLOBAL ),
 		DEATH_FROM_ALL              ( 102, BadgeType.GLOBAL ),
 		BOSS_SLAIN_3_GLADIATOR,
@@ -193,6 +197,8 @@ public class Badges {
 		BOSS_SLAIN_3_MONK,
 		BOSS_SLAIN_3_PRIEST,
 		BOSS_SLAIN_3_PALADIN,
+		BOSS_SLAIN_3_INVENTOR,
+		BOSS_SLAIN_3_MACHINIST,
 		BOSS_SLAIN_3_ALL_SUBCLASSES ( 103, BadgeType.GLOBAL ),
 		BOSS_CHALLENGE_3            ( 104 ),
 		BOSS_CHALLENGE_4            ( 105 ),
@@ -792,6 +798,7 @@ public class Badges {
 		firstBossClassBadges.put(HeroClass.HUNTRESS, Badge.BOSS_SLAIN_1_HUNTRESS);
 		firstBossClassBadges.put(HeroClass.DUELIST, Badge.BOSS_SLAIN_1_DUELIST);
 		firstBossClassBadges.put(HeroClass.CLERIC, Badge.BOSS_SLAIN_1_CLERIC);
+		firstBossClassBadges.put(HeroClass.ARTIFICER, Badge.BOSS_SLAIN_1_ARTIFICER);
 	}
 
 	private static LinkedHashMap<HeroClass, Badge> victoryClassBadges = new LinkedHashMap<>();
@@ -802,6 +809,7 @@ public class Badges {
 		victoryClassBadges.put(HeroClass.HUNTRESS, Badge.VICTORY_HUNTRESS);
 		victoryClassBadges.put(HeroClass.DUELIST, Badge.VICTORY_DUELIST);
 		victoryClassBadges.put(HeroClass.CLERIC, Badge.VICTORY_CLERIC);
+		victoryClassBadges.put(HeroClass.ARTIFICER, Badge.VICTORY_ARTIFICER);
 	}
 
 	private static LinkedHashMap<HeroSubClass, Badge> thirdBossSubclassBadges = new LinkedHashMap<>();
@@ -818,6 +826,8 @@ public class Badges {
 		thirdBossSubclassBadges.put(HeroSubClass.MONK, Badge.BOSS_SLAIN_3_MONK);
 		thirdBossSubclassBadges.put(HeroSubClass.PRIEST, Badge.BOSS_SLAIN_3_PRIEST);
 		thirdBossSubclassBadges.put(HeroSubClass.PALADIN, Badge.BOSS_SLAIN_3_PALADIN);
+		thirdBossSubclassBadges.put(HeroSubClass.INVENTOR, Badge.BOSS_SLAIN_3_INVENTOR);
+		thirdBossSubclassBadges.put(HeroSubClass.MACHINIST, Badge.BOSS_SLAIN_3_MACHINIST);
 	}
 	
 	public static void validateBossSlain() {
@@ -940,9 +950,21 @@ public class Badges {
 			case CLERIC:
 				badge = Badge.MASTERY_CLERIC;
 				break;
+			case ARTIFICER:
+				badge = Badge.MASTERY_ARTIFICER;
+				break;
 		}
 		
 		unlock(badge);
+		validateArtificerUnlock();
+	}
+	
+	public static void validateArtificerUnlock() {
+		if (!isUnlocked(Badge.UNLOCK_ARTIFICER) && 
+			isUnlocked(Badge.MASTERY_WARRIOR) && 
+			isUnlocked(Badge.MASTERY_HUNTRESS)) {
+			displayBadge(Badge.UNLOCK_ARTIFICER);
+		}
 	}
 
 	public static void validateRatmogrify(){
@@ -989,6 +1011,9 @@ public class Badges {
 			displayBadge( Badge.UNLOCK_CLERIC );
 		}
 	}
+	
+	// This is called from validateArtificerUnlock() which is called after validateMastery()
+	// We don't need a separate validation function here
 	
 	public static void validateMasteryCombo( int n ) {
 		if (!local.contains( Badge.MASTERY_COMBO ) && n == 10) {

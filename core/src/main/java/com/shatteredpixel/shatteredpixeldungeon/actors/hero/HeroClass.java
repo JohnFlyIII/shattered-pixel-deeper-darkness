@@ -60,6 +60,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlam
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfMindVision;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfPurity;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
@@ -81,6 +82,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingSt
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.DeviceCompat;
+import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.Generator.Category;
 
 public enum HeroClass {
 
@@ -89,7 +92,8 @@ public enum HeroClass {
 	ROGUE( HeroSubClass.ASSASSIN, HeroSubClass.FREERUNNER ),
 	HUNTRESS( HeroSubClass.SNIPER, HeroSubClass.WARDEN ),
 	DUELIST( HeroSubClass.CHAMPION, HeroSubClass.MONK ),
-	CLERIC( HeroSubClass.PRIEST, HeroSubClass.PALADIN );
+	CLERIC( HeroSubClass.PRIEST, HeroSubClass.PALADIN ),
+	ARTIFICER( HeroSubClass.INVENTOR, HeroSubClass.MACHINIST );
 
 	private HeroSubClass[] subClasses;
 
@@ -140,6 +144,10 @@ public enum HeroClass {
 			case CLERIC:
 				initCleric( hero );
 				break;
+				
+			case ARTIFICER:
+				initArtificer( hero );
+				break;
 		}
 
 		if (SPDSettings.quickslotWaterskin()) {
@@ -167,6 +175,8 @@ public enum HeroClass {
 				return Badges.Badge.MASTERY_DUELIST;
 			case CLERIC:
 				return Badges.Badge.MASTERY_CLERIC;
+			case ARTIFICER:
+				return Badges.Badge.MASTERY_ARTIFICER;
 		}
 		return null;
 	}
@@ -259,6 +269,43 @@ public enum HeroClass {
 		new ScrollOfRemoveCurse().identify();
 	}
 
+	private static void initArtificer( Hero hero ) {
+		// Based on Huntress with additional items
+		(hero.belongings.weapon = new Gloves()).identify();
+		SpiritBow bow = new SpiritBow();
+		bow.identify().collect();
+
+		// Add Warrior's seal
+		if (hero.belongings.armor != null) {
+			hero.belongings.armor.affixSeal(new BrokenSeal());
+			Catalog.setSeen(BrokenSeal.class);
+		}
+
+		// Two potions of strength
+		PotionOfStrength potion = new PotionOfStrength();
+		potion.identify();
+		potion.collect();
+		potion = new PotionOfStrength();
+		potion.identify();
+		potion.collect();
+
+		// Two scrolls of upgrade
+		ScrollOfUpgrade scroll = new ScrollOfUpgrade();
+		scroll.identify();
+		scroll.collect();
+		scroll = new ScrollOfUpgrade();
+		scroll.identify();
+		scroll.collect();
+
+		// Add a random ring
+		Generator.random(Category.RING).identify().collect();
+
+		Dungeon.quickslot.setSlot(0, bow);
+
+		new PotionOfMindVision().identify();
+		new ScrollOfLullaby().identify();
+	}
+
 	public String title() {
 		return Messages.get(HeroClass.class, name());
 	}
@@ -289,6 +336,8 @@ public enum HeroClass {
 				return new ArmorAbility[]{new Challenge(), new ElementalStrike(), new Feint()};
 			case CLERIC:
 				return new ArmorAbility[]{new AscendedForm(), new Trinity(), new PowerOfMany()};
+			case ARTIFICER:
+				return new ArmorAbility[]{new SpectralBlades(), new NaturesPower(), new SpiritHawk()}; // Reuse Huntress abilities for now
 		}
 	}
 
@@ -304,8 +353,10 @@ public enum HeroClass {
 				return Assets.Sprites.HUNTRESS;
 			case DUELIST:
 				return Assets.Sprites.DUELIST;
-			case CLERIC: //TODO CLERIC finish sprite sheet
+			case CLERIC: 
 				return Assets.Sprites.CLERIC;
+			case ARTIFICER:
+				return Assets.Sprites.ARTIFICER;
 		}
 	}
 
@@ -321,8 +372,10 @@ public enum HeroClass {
 				return Assets.Splashes.HUNTRESS;
 			case DUELIST:
 				return Assets.Splashes.DUELIST;
-			case CLERIC: //TODO CLERIC finish cleric splash
+			case CLERIC:
 				return Assets.Splashes.CLERIC;
+			case ARTIFICER:
+				return Assets.Splashes.ARTIFICER;
 		}
 	}
 	
@@ -343,6 +396,8 @@ public enum HeroClass {
 				return Badges.isUnlocked(Badges.Badge.UNLOCK_DUELIST);
 			case CLERIC:
 				return Badges.isUnlocked(Badges.Badge.UNLOCK_CLERIC);
+			case ARTIFICER:
+				return Badges.isUnlocked(Badges.Badge.UNLOCK_ARTIFICER);
 		}
 	}
 	
