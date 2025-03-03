@@ -153,6 +153,13 @@ public abstract class Wand extends Item {
 			return false;
 		}
 
+		// Check for Full Tank talent (Artificer)
+		Talent.FullTankTracker fullTank = owner.buff(Talent.FullTankTracker.class);
+		if (fullTank != null && fullTank.count() > 0 && curCharges < chargesPerCast()) {
+			fullTank.detach();
+			return true;
+		}
+
 		//if we're using wild magic, then assume we have charges
 		if ( owner.buff(WildMagic.WildMagicTracker.class) != null || curCharges >= chargesPerCast()){
 			return true;

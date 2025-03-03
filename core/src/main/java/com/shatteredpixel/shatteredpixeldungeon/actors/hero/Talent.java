@@ -96,6 +96,8 @@ public enum Talent {
 
 	//Warrior T1
 	HEARTY_MEAL(0), VETERANS_INTUITION(1), PROVOKED_ANGER(2), IRON_WILL(3),
+	//Artificer T1
+	FULL_TANK(192),
 	//Warrior T2
 	IRON_STOMACH(4), LIQUID_WILLPOWER(5), RUNIC_TRANSFERENCE(6), LETHAL_MOMENTUM(7), IMPROVISED_PROJECTILES(8),
 	//Warrior T3
@@ -212,6 +214,11 @@ public enum Talent {
 	public static class EmpoweredStrikeTracker extends FlavourBuff{
 		//blast wave on-hit doesn't resolve instantly, so we delay detaching for it
 		public boolean delayedDetach = false;
+	};
+	public static class FullTankTracker extends CounterBuff{
+		public int icon() { return BuffIndicator.ENERGY; }
+		public void tintIcon(Image icon) { icon.hardlight(0.5f, 0.8f, 0.5f); }
+		{revivePersists = true;}
 	};
 	public static class ProtectiveShadowsTracker extends Buff {
 		float barrierInc = 0.5f;
@@ -582,7 +589,14 @@ public enum Talent {
 				int healing = 1 + 2 * hero.pointsInTalent(HEARTY_MEAL);
 				hero.HP = Math.min(hero.HP + healing, hero.HT);
 				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healing), FloatingText.HEALING);
-
+			}
+		}
+		if (hero.hasTalent(FULL_TANK)){
+			// Add charges for magic or equipment effects
+			int charges = hero.pointsInTalent(FULL_TANK);
+			if (charges > 0) {
+				Buff.affect(hero, FullTankTracker.class).count(charges);
+				GLog.p(Messages.get(Talent.class, "full_tank_proc", charges));
 			}
 		}
 		if (hero.hasTalent(IRON_STOMACH)){
@@ -973,6 +987,9 @@ public enum Talent {
 			case CLERIC:
 				Collections.addAll(tierTalents, SATIATED_SPELLS, HOLY_INTUITION, SEARING_LIGHT, SHIELD_OF_LIGHT);
 				break;
+			case ARTIFICER:
+				Collections.addAll(tierTalents, FULL_TANK, VETERANS_INTUITION, PROVOKED_ANGER, IRON_WILL);
+				break;
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -1002,6 +1019,9 @@ public enum Talent {
 			case CLERIC:
 				Collections.addAll(tierTalents, ENLIGHTENING_MEAL, RECALL_INSCRIPTION, SUNRAY, DIVINE_SENSE, BLESS);
 				break;
+			case ARTIFICER:
+				Collections.addAll(tierTalents, ENERGIZING_MEAL, INSCRIBED_POWER, WAND_PRESERVATION, MYSTICAL_MEAL, DURABLE_PROJECTILES);
+				break;
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -1030,6 +1050,9 @@ public enum Talent {
 				break;
 			case CLERIC:
 				Collections.addAll(tierTalents, CLEANSE, LIGHT_READING);
+				break;
+			case ARTIFICER:
+				Collections.addAll(tierTalents, ENHANCED_RINGS, LIGHT_CLOAK);
 				break;
 		}
 		for (Talent talent : tierTalents){
@@ -1094,6 +1117,12 @@ public enum Talent {
 				break;
 			case PALADIN:
 				Collections.addAll(tierTalents, LAY_ON_HANDS, AURA_OF_PROTECTION, WALL_OF_LIGHT);
+				break;
+			case INVENTOR:
+				Collections.addAll(tierTalents, VARIED_CHARGE, ENHANCED_RINGS, WAND_PRESERVATION);
+				break;
+			case MACHINIST:
+				Collections.addAll(tierTalents, STRONGMAN, BARKSKIN, TWIN_UPGRADES);
 				break;
 		}
 		for (Talent talent : tierTalents){
