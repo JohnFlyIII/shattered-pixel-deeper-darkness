@@ -14,11 +14,11 @@ buildscript {
 allprojects {
 
     ext {
-        appName = 'Shattered Pixel Dungeon'
-        appPackageName = 'com.shatteredpixel.shatteredpixeldungeon'
+        appName = 'Shattered Pixel Dungeon Deeper Darkness'
+        appPackageName = 'com.johnfly.deeperdarkness'
 
-        appVersionCode = 831
-        appVersionName = '3.0.0'
+        appVersionCode = 832
+        appVersionName = '1.0.0'
 
         appJavaCompatibility = JavaVersion.VERSION_1_8
 
