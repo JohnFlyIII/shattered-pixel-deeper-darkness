@@ -595,7 +595,7 @@ public enum Talent {
 			// Add charges for magic or equipment effects
 			int charges = hero.pointsInTalent(FULL_TANK);
 			if (charges > 0) {
-				Buff.affect(hero, FullTankTracker.class).count(charges);
+				Buff.affect(hero, FullTankTracker.class).countUp(charges);
 				GLog.p(Messages.get(Talent.class, "full_tank_proc", charges));
 			}
 		}
