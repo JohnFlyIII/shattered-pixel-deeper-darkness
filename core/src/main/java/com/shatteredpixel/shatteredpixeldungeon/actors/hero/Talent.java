@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.CounterBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.EnhancedRings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FullTank;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PhysicalEmpower;
@@ -96,8 +97,6 @@ public enum Talent {
 
 	//Warrior T1
 	HEARTY_MEAL(0), VETERANS_INTUITION(1), PROVOKED_ANGER(2), IRON_WILL(3),
-	//Artificer T1
-	FULL_TANK(192),
 	//Warrior T2
 	IRON_STOMACH(4), LIQUID_WILLPOWER(5), RUNIC_TRANSFERENCE(6), LETHAL_MOMENTUM(7), IMPROVISED_PROJECTILES(8),
 	//Warrior T3
@@ -198,8 +197,12 @@ public enum Talent {
 	//Power of Many T4
 	BEAMING_RAY(183, 4), LIFE_LINK(184, 4), STASIS(185, 4),
 
+	//Artificer T1
+	FULL_TANK(192),
+
 	//universal T4
 	HEROIC_ENERGY(26, 4), //See icon() and title() for special logic for this one
+
 	//Ratmogrify T4
 	RATSISTANCE(215, 4), RATLOMACY(216, 4), RATFORCEMENTS(217, 4);
 
@@ -214,11 +217,6 @@ public enum Talent {
 	public static class EmpoweredStrikeTracker extends FlavourBuff{
 		//blast wave on-hit doesn't resolve instantly, so we delay detaching for it
 		public boolean delayedDetach = false;
-	};
-	public static class FullTankTracker extends CounterBuff{
-		public int icon() { return BuffIndicator.ENERGY; }
-		public void tintIcon(Image icon) { icon.hardlight(0.5f, 0.8f, 0.5f); }
-		{revivePersists = true;}
 	};
 	public static class ProtectiveShadowsTracker extends Buff {
 		float barrierInc = 0.5f;
@@ -595,7 +593,7 @@ public enum Talent {
 			// Add charges for magic or equipment effects
 			int charges = hero.pointsInTalent(FULL_TANK);
 			if (charges > 0) {
-				Buff.affect(hero, FullTankTracker.class).countUp(charges);
+				Buff.affect(hero, FullTank.class).add(charges);
 				GLog.p(Messages.get(Talent.class, "full_tank_proc", charges));
 			}
 		}

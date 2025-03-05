@@ -89,6 +89,9 @@ public class Artificer extends HeroBase {
         Ring ring = (Ring) Generator.random(Generator.Category.RING);
         ring.identify().collect();
 
+        Wand wand = (Wand) Generator.random(Generator.Category.WAND);
+        wand.identify().collect();
+
         Dungeon.quickslot.setSlot(0, bow);
 
         new PotionOfMindVision().identify();

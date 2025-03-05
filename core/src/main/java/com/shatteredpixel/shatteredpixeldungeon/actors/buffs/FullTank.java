@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 
-public class WandEmpower extends Buff {
+public class FullTank extends Buff {
 
 	{
 		type = buffType.POSITIVE;
@@ -44,42 +44,46 @@ public class WandEmpower extends Buff {
 
 	@Override
 	public float iconFadePercent() {
-		return Math.max(0, (3-left) / 3f);
+		return Math.max(0, (3-charges) / 3f);
 	}
 
 	@Override
 	public String iconTextDisplay() {
-		return Integer.toString(left);
+		return Integer.toString(charges);
 	}
 
 	@Override
 	public String desc() {
-		return Messages.get(this, "desc", dmgBoost, left);
+		return Messages.get(this, "desc", charges);
 	}
 
-	public int dmgBoost;
-	public int left;
+	public int charges;
 
-	public void set(int dmg, int shots){
-		dmgBoost = dmg;
-		left = Math.max(left, shots);
+	public void set(int charges){
+		this.charges = charges;
 	}
 
-	private static final String BOOST = "boost";
-	private static final String LEFT = "left";
+	public void add(int charges){
+		this.charges += charges;
+	}
+
+	public void useCharge(){
+		if(charges > 0) {
+			charges--;
+		}
+	}
+	private static final String CHARGES = "charges";
 
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
-		bundle.put( BOOST, dmgBoost );
-		bundle.put( LEFT, left );
+		bundle.put( CHARGES, charges );
 	}
 
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		dmgBoost = bundle.getInt( BOOST );
-		left = bundle.getInt( LEFT );
+		charges = bundle.getInt( CHARGES );
 	}
 
 }

@@ -30,12 +30,14 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FullTank;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ScrollEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SoulMark;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WandEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
@@ -153,10 +155,9 @@ public abstract class Wand extends Item {
 			return false;
 		}
 
-		// Check for Full Tank talent (Artificer)
-		Talent.FullTankTracker fullTank = owner.buff(Talent.FullTankTracker.class);
-		if (fullTank != null && fullTank.count() > 0 && curCharges < chargesPerCast()) {
-			fullTank.detach();
+		FullTank fulltank = Dungeon.hero.buff(FullTank.class);
+		if(fulltank.charges > 0)
+		{
 			return true;
 		}
 
@@ -490,8 +491,17 @@ public abstract class Wand extends Item {
 				Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 			}
 		}
-		
-		curCharges -= cursed ? 1 : chargesPerCast();
+
+		// If Full Tank has a charge spend it instead of a wand charge
+		FullTank fulltank = Dungeon.hero.buff(FullTank.class);
+		if(fulltank.charges > 0)
+		{
+			fulltank.useCharge();
+		}
+		else
+		{
+			curCharges -= cursed ? 1 : chargesPerCast();
+		}
 
 		//remove magic charge at a higher priority, if we are benefiting from it are and not the
 		//wand that just applied it
