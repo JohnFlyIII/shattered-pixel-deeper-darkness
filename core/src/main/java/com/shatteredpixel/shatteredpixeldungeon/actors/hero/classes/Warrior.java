@@ -48,26 +48,34 @@ public class Warrior extends HeroBase {
     
     private BrokenSeal seal;
 
-    @Override
-    public void initHero() {
-        heroClass = HeroClass.WARRIOR;
-        
-        // Initialize equipment
-        (belongings.weapon = new WornShortsword()).identify();
+    /**
+     * Static method to initialize a Warrior hero
+     * Used by HeroClass to provide consistent initialization
+     * 
+     * @param hero The hero to initialize with Warrior-specific equipment and abilities
+     */
+    public static void initHero(com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero hero) {
+        (hero.belongings.weapon = new WornShortsword()).identify();
         ThrowingStone stones = new ThrowingStone();
         stones.quantity(3).collect();
         Dungeon.quickslot.setSlot(0, stones);
 
         // Add the seal to armor
-        if (belongings.armor != null) {
-            seal = new BrokenSeal();
-            belongings.armor.affixSeal(seal);
+        if (hero.belongings.armor != null) {
+            BrokenSeal seal = new BrokenSeal();
+            hero.belongings.armor.affixSeal(seal);
             Catalog.setSeen(BrokenSeal.class);
         }
 
         // Identify starting potions/scrolls
         new PotionOfHealing().identify();
         new ScrollOfRage().identify();
+    }
+    
+    @Override
+    public void initHero() {
+        initCommon(HeroClass.WARRIOR);
+        Warrior.initHero(this);
     }
 
     @Override

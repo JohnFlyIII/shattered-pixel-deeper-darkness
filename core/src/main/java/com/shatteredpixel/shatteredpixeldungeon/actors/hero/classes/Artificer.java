@@ -54,18 +54,21 @@ public class Artificer extends HeroBase {
     // Number of charges accumulated by the Full Tank talent
     private int fullTankCharges = 0;
     
-    @Override
-    public void initHero() {
-        heroClass = HeroClass.ARTIFICER;
-        
+    /**
+     * Static method to initialize an Artificer hero
+     * Used by HeroClass to provide consistent initialization
+     * 
+     * @param hero The hero to initialize with Artificer-specific equipment and abilities
+     */
+    public static void initHero(com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero hero) {
         // Based on Huntress with additional items
-        (belongings.weapon = new Gloves()).identify();
+        (hero.belongings.weapon = new Gloves()).identify();
         SpiritBow bow = new SpiritBow();
         bow.identify().collect();
 
         // Add Warrior's seal
-        if (belongings.armor != null) {
-            belongings.armor.affixSeal(new BrokenSeal());
+        if (hero.belongings.armor != null) {
+            hero.belongings.armor.affixSeal(new BrokenSeal());
             Catalog.setSeen(BrokenSeal.class);
         }
 
@@ -96,6 +99,12 @@ public class Artificer extends HeroBase {
 
         new PotionOfMindVision().identify();
         new ScrollOfLullaby().identify();
+    }
+    
+    @Override
+    public void initHero() {
+        initCommon(HeroClass.ARTIFICER);
+        Artificer.initHero(this);
     }
     
     @Override

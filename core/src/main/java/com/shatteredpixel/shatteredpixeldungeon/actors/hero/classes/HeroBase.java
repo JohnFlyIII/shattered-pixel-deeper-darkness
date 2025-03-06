@@ -23,11 +23,17 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.watabou.utils.Bundle;
 
 /**
@@ -39,8 +45,23 @@ public abstract class HeroBase extends Hero {
     /**
      * Initializes the hero with class-specific properties.
      * This method is called when a new game is started or when a game is loaded.
+     * 
+     * 1. Sets the hero's class
+     * 2. Initializes class-specific equipment and items
+     * 3. Handles any other class-specific initialization
      */
     public abstract void initHero();
+    
+    /**
+     * Common initialization shared by all hero classes.
+     * Called by HeroClass.initHero before class-specific initialization.
+     * 
+     * @param heroClass The class being initialized
+     */
+    public void initCommon(HeroClass heroClass) {
+        this.heroClass = heroClass;
+        Talent.initClassTalents(this);
+    }
 
     /**
      * Called when a hero gains a subclass. Handles any special effects, buffs, or abilities

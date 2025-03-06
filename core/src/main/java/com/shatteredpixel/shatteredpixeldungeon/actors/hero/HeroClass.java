@@ -46,6 +46,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue.Smok
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.Endure;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.HeroicLeap;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.Shockwave;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes.HeroBase;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
@@ -102,10 +103,15 @@ public enum HeroClass {
 	}
 
 	public void initHero( Hero hero ) {
+		// Initialize common hero properties
+		if (hero instanceof HeroBase) {
+			((HeroBase) hero).initCommon(this);
+		} else {
+			hero.heroClass = this;
+			Talent.initClassTalents(hero);
+		}
 
-		hero.heroClass = this;
-		Talent.initClassTalents(hero);
-
+		// Add default armor and items that all heroes start with
 		Item i = new ClothArmor().identify();
 		if (!Challenges.isItemBlocked(i)) hero.belongings.armor = (ClothArmor)i;
 
@@ -120,6 +126,7 @@ public enum HeroClass {
 
 		new ScrollOfIdentify().identify();
 
+		// Initialize class-specific items and properties
 		switch (this) {
 			case WARRIOR:
 				initWarrior( hero );
@@ -150,6 +157,7 @@ public enum HeroClass {
 				break;
 		}
 
+		// Set up quickslot for waterskin if enabled
 		if (SPDSettings.quickslotWaterskin()) {
 			for (int s = 0; s < QuickSlot.SIZE; s++) {
 				if (Dungeon.quickslot.getItem(s) == null) {
@@ -158,7 +166,6 @@ public enum HeroClass {
 				}
 			}
 		}
-
 	}
 
 	public Badges.Badge masteryBadge() {
@@ -182,18 +189,7 @@ public enum HeroClass {
 	}
 
 	private static void initWarrior( Hero hero ) {
-		(hero.belongings.weapon = new WornShortsword()).identify();
-		ThrowingStone stones = new ThrowingStone();
-		stones.quantity(3).collect();
-		Dungeon.quickslot.setSlot(0, stones);
-
-		if (hero.belongings.armor != null){
-			hero.belongings.armor.affixSeal(new BrokenSeal());
-			Catalog.setSeen(BrokenSeal.class); //as it's not added to the inventory
-		}
-
-		new PotionOfHealing().identify();
-		new ScrollOfRage().identify();
+		com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes.Warrior.initHero(hero);
 	}
 
 	private static void initMage( Hero hero ) {
@@ -270,40 +266,7 @@ public enum HeroClass {
 	}
 
 	private static void initArtificer( Hero hero ) {
-		// Based on Huntress with additional items
-		(hero.belongings.weapon = new Gloves()).identify();
-		SpiritBow bow = new SpiritBow();
-		bow.identify().collect();
-
-		// Add Warrior's seal
-		if (hero.belongings.armor != null) {
-			hero.belongings.armor.affixSeal(new BrokenSeal());
-			Catalog.setSeen(BrokenSeal.class);
-		}
-
-		// Two potions of strength
-		PotionOfStrength potion = new PotionOfStrength();
-		potion.identify();
-		potion.collect();
-		potion = new PotionOfStrength();
-		potion.identify();
-		potion.collect();
-
-		// Two scrolls of upgrade
-		ScrollOfUpgrade scroll = new ScrollOfUpgrade();
-		scroll.identify();
-		scroll.collect();
-		scroll = new ScrollOfUpgrade();
-		scroll.identify();
-		scroll.collect();
-
-		// Add a random ring
-		Generator.random(Category.RING).identify().collect();
-
-		Dungeon.quickslot.setSlot(0, bow);
-
-		new PotionOfMindVision().identify();
-		new ScrollOfLullaby().identify();
+		com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes.Artificer.initHero(hero);
 	}
 
 	public String title() {

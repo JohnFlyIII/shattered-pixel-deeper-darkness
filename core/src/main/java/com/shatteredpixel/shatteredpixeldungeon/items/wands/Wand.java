@@ -150,15 +150,17 @@ public abstract class Wand extends Item {
 
 	public boolean tryToZap( Hero owner, int target ){
 
-		if (owner.buff(WildMagic.WildMagicTracker.class) == null && owner.buff(MagicImmune.class) != null){
+		if (owner.buff(WildMagic.WildMagicTracker.class) == null &&
+				owner.buff(MagicImmune.class) != null) {
 			GLog.w( Messages.get(this, "no_magic") );
 			return false;
 		}
 
-		FullTank fulltank = Dungeon.hero.buff(FullTank.class);
-		if(fulltank.charges > 0)
+		if(owner.hasTalent(Talent.FULL_TANK) &&
+				Buff.affect(Dungeon.hero, FullTank.class).hasCharges())
 		{
-			return true;
+						return true;
+
 		}
 
 		//if we're using wild magic, then assume we have charges
@@ -493,13 +495,19 @@ public abstract class Wand extends Item {
 		}
 
 		// If Full Tank has a charge spend it instead of a wand charge
-		FullTank fulltank = Dungeon.hero.buff(FullTank.class);
-		if(fulltank.charges > 0)
-		{
-			fulltank.useCharge();
+		if(Dungeon.hero.hasTalent(Talent.FULL_TANK)) {
+			if(Buff.affect(Dungeon.hero, FullTank.class).hasCharges())
+			{
+				Buff.affect(Dungeon.hero, FullTank.class).useCharge();
+			}
+			else
+			{
+				curCharges -= cursed ? 1 : chargesPerCast();
+			}
 		}
 		else
 		{
+			// Normal charge spend
 			curCharges -= cursed ? 1 : chargesPerCast();
 		}
 

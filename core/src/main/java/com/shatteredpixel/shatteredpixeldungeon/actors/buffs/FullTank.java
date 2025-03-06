@@ -57,7 +57,12 @@ public class FullTank extends Buff {
 		return Messages.get(this, "desc", charges);
 	}
 
-	public int charges;
+	private int charges = 0;
+
+	public boolean hasCharges()
+	{
+		return charges > 0;
+	}
 
 	public void set(int charges){
 		this.charges = charges;

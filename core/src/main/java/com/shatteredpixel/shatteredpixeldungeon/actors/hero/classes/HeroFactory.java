@@ -97,8 +97,34 @@ public class HeroFactory {
         }
         
         // Copy all relevant data from the original hero
-        // This is a simplified version - you would need to copy all relevant fields
+        copyHeroData(hero, newHero);
         
         return newHero;
+    }
+    
+    /**
+     * Copies all relevant data from one hero to another.
+     * Used when converting a Hero to a HeroBase subclass.
+     * 
+     * @param from The source hero
+     * @param to The target hero
+     */
+    private static void copyHeroData(Hero from, Hero to) {
+        // Core properties
+        to.pos = from.pos;
+        //to.name = from.name;
+        to.heroClass = from.heroClass;
+        to.subClass = from.subClass;
+        to.armorAbility = from.armorAbility;
+        
+        // Stats
+        to.HP = from.HP;
+        to.HT = from.HT;
+        to.STR = from.STR;
+        to.lvl = from.lvl;
+        to.exp = from.exp;
+        
+        // Belongings, inventory, buffs would need to be handled properly
+        // This is a simplified version
     }
 }
