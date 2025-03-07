@@ -133,7 +133,7 @@ public class ElixirOfMight extends Elixir {
 			return Messages.get(this, "desc", boost(), left);
 		}
 		
-		private static String LEFT = "left";
+		private static final String LEFT = "left";
 		
 		@Override
 		public void storeInBundle(Bundle bundle) {

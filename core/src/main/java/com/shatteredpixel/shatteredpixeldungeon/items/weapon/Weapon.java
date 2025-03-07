@@ -90,8 +90,8 @@ abstract public class Weapon extends KindOfWeapon {
 		DAMAGE  (1.5f, 5/3f),
 		NONE	(1.0f, 1f);
 
-		private float damageFactor;
-		private float delayFactor;
+		private final float damageFactor;
+		private final float delayFactor;
 
 		Augment(float dmg, float dly){
 			damageFactor = dmg;
@@ -477,7 +477,7 @@ abstract public class Weapon extends KindOfWeapon {
 		return enchantment != null && enchantment.curse();
 	}
 
-	private static ItemSprite.Glowing HOLY = new ItemSprite.Glowing( 0xFFFF00 );
+	private static final ItemSprite.Glowing HOLY = new ItemSprite.Glowing( 0xFFFF00 );
 
 	@Override
 	public ItemSprite.Glowing glowing() {

@@ -272,11 +272,8 @@ public class RingOfForce extends Ring {
 			return hero.buff(MonkEnergy.MonkAbility.FlurryEmpowerTracker.class) != null;
 		}
 		BrawlersStance stance = hero.buff(BrawlersStance.class);
-		if (stance != null && stance.active){
-			return true;
-		}
-		return false;
-	}
+        return stance != null && stance.active;
+    }
 
 	public static boolean unarmedGetsWeaponAugment(Hero hero ){
 		if (hero.belongings.attackingWeapon() == null
@@ -284,11 +281,8 @@ public class RingOfForce extends Ring {
 			return false;
 		}
 		BrawlersStance stance = hero.buff(BrawlersStance.class);
-		if (stance != null && stance.active){
-			return true;
-		}
-		return false;
-	}
+        return stance != null && stance.active;
+    }
 
 	public static class BrawlersStance extends Buff {
 

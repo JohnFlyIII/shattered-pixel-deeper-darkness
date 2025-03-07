@@ -1018,7 +1018,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, ENLIGHTENING_MEAL, RECALL_INSCRIPTION, SUNRAY, DIVINE_SENSE, BLESS);
 				break;
 			case ARTIFICER:
-				Collections.addAll(tierTalents, ENERGIZING_MEAL, INSCRIBED_POWER, WAND_PRESERVATION, MYSTICAL_MEAL, DURABLE_PROJECTILES);
+				Collections.addAll(tierTalents, ENERGIZING_MEAL, REJUVENATING_STEPS, HEIGHTENED_SENSES, MYSTICAL_MEAL, SILENT_STEPS);
 				break;
 		}
 		for (Talent talent : tierTalents){
@@ -1050,7 +1050,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, CLEANSE, LIGHT_READING);
 				break;
 			case ARTIFICER:
-				Collections.addAll(tierTalents, ENHANCED_RINGS, LIGHT_CLOAK);
+				Collections.addAll(tierTalents, ENHANCED_RINGS, STRONGMAN);
 				break;
 		}
 		for (Talent talent : tierTalents){
@@ -1120,7 +1120,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, VARIED_CHARGE, ENHANCED_RINGS, WAND_PRESERVATION);
 				break;
 			case MACHINIST:
-				Collections.addAll(tierTalents, STRONGMAN, BARKSKIN, TWIN_UPGRADES);
+				Collections.addAll(tierTalents, FARSIGHT, SOUL_EATER, MYSTICAL_CHARGE);
 				break;
 		}
 		for (Talent talent : tierTalents){

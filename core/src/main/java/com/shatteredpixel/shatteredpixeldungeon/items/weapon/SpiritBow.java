@@ -93,7 +93,7 @@ public class SpiritBow extends Weapon {
 		}
 	}
 
-	private static Class[] harmfulPlants = new Class[]{
+	private static final Class[] harmfulPlants = new Class[]{
 			Blindweed.class, Firebloom.class, Icecap.class, Sorrowmoss.class,  Stormvine.class
 	};
 
@@ -467,7 +467,7 @@ public class SpiritBow extends Weapon {
 		}
 	}
 	
-	private CellSelector.Listener shooter = new CellSelector.Listener() {
+	private final CellSelector.Listener shooter = new CellSelector.Listener() {
 		@Override
 		public void onSelect( Integer target ) {
 			if (target != null) {

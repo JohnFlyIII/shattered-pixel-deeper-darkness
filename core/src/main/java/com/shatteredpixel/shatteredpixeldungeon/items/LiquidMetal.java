@@ -143,7 +143,7 @@ public class LiquidMetal extends Item {
 				maxToUse = (int)Math.ceil(maxToUse*percentDurabilityLost);
 				float durPerUse = m.durabilityPerUse()/100f;
 				if (maxToUse == 0 ||
-						Math.ceil(m.durabilityLeft()/ m.durabilityPerUse()) >= Math.ceil(m.MAX_DURABILITY/ m.durabilityPerUse()) ){
+						Math.ceil(m.durabilityLeft()/ m.durabilityPerUse()) >= Math.ceil(MissileWeapon.MAX_DURABILITY / m.durabilityPerUse()) ){
 					GLog.w(Messages.get(LiquidMetal.class, "already_fixed"));
 					return;
 				} else if (maxToUse < quantity()) {

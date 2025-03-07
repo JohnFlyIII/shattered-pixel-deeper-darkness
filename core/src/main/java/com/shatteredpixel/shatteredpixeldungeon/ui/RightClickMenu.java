@@ -85,9 +85,7 @@ public class RightClickMenu extends Component {
 				if (event != null && event.type == PointerEvent.Type.HOVER && !hit){
 					RightClickMenu.this.destroy();
 					RightClickMenu.this.killAndErase();
-				} else if (hit){
-					return true;
-				}
+				} else return hit;
 				return false;
 			}
 		};

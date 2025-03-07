@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
@@ -36,16 +37,16 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKn
  */
 public class Rogue extends HeroBase {
 
-    @Override
-    public void initHero() {
-        heroClass = HeroClass.ROGUE;
+
+    public static void initHero(Hero hero) {
+
         
         // Initialize equipment
-        (belongings.weapon = new Dagger()).identify();
+        (hero.belongings.weapon = new Dagger()).identify();
 
         CloakOfShadows cloak = new CloakOfShadows();
-        (belongings.artifact = cloak).identify();
-        belongings.artifact.activate(this);
+        (hero.belongings.artifact = cloak).identify();
+        hero.belongings.artifact.activate(hero);
 
         ThrowingKnife knives = new ThrowingKnife();
         knives.quantity(3).collect();
@@ -56,6 +57,12 @@ public class Rogue extends HeroBase {
         // Identify starting potions/scrolls
         new ScrollOfMagicMapping().identify();
         new PotionOfInvisibility().identify();
+    }
+
+    @Override
+    public void initHero() {
+        initCommon(HeroClass.ROGUE);
+        initHero(this);
     }
     
     @Override

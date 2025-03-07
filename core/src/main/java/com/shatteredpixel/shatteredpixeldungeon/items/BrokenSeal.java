@@ -70,13 +70,9 @@ public class BrokenSeal extends Item {
 		}
 		if (Dungeon.hero.pointsInTalent(Talent.RUNIC_TRANSFERENCE) == 2){
 			return true;
-		} else if (Dungeon.hero.pointsInTalent(Talent.RUNIC_TRANSFERENCE) == 1
-			&& (Arrays.asList(Armor.Glyph.common).contains(glyph.getClass())
-				|| Arrays.asList(Armor.Glyph.uncommon).contains(glyph.getClass()))){
-			return true;
-		} else {
-			return false;
-		}
+		} else return Dungeon.hero.pointsInTalent(Talent.RUNIC_TRANSFERENCE) == 1
+                && (Arrays.asList(Armor.Glyph.common).contains(glyph.getClass())
+                || Arrays.asList(Armor.Glyph.uncommon).contains(glyph.getClass()));
 	}
 
 	public Armor.Glyph getGlyph(){

@@ -167,11 +167,11 @@ public abstract class Recipe {
 	// Static members
 	//*******
 
-	private static Recipe[] variableRecipes = new Recipe[]{
+	private static final Recipe[] variableRecipes = new Recipe[]{
 			new LiquidMetal.Recipe()
 	};
 	
-	private static Recipe[] oneIngredientRecipes = new Recipe[]{
+	private static final Recipe[] oneIngredientRecipes = new Recipe[]{
 		new Scroll.ScrollToStone(),
 		new ExoticPotion.PotionToExotic(),
 		new ExoticScroll.ScrollToExotic(),
@@ -196,7 +196,7 @@ public abstract class Recipe {
 		new Trinket.UpgradeTrinket()
 	};
 	
-	private static Recipe[] twoIngredientRecipes = new Recipe[]{
+	private static final Recipe[] twoIngredientRecipes = new Recipe[]{
 		new Blandfruit.CookFruit(),
 		new Bomb.EnhanceBomb(),
 		new UnstableBrew.Recipe(),
@@ -212,7 +212,7 @@ public abstract class Recipe {
 		new StewedMeat.twoMeat()
 	};
 	
-	private static Recipe[] threeIngredientRecipes = new Recipe[]{
+	private static final Recipe[] threeIngredientRecipes = new Recipe[]{
 		new Potion.SeedToPotion(),
 		new StewedMeat.threeMeat(),
 		new MeatPie.Recipe()

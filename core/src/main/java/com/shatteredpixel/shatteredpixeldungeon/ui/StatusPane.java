@@ -47,9 +47,9 @@ import com.watabou.utils.GameMath;
 
 public class StatusPane extends Component {
 
-	private NinePatch bg;
-	private Image avatar;
-	private Button heroInfo;
+	private final NinePatch bg;
+	private final Image avatar;
+	private final Button heroInfo;
 	public static float talentBlink;
 	private float warning;
 
@@ -57,28 +57,28 @@ public class StatusPane extends Component {
 
 	private int lastTier = 0;
 
-	private Image rawShielding;
-	private Image shieldedHP;
-	private Image hp;
-	private BitmapText hpText;
-	private Button heroInfoOnBar;
+	private final Image rawShielding;
+	private final Image shieldedHP;
+	private final Image hp;
+	private final BitmapText hpText;
+	private final Button heroInfoOnBar;
 
-	private Image exp;
+	private final Image exp;
 	private BitmapText expText;
 
 	private int lastLvl = -1;
 
-	private BitmapText level;
+	private final BitmapText level;
 
-	private BuffIndicator buffs;
-	private Compass compass;
+	private final BuffIndicator buffs;
+	private final Compass compass;
 
-	private BusyIndicator busy;
-	private CircleArc counter;
+	private final BusyIndicator busy;
+	private final CircleArc counter;
 
-	private static String asset = Assets.Interfaces.STATUS;
+	private static final String asset = Assets.Interfaces.STATUS;
 
-	private boolean large;
+	private final boolean large;
 
 	public StatusPane( boolean large ){
 		super();

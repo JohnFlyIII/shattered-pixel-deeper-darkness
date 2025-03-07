@@ -268,9 +268,7 @@ public class Heap implements Bundlable {
 
 		if (type != Type.HEAP) {
 
-			return;
-
-		} else {
+        } else {
 
 			for (Item item : items.toArray( new Item[0] )) {
 

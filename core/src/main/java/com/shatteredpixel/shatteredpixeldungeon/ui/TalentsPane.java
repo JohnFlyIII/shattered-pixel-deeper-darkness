@@ -156,7 +156,7 @@ public class TalentsPane extends ScrollPane {
 
 	public static class TalentTierPane extends Component {
 
-		private int tier;
+		private final int tier;
 
 		public RenderedTextBlock title;
 		ArrayList<TalentButton> buttons;

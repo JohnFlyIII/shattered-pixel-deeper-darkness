@@ -74,10 +74,8 @@ public class Blandfruit extends Food {
 			Blandfruit other = (Blandfruit) item;
 			if (potionAttrib == null && other.potionAttrib == null) {
 					return true;
-			} else if (potionAttrib != null && other.potionAttrib != null
-					&& potionAttrib.isSimilar(other.potionAttrib)){
-					return true;
-			}
+			} else return potionAttrib != null && other.potionAttrib != null
+                    && potionAttrib.isSimilar(other.potionAttrib);
 		}
 		return false;
 	}
@@ -261,15 +259,10 @@ public class Blandfruit extends Food {
 			
 			Blandfruit fruit = (Blandfruit) ingredients.get(0);
 			Seed seed = (Seed) ingredients.get(1);
-			
-			if (fruit.quantity() >= 1 && fruit.potionAttrib == null
-				&& seed.quantity() >= 1){
 
-				return true;
-			}
-			
-			return false;
-		}
+            return fruit.quantity() >= 1 && fruit.potionAttrib == null
+                    && seed.quantity() >= 1;
+        }
 		
 		@Override
 		public int cost(ArrayList<Item> ingredients) {

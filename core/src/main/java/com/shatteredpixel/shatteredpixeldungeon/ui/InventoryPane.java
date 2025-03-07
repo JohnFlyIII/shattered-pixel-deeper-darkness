@@ -608,7 +608,7 @@ public class InventoryPane extends Component {
 		private ColorBlock bgBottom;
 
 		private Bag bag;
-		private int index;
+		private final int index;
 
 		public BagButton( Bag bag, int index ){
 			super( bagIcon(bag) );

@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfMindVision;
@@ -35,12 +36,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
  */
 public class Huntress extends HeroBase {
 
-    @Override
-    public void initHero() {
-        heroClass = HeroClass.HUNTRESS;
+    public static void initHero(Hero hero) {
+        hero.heroClass = HeroClass.HUNTRESS;
         
         // Initialize equipment
-        (belongings.weapon = new Gloves()).identify();
+        (hero.belongings.weapon = new Gloves()).identify();
         SpiritBow bow = new SpiritBow();
         bow.identify().collect();
 
@@ -50,7 +50,12 @@ public class Huntress extends HeroBase {
         new PotionOfMindVision().identify();
         new ScrollOfLullaby().identify();
     }
-    
+
+    @Override
+    public void initHero() {
+        initCommon(HeroClass.HUNTRESS);
+        Huntress.initHero(this);
+    }
     @Override
     public void applySubclass(HeroSubClass subClass) {
         super.applySubclass(subClass);

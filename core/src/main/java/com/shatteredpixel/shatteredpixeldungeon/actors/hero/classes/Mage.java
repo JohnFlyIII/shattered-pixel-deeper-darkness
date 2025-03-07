@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -45,21 +46,25 @@ public class Mage extends HeroBase {
     
     private Wand wand;
     
-    @Override
-    public void initHero() {
-        heroClass = HeroClass.MAGE;
-        
+
+    public static void initHero(Hero hero) {
         // Initialize the mage's staff with a magic missile wand
         MagesStaff staff = new MagesStaff(new WandOfMagicMissile());
         
-        (belongings.weapon = staff).identify();
-        belongings.weapon.activate(this);
+        (hero.belongings.weapon = staff).identify();
+        hero.belongings.weapon.activate(hero);
         
         Dungeon.quickslot.setSlot(0, staff);
         
         // Identify starting potions/scrolls
         new ScrollOfUpgrade().identify();
         new PotionOfLiquidFlame().identify();
+    }
+
+    @Override
+    public void initHero() {
+        initCommon(HeroClass.MAGE);
+        initHero(this);
     }
     
     @Override

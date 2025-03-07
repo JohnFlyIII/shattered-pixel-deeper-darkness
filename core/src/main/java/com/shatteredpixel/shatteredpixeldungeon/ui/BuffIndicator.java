@@ -142,9 +142,9 @@ public class BuffIndicator extends Component {
 	private static BuffIndicator heroInstance;
 	private static BuffIndicator bossInstance;
 	
-	private LinkedHashMap<Buff, BuffButton> buffButtons = new LinkedHashMap<>();
+	private final LinkedHashMap<Buff, BuffButton> buffButtons = new LinkedHashMap<>();
 	private boolean needsRefresh;
-	private Char ch;
+	private final Char ch;
 
 	private boolean large = false;
 	
@@ -269,9 +269,9 @@ public class BuffIndicator extends Component {
 
 	private static class BuffButton extends IconButton {
 
-		private Buff buff;
+		private final Buff buff;
 
-		private boolean large;
+		private final boolean large;
 
 		public Image grey; //only for small
 		public BitmapText text; //only for large

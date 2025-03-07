@@ -122,6 +122,6 @@ public class RunicBlade extends MeleeWeapon {
 
 		public float boost = 2f;
 
-	};
+	}
 
 }

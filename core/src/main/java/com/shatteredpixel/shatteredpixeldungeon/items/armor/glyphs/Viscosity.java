@@ -39,7 +39,7 @@ import com.watabou.utils.Bundle;
 
 public class Viscosity extends Glyph {
 	
-	private static ItemSprite.Glowing PURPLE = new ItemSprite.Glowing( 0x8844CC );
+	private static final ItemSprite.Glowing PURPLE = new ItemSprite.Glowing( 0x8844CC );
 	
 	@Override
 	public int proc( Armor armor, Char attacker, Char defender, int damage ) {
@@ -98,9 +98,9 @@ public class Viscosity extends Glyph {
 			detach();
 			return true;
 		}
-	};
-	
-	public static class DeferedDamage extends Buff {
+	}
+
+    public static class DeferedDamage extends Buff {
 		
 		{
 			type = buffType.NEGATIVE;

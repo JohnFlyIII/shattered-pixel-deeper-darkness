@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
@@ -29,29 +30,29 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfPurity;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Cudgel;
 
-/**
- * Placeholder implementation for the Cleric hero class.
- * Will be filled out with complete implementations in the future.
- */
 public class Cleric extends HeroBase {
 
-    @Override
-    public void initHero() {
-        heroClass = HeroClass.CLERIC;
-        
+      public static void initHero(Hero hero) {
+        hero.heroClass = HeroClass.CLERIC;
         // Initialize equipment
-        (belongings.weapon = new Cudgel()).identify();
-        belongings.weapon.activate(this);
+        (hero.belongings.weapon = new Cudgel()).identify();
+        hero.belongings.weapon.activate(hero);
 
         HolyTome tome = new HolyTome();
-        (belongings.artifact = tome).identify();
-        belongings.artifact.activate(this);
+        (hero.belongings.artifact = tome).identify();
+          hero.belongings.artifact.activate(hero);
 
         Dungeon.quickslot.setSlot(0, tome);
 
         // Identify starting potions/scrolls
         new PotionOfPurity().identify();
         new ScrollOfRemoveCurse().identify();
+    }
+
+    @Override
+    public void initHero() {
+        initCommon(HeroClass.CLERIC);
+        Cleric.initHero(this);
     }
     
     @Override

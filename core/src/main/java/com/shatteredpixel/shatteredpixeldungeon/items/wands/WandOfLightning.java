@@ -53,9 +53,9 @@ public class WandOfLightning extends DamageWand {
 		image = ItemSpriteSheet.WAND_LIGHTNING;
 	}
 	
-	private ArrayList<Char> affected = new ArrayList<>();
+	private final ArrayList<Char> affected = new ArrayList<>();
 
-	private ArrayList<Lightning.Arc> arcs = new ArrayList<>();
+	private final ArrayList<Lightning.Arc> arcs = new ArrayList<>();
 
 	public int min(int lvl){
 		return 5+lvl;

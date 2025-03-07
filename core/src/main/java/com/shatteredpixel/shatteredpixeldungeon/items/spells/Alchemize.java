@@ -82,12 +82,8 @@ public class Alchemize extends Spell {
 				return true;
 			}
 
-			if (ingredients.get(0) instanceof Runestone && ingredients.get(1) instanceof Plant.Seed){
-				return true;
-			}
-
-			return false;
-		}
+            return ingredients.get(0) instanceof Runestone && ingredients.get(1) instanceof Plant.Seed;
+        }
 
 		@Override
 		public int cost(ArrayList<Item> ingredients) {
@@ -107,7 +103,7 @@ public class Alchemize extends Spell {
 		}
 	}
 
-	private static WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+	private static final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 		@Override
 		public String textPrompt() {
 			return Messages.get(Alchemize.class, "prompt");
@@ -136,7 +132,7 @@ public class Alchemize extends Spell {
 		private static final float GAP		= 2;
 		private static final int BTN_HEIGHT	= 18;
 
-		private WndBag owner;
+		private final WndBag owner;
 
 		public WndAlchemizeItem(Item item, WndBag owner) {
 			super(item);

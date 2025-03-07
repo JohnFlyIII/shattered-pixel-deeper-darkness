@@ -126,12 +126,8 @@ public class ExoticPotion extends Potion {
 
 		@Override
 		public boolean testIngredients(ArrayList<Item> ingredients) {
-			if (ingredients.size() == 1 && regToExo.containsKey(ingredients.get(0).getClass())){
-				return true;
-			}
-
-			return false;
-		}
+            return ingredients.size() == 1 && regToExo.containsKey(ingredients.get(0).getClass());
+        }
 		
 		@Override
 		public int cost(ArrayList<Item> ingredients) {

@@ -44,7 +44,7 @@ import com.watabou.utils.PathFinder;
 public class QuickSlotButton extends Button {
 	
 	private static QuickSlotButton[] instance = new QuickSlotButton[QuickSlot.SIZE];
-	private int slotNum;
+	private final int slotNum;
 
 	private ItemSlot slot;
 	
@@ -237,7 +237,7 @@ public class QuickSlotButton extends Button {
 		return true;
 	}
 
-	private WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+	private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
 		public String textPrompt() {

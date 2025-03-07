@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -48,19 +49,15 @@ import com.watabou.utils.Bundle;
  * They can harness the power of various artifacts and wands more effectively.
  */
 public class Artificer extends HeroBase {
-
-    private static final String CHARGES = "fullTankCharges";
-    
-    // Number of charges accumulated by the Full Tank talent
-    private int fullTankCharges = 0;
-    
     /**
      * Static method to initialize an Artificer hero
      * Used by HeroClass to provide consistent initialization
      * 
      * @param hero The hero to initialize with Artificer-specific equipment and abilities
      */
-    public static void initHero(com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero hero) {
+    public static void initHero(Hero hero) {
+        hero.heroClass = HeroClass.ARTIFICER;
+
         // Based on Huntress with additional items
         (hero.belongings.weapon = new Gloves()).identify();
         SpiritBow bow = new SpiritBow();
@@ -105,60 +102,5 @@ public class Artificer extends HeroBase {
     public void initHero() {
         initCommon(HeroClass.ARTIFICER);
         Artificer.initHero(this);
-    }
-    
-    @Override
-    public void storeInBundle(Bundle bundle) {
-        super.storeInBundle(bundle);
-        bundle.put(CHARGES, fullTankCharges);
-    }
-    
-    @Override
-    public void restoreFromBundle(Bundle bundle) {
-        super.restoreFromBundle(bundle);
-        fullTankCharges = bundle.getInt(CHARGES);
-    }
-    
-    /**
-     * Add charges to the Full Tank talent
-     * @param amount Number of charges to add
-     */
-    public void addFullTankCharges(int amount) {
-        fullTankCharges += amount;
-    }
-    
-    /**
-     * Get the current number of Full Tank charges
-     * @return Current charges
-     */
-    public int getFullTankCharges() {
-        return fullTankCharges;
-    }
-    
-    /**
-     * Use Full Tank charges
-     * @param amount Number of charges to use
-     * @return True if enough charges were available and consumed
-     */
-    public boolean useFullTankCharges(int amount) {
-        if (fullTankCharges >= amount) {
-            fullTankCharges -= amount;
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * Handles special behavior when an Artificer eats food
-     * - Implements the Full Tank talent
-     * 
-     * @param food The food item being eaten
-     */
-    public void onEatFood(Food food) {
-        // If the hero has the Full Tank talent, gain charges
-        if (hasTalent(Talent.FULL_TANK)) {
-            int charges = pointsInTalent(Talent.FULL_TANK);
-            addFullTankCharges(charges);
-        }
     }
 }

@@ -285,9 +285,9 @@ public class WandOfWarding extends Wand {
 		}
 
 		//this class is used so that wards and sentries can have two entries in the Bestiary
-		public static class WardSentry extends Ward{};
+		public static class WardSentry extends Ward{}
 
-		public void wandHeal( int wandLevel ){
+        public void wandHeal( int wandLevel ){
 			wandHeal( wandLevel, 1f );
 		}
 

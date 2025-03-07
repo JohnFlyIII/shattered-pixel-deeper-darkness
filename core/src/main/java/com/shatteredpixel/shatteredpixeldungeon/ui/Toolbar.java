@@ -676,7 +676,7 @@ public class Toolbar extends Component {
 			btnInventory.centerY());
 	}
 	
-	private static CellSelector.Listener informer = new CellSelector.Listener() {
+	private static final CellSelector.Listener informer = new CellSelector.Listener() {
 		@Override
 		public void onSelect( Integer cell ) {
 			if (instance != null) {
@@ -768,7 +768,7 @@ public class Toolbar extends Component {
 	
 	private static class QuickslotTool extends Tool {
 		
-		private QuickSlotButton slot;
+		private final QuickSlotButton slot;
 		private int borderLeft = 2;
 		private int borderRight = 2;
 		
@@ -810,8 +810,8 @@ public class Toolbar extends Component {
 
 	public static class SlotSwapTool extends Tool {
 
-		private Image[] icons = new Image[4];
-		private Item[] items = new Item[4];
+		private final Image[] icons = new Image[4];
+		private final Item[] items = new Item[4];
 
 		public SlotSwapTool(int x, int y, int width, int height) {
 			super(x, y, width, height);

@@ -160,7 +160,7 @@ public class CursedWand {
 	}
 
 	// common/uncommon/rare/v.rare have a 60/30/9/1% chance respectively
-	private static float[] EFFECT_CAT_CHANCES = new float[]{60, 30, 9, 1};
+	private static final float[] EFFECT_CAT_CHANCES = new float[]{60, 30, 9, 1};
 
 	public static CursedEffect randomEffect(){
 		switch (Random.chances(EFFECT_CAT_CHANCES)){
@@ -192,7 +192,7 @@ public class CursedWand {
 	//*** Common Effects ***
 	//**********************
 
-	private static ArrayList<CursedEffect> COMMON_EFFECTS = new ArrayList<>();
+	private static final ArrayList<CursedEffect> COMMON_EFFECTS = new ArrayList<>();
 	static {
 		COMMON_EFFECTS.add(new BurnAndFreeze());
 		COMMON_EFFECTS.add(new SpawnRegrowth());
@@ -249,11 +249,8 @@ public class CursedWand {
 		@Override
 		public boolean valid(Item origin, Char user, Ballistica bolt, boolean positiveOnly) {
 			Char target = Actor.findChar(bolt.collisionPos);
-			if (positiveOnly && (target == null || Char.hasProp(target, Char.Property.IMMOVABLE))){
-				return false;
-			}
-			return true;
-		}
+            return !positiveOnly || (target != null && !Char.hasProp(target, Char.Property.IMMOVABLE));
+        }
 
 		//might be nice to have no fx if self teleports?
 
@@ -411,7 +408,7 @@ public class CursedWand {
 	//*** Uncommon Effects ***
 	//************************
 
-	private static ArrayList<CursedEffect> UNCOMMON_EFFECTS = new ArrayList<>();
+	private static final ArrayList<CursedEffect> UNCOMMON_EFFECTS = new ArrayList<>();
 	static {
 		UNCOMMON_EFFECTS.add(new RandomPlant());
 		UNCOMMON_EFFECTS.add(new HealthTransfer());
@@ -441,14 +438,10 @@ public class CursedWand {
 		public boolean valid(Item origin, Char user, Ballistica bolt, boolean positiveOnly) {
 			int pos = bolt.collisionPos;
 
-			if (Dungeon.level.map[pos] != Terrain.ALCHEMY
-					&& !Dungeon.level.pit[pos]
-					&& Dungeon.level.traps.get(pos) == null
-					&& !Dungeon.isChallenged(Challenges.NO_HERBALISM)) {
-				return true;
-			} else {
-				return false;
-			}
+            return Dungeon.level.map[pos] != Terrain.ALCHEMY
+                    && !Dungeon.level.pit[pos]
+                    && Dungeon.level.traps.get(pos) == null
+                    && !Dungeon.isChallenged(Challenges.NO_HERBALISM);
 		}
 
 		@Override
@@ -662,7 +655,7 @@ public class CursedWand {
 	//*** Rare Effects ***
 	//********************
 
-	private static ArrayList<CursedEffect> RARE_EFFECTS = new ArrayList<>();
+	private static final ArrayList<CursedEffect> RARE_EFFECTS = new ArrayList<>();
 	static {
 		RARE_EFFECTS.add(new SheepPolymorph());
 		RARE_EFFECTS.add(new CurseEquipment());
@@ -691,15 +684,11 @@ public class CursedWand {
 		@Override
 		public boolean valid(Item origin, Char user, Ballistica bolt, boolean positiveOnly) {
 			Char ch = Actor.findChar( bolt.collisionPos );
-			if (ch != null && !(ch instanceof Hero)
-					//ignores bosses, questgivers, rat king, etc.
-					&& !ch.properties().contains(Char.Property.BOSS)
-					&& !ch.properties().contains(Char.Property.MINIBOSS)
-					&& !(ch instanceof NPC && ch.alignment == Char.Alignment.NEUTRAL)){
-				return true;
-			} else {
-				return false;
-			}
+            return ch != null && !(ch instanceof Hero)
+                    //ignores bosses, questgivers, rat king, etc.
+                    && !ch.properties().contains(Char.Property.BOSS)
+                    && !ch.properties().contains(Char.Property.MINIBOSS)
+                    && !(ch instanceof NPC && ch.alignment == Char.Alignment.NEUTRAL);
 		}
 
 		@Override
@@ -998,7 +987,7 @@ public class CursedWand {
 	//*** Very Rare Effects ***
 	//*************************
 
-	private static ArrayList<CursedEffect> VERY_RARE_EFFECTS = new ArrayList<>();
+	private static final ArrayList<CursedEffect> VERY_RARE_EFFECTS = new ArrayList<>();
 	static {
 		VERY_RARE_EFFECTS.add(new ForestFire());
 		VERY_RARE_EFFECTS.add(new SpawnGoldenMimic());
@@ -1144,11 +1133,7 @@ public class CursedWand {
 		public boolean valid(Item origin, Char user, Ballistica bolt, boolean positiveOnly) {
 			if (positiveOnly){
 				return true;
-			} else if (origin == null || user != Dungeon.hero || !Dungeon.hero.belongings.contains(origin)){
-				return false;
-			} else {
-				return true;
-			}
+			} else return origin != null && user == Dungeon.hero && Dungeon.hero.belongings.contains(origin);
 		}
 
 		@Override
@@ -1224,11 +1209,8 @@ public class CursedWand {
 		@Override
 		public boolean valid(Item origin, Char user, Ballistica bolt, boolean positiveOnly) {
 			//can't happen on floors where chasms aren't allowed
-			if( Dungeon.bossLevel() || Dungeon.depth > 25 || Dungeon.branch != 0){
-				return false;
-			}
-			return true;
-		}
+            return !Dungeon.bossLevel() && Dungeon.depth <= 25 && Dungeon.branch == 0;
+        }
 
 		@Override
 		public void FX(Item origin, Char user, Ballistica bolt, Callback callback) {

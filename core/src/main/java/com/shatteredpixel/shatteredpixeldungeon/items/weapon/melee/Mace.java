@@ -118,7 +118,7 @@ public class Mace extends MeleeWeapon {
 					if (enemy.isAlive()){
 						Buff.affect(enemy, Daze.class, Daze.DURATION);
 					} else {
-						wep.onAbilityKill(hero, enemy);
+						onAbilityKill(hero, enemy);
 					}
 				}
 				Invisibility.dispel();

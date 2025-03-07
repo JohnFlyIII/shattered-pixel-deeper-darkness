@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
@@ -34,26 +35,30 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingSp
  * Will be filled out with complete implementations in the future.
  */
 public class Duelist extends HeroBase {
-
-    @Override
-    public void initHero() {
-        heroClass = HeroClass.DUELIST;
+    public static void initHero(Hero hero) {
+        hero.heroClass = HeroClass.DUELIST;
         
         // Initialize equipment
-        (belongings.weapon = new Rapier()).identify();
-        belongings.weapon.activate(this);
+        (hero.belongings.weapon = new Rapier()).identify();
+        hero.belongings.weapon.activate(hero);
 
         ThrowingSpike spikes = new ThrowingSpike();
         spikes.quantity(2).collect();
 
-        Dungeon.quickslot.setSlot(0, belongings.weapon);
+        Dungeon.quickslot.setSlot(0, hero.belongings.weapon);
         Dungeon.quickslot.setSlot(1, spikes);
 
         // Identify starting potions/scrolls
         new PotionOfStrength().identify();
         new ScrollOfMirrorImage().identify();
     }
-    
+
+    @Override
+    public void initHero() {
+        initCommon(HeroClass.DUELIST);
+        Duelist.initHero(this);
+    }
+
     @Override
     public void applySubclass(HeroSubClass subClass) {
         super.applySubclass(subClass);

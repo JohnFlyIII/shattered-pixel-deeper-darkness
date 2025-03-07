@@ -110,9 +110,7 @@ public class Pasty extends Food {
 		super.satisfy(hero);
 		
 		switch(Holiday.getCurrentHoliday()){
-			default:
-				break; //do nothing extra
-			case LUNAR_NEW_YEAR:
+            case LUNAR_NEW_YEAR:
 				//...but it also awards an extra item that restores 150 hunger
 				FishLeftover left = new FishLeftover();
 				if (!left.collect()){
@@ -168,7 +166,9 @@ public class Pasty extends Food {
 				Buff.affect(hero, Barrier.class).setShield(toShield);
 				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(toShield), FloatingText.SHIELDING );
 				break;
-		}
+            default:
+                break; //do nothing extra
+        }
 	}
 
 	@Override

@@ -75,7 +75,7 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 		GameScene.selectCell(targeter);
 	}
 	
-	private CellSelector.Listener targeter = new CellSelector.Listener() {
+	private final CellSelector.Listener targeter = new CellSelector.Listener() {
 
 		private boolean showingWindow = false;
 		private boolean potionAlreadyUsed = false;

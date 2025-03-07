@@ -115,7 +115,7 @@ public class Sword extends MeleeWeapon {
 
 				if (!enemy.isAlive()){
 					hero.next();
-					wep.onAbilityKill(hero, enemy);
+					onAbilityKill(hero, enemy);
 					if (hero.buff(CleaveTracker.class) != null) {
 						hero.buff(CleaveTracker.class).detach();
 					} else {

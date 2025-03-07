@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -57,7 +58,7 @@ public abstract class TargetedSpell extends Spell {
 		Sample.INSTANCE.play( Assets.Sounds.ZAP );
 	}
 	
-	private static CellSelector.Listener targeter = new  CellSelector.Listener(){
+	private static final CellSelector.Listener targeter = new  CellSelector.Listener(){
 		
 		@Override
 		public void onSelect( Integer target ) {
@@ -91,7 +92,7 @@ public abstract class TargetedSpell extends Spell {
 						curSpell.affectTarget(shot, curUser);
 						curSpell.detach( curUser.belongings.backpack );
 						Invisibility.dispel();
-						curSpell.updateQuickslot();
+						updateQuickslot();
 						curUser.spendAndNext( 1f );
 						Catalog.countUse(curSpell.getClass());
 						if (Random.Float() < curSpell.talentChance){
