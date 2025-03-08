@@ -43,8 +43,10 @@ public class GLog {
 	}
 	
 	public static void i( String text, Object... args ) {
-		
-		if (args.length > 0) {
+
+		GameLogger.i("Info", text);
+
+				if (args.length > 0) {
 			text = Messages.format( text, args );
 		}
 		

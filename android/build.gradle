@@ -75,6 +75,9 @@ dependencies {
     natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
     natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
     implementation "com.badlogicgames.gdx-controllers:gdx-controllers-android:$gdxControllersVersion"
+    
+    // Bugfender for logging and crash reporting
+    implementation 'com.bugfender.sdk:android:3.+'
 }
 
 // called every time gradle gets executed, takes the native dependencies of

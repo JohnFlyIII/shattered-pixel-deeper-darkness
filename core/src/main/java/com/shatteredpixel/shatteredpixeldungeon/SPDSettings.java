@@ -453,6 +453,10 @@ public class SPDSettings extends GameSettings {
 	public static final String KEY_WINDOW_HEIGHT    = "window_height";
 	public static final String KEY_WINDOW_MAXIMIZED = "window_maximized";
 	public static final String KEY_FULLSCREEN_MONITOR = "fullscreen_monitor";
+	
+	//Logging
+	public static final String KEY_LOCAL_LOGGING    = "local_logging";
+	public static final String KEY_REMOTE_LOGGING   = "remote_logging";
 
 	public static void windowResolution( Point p ){
 		put(KEY_WINDOW_WIDTH, p.x);
@@ -480,5 +484,23 @@ public class SPDSettings extends GameSettings {
 
 	public static int fulLScreenMonitor(){
 		return getInt( KEY_FULLSCREEN_MONITOR, 0 );
+	}
+	
+	// Logging settings methods
+	
+	public static void localLogging(boolean value) {
+		put(KEY_LOCAL_LOGGING, value);
+	}
+	
+	public static boolean localLogging() {
+		return getBoolean(KEY_LOCAL_LOGGING, false);
+	}
+	
+	public static void remoteLogging(boolean value) {
+		put(KEY_REMOTE_LOGGING, value);
+	}
+	
+	public static boolean remoteLogging() {
+		return getBoolean(KEY_REMOTE_LOGGING, false);
 	}
 }

@@ -832,6 +832,13 @@ public class WndSettings extends WndTabbed {
 		CheckBox chkUpdates;
 		CheckBox chkBetas;
 		CheckBox chkWifi;
+		
+		// Logging options
+		ColorBlock sep2;
+		RenderedTextBlock logTitle;
+		CheckBox chkLocalLog;
+		CheckBox chkRemoteLog;
+		RenderedTextBlock logInfo;
 
 		@Override
 		protected void createChildren() {
@@ -921,7 +928,46 @@ public class WndSettings extends WndTabbed {
 				chkWifi.setRect(0, pos + GAP, width, BTN_HEIGHT);
 				pos = chkWifi.bottom();
 			}
-
+			
+			// Logging options
+			sep2 = new ColorBlock(1, 1, 0xFF000000);
+			sep2.size(width, 1);
+			sep2.y = pos + GAP*2;
+			add(sep2);
+			
+			logTitle = PixelScene.renderTextBlock(Messages.get(this, "logging_options"), 9);
+			logTitle.setPos((width - logTitle.width())/2, sep2.y + GAP*2);
+			add(logTitle);
+			
+			chkLocalLog = new CheckBox(Messages.get(this, "local_logging")) {
+				@Override
+				protected void onClick() {
+					super.onClick();
+					SPDSettings.localLogging(checked());
+				}
+			};
+			chkLocalLog.checked(SPDSettings.localLogging());
+			chkLocalLog.setRect(0, logTitle.bottom() + GAP*2, width, BTN_HEIGHT);
+			add(chkLocalLog);
+			
+			chkRemoteLog = new CheckBox(Messages.get(this, "remote_logging")) {
+				@Override
+				protected void onClick() {
+					super.onClick();
+					SPDSettings.remoteLogging(checked());
+				}
+			};
+			chkRemoteLog.checked(SPDSettings.remoteLogging());
+			chkRemoteLog.setRect(0, chkLocalLog.bottom() + GAP, width, BTN_HEIGHT);
+			add(chkRemoteLog);
+			
+			logInfo = PixelScene.renderTextBlock(Messages.get(this, "logging_info"), 6);
+			logInfo.maxWidth((int)width);
+			logInfo.setPos(0, chkRemoteLog.bottom() + GAP);
+			add(logInfo);
+			
+			pos = logInfo.bottom();
+			
 			height = pos;
 
 		}
