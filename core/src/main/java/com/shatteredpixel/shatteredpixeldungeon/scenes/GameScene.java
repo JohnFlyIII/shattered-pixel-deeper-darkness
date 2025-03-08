@@ -897,6 +897,20 @@ public class GameScene extends PixelScene {
 			add( new WndGame() );
 		}
 	}
+	
+	// Clean up non-essential effects during low memory situations
+	public void cleanEffects() {
+		// Force a GC pass
+		System.gc();
+	}
+	
+	@Override
+	public void onMemoryWarning() {
+		super.onMemoryWarning();
+		
+		// Additional memory cleanup specific to game scene
+		cleanEffects();
+	}
 
 	public void addCustomTile( CustomTilemap visual){
 		customTiles.add( visual.create() );

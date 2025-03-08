@@ -171,4 +171,21 @@ public class AndroidLauncher extends AndroidApplication {
 		super.onMultiWindowModeChanged(isInMultiWindowMode);
 		support.updateSystemUI();
 	}
+	
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		if (ShatteredPixelDungeon.instance != null) {
+			ShatteredPixelDungeon.instance.onMemoryWarning();
+		}
+	}
+	
+	@Override
+	public void onTrimMemory(int level) {
+		super.onTrimMemory(level);
+		// TRIM_MEMORY_MODERATE = 60, TRIM_MEMORY_COMPLETE = 80
+		if (level >= TRIM_MEMORY_MODERATE && ShatteredPixelDungeon.instance != null) {
+			ShatteredPixelDungeon.instance.onMemoryWarning();
+		}
+	}
 }

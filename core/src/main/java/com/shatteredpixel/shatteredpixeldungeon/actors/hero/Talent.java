@@ -1120,7 +1120,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, VARIED_CHARGE, ENHANCED_RINGS, WAND_PRESERVATION);
 				break;
 			case MACHINIST:
-				Collections.addAll(tierTalents, FARSIGHT, SOUL_EATER, MYSTICAL_CHARGE);
+				Collections.addAll(tierTalents, FARSIGHT, RUNIC_TRANSFERENCE, WIDE_SEARCH);
 				break;
 		}
 		for (Talent talent : tierTalents){

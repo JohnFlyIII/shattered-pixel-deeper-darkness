@@ -36,6 +36,9 @@ android {
             //This makes release APKs smaller and more efficient, but also makes debugging trickier
             //as the information produced in stack traces must be de-obfuscated.
             //See here: https://developer.android.com/studio/build/shrink-code#decode-stack-trace
+            //
+            //R8 full mode is enabled in gradle.properties for better optimization
+            //Enhanced ProGuard rules are defined in proguard-rules.pro to ensure stability
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -59,19 +62,18 @@ configurations { natives }
 dependencies {
     implementation project(':core')
 
-    // We are using the natives from 1.11.0 to maintain compatibility with Android 4.0-4.3 for now
-    // The 1.12.0+ natives are compiled with a version of the NDK which drops 4.3- support
-    // YES, THIS IS VERY DANGEROUS! 1.11.0 natives may only incidentally work with later libGDX versions
+    // Updated to use the natives from the current gdxVersion to ensure compatibility and stability
+    // Note: This drops support for Android 4.0-4.3 (API levels 14-18), minimum supported version is now Android 4.4+ (API 19+)
     implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
-    natives "com.badlogicgames.gdx:gdx-platform:1.11.0:natives-armeabi-v7a"
-    natives "com.badlogicgames.gdx:gdx-platform:1.11.0:natives-arm64-v8a"
-    natives "com.badlogicgames.gdx:gdx-platform:1.11.0:natives-x86"
-    natives "com.badlogicgames.gdx:gdx-platform:1.11.0:natives-x86_64"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
     implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.11.0:natives-armeabi-v7a"
-    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.11.0:natives-arm64-v8a"
-    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.11.0:natives-x86"
-    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.11.0:natives-x86_64"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
     implementation "com.badlogicgames.gdx-controllers:gdx-controllers-android:$gdxControllersVersion"
 }
 

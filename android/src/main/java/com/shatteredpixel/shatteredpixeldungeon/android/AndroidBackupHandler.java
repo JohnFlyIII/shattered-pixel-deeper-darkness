@@ -37,13 +37,13 @@ import java.io.File;
 //a handler for android backup requests
 public class AndroidBackupHandler extends BackupAgent {
 	
-	//Both of these do nothing. This handler is here to support use of android 4.0+ ADB backup
-	//and android 6.0+ auto-backup. It does not support android 2.2+ key-value backup
+	//Both of these do nothing. This handler is here to support use of android 4.4+ ADB backup
+	//and android 6.0+ auto-backup. It does not support older key-value backup
 	public void onBackup(ParcelFileDescriptor oldState, BackupDataOutput data, ParcelFileDescriptor newState) {}
 	public void onRestore(BackupDataInput data, int appVersionCode, ParcelFileDescriptor newState) {}
 	
 	@Override
-	@TargetApi(14)
+	@TargetApi(19)
 	public void onFullBackup(FullBackupDataOutput data) {
 		//fully overrides super.onFullBackup, meaning only files specified here are backed up
 		

@@ -50,8 +50,11 @@ public class ShatteredPixelDungeon extends Game {
 	
 	public static final int v1_0_0 = 831;
 	
+	public static ShatteredPixelDungeon instance;
+	
 	public ShatteredPixelDungeon( PlatformSupport platform ) {
 		super( sceneClass == null ? WelcomeScene.class : sceneClass, platform );
+		instance = this;
 
 		//pre-v2.5.2
 		com.watabou.utils.Bundle.addAlias(
@@ -208,5 +211,18 @@ public class ShatteredPixelDungeon extends Game {
 
 	public static void updateSystemUI() {
 		platform.updateSystemUI();
+	}
+	
+	// Called when the system is running low on memory
+	public void onMemoryWarning() {
+		if (scene() instanceof PixelScene) {
+			((PixelScene)scene()).onMemoryWarning();
+		}
+		// Clear non-essential caches
+		com.watabou.gltextures.TextureCache.clear();
+		com.watabou.utils.BitmapCache.clear();
+		
+		// Force a garbage collection
+		System.gc();
 	}
 }

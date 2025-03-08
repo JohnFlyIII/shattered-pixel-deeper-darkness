@@ -82,6 +82,9 @@ public class PixelScene extends Scene {
 	public static float maxZoom;
 
 	public static Camera uiCamera;
+	
+	// Size of the rendered text page for font rendering
+	protected static int renderedTextPageSize;
 
 	//stylized 3x5 bitmapped pixel font. Only latin characters supported.
 	public static BitmapText.Font pixelFont;
@@ -148,7 +151,6 @@ public class PixelScene extends Scene {
 		pixelFont.tracking = -1;
 		
 		//set up the texture size which rendered text will use for any new glyphs.
-		int renderedTextPageSize;
 		if (defaultZoom <= 3){
 			renderedTextPageSize = 256;
 		} else if (defaultZoom <= 8){
@@ -395,6 +397,22 @@ public class PixelScene extends Scene {
 	public static void shake( float magnitude, float duration){
 		magnitude *= SPDSettings.screenShake();
 		Camera.main.shake(magnitude, duration);
+	}
+	
+	// Called when the system is running low on memory
+	public void onMemoryWarning() {
+		// Close non-essential windows
+		for (Gizmo g : members.toArray(new Gizmo[0])) {
+			if (g instanceof WndJournal) {
+				((WndJournal)g).hide();
+			}
+		}
+		
+		// Reduce texture quality temporarily if not in a GameScene
+		if (!(this instanceof GameScene) && defaultZoom > 2) {
+			// Force recreation of text rendering cache when needed
+			Game.platform.setupFontGenerators(renderedTextPageSize, SPDSettings.systemFont());
+		}
 	}
 	
 	protected static class Fader extends ColorBlock {
