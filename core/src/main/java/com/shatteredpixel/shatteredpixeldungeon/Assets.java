@@ -22,6 +22,13 @@
 package com.shatteredpixel.shatteredpixeldungeon;
 
 public class Assets {
+    
+    // Default fallback assets for missing resources
+    public static class Defaults {
+        public static final String TEXTURE = "placeholders/missing_texture.png";
+        public static final String SOUND = "placeholders/missing_sound.mp3";
+        public static final String MUSIC = "placeholders/missing_music.ogg";
+    }
 
 	public static class Effects {
 		public static final String EFFECTS      = "effects/effects.png";

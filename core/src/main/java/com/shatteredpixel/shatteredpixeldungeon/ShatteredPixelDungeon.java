@@ -132,6 +132,9 @@ public class ShatteredPixelDungeon extends Game {
 		updateSystemUI();
 		SPDAction.loadBindings();
 		
+		// Initialize the safe asset loading system
+		com.shatteredpixel.shatteredpixeldungeon.utils.AssetLoader.init();
+		
 		Music.INSTANCE.enable( SPDSettings.music() );
 		Music.INSTANCE.volume( SPDSettings.musicVol()*SPDSettings.musicVol()/100f );
 		Sample.INSTANCE.enable( SPDSettings.soundFx() );
