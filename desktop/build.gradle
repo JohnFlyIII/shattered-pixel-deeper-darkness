@@ -1,11 +1,23 @@
 plugins {
     id 'org.beryx.runtime' version '1.12.7'
+    id 'application' // Add application plugin
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-sourceCompatibility = targetCompatibility = appJavaCompatibility
+
+// Modern way to set Java compatibility
+java {
+    sourceCompatibility = appJavaCompatibility
+    targetCompatibility = appJavaCompatibility
+}
 
 ext.appMainClass = "com.shatteredpixel.shatteredpixeldungeon.desktop.DesktopLauncher"
+
+// Set mainClass for application plugin
+application {
+    mainClass = appMainClass
+}
+
 processResources {
     from new File(project(':core').projectDir, "/src/main/assets")
     from new File(project(':desktop').projectDir,"/src/main/assets")
@@ -17,7 +29,8 @@ task debug(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     ignoreExitValue = true
 
-    main = appMainClass
+    // Replace deprecated main property with mainClass
+    mainClass = appMainClass
     systemProperty 'Specification-Title', appName
     systemProperty 'Implementation-Title', appPackageName
     systemProperty 'Specification-Version', appVersionName + "-INDEV"
@@ -46,6 +59,11 @@ task release(type: Jar) {
 installDist.dependsOn release
 startScripts.dependsOn release
 jpackageImage.dependsOn release
+
+// Fix CreateStartScripts mainClassName deprecation
+tasks.withType(CreateStartScripts).configureEach {
+    mainClass = project.appMainClass
+}
 
 runtime {
     modules = ['java.base',
@@ -101,7 +119,6 @@ runtime {
             }
         }
     }
-
 }
 
 dependencies {

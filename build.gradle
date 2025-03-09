@@ -12,7 +12,6 @@ buildscript {
 }
 
 allprojects {
-
     ext {
         appName = 'Shattered Pixel Dungeon Deeper Darkness'
         appPackageName = 'com.johnfly.deeperdarkness'
@@ -20,22 +19,51 @@ allprojects {
         appVersionCode = 832
         appVersionName = '1.0.0'
 
-        appJavaCompatibility = JavaVersion.VERSION_11
+        // Updated Java compatibility
+        appJavaCompatibility = JavaVersion.VERSION_17
 
+        // Updated Android SDK targets
         appAndroidCompileSDK = 34
-        appAndroidMinSDK = 19
+        appAndroidMinSDK = 21  // Raised from 19
         appAndroidTargetSDK = 34
 
+        // Updated dependencies
         gdxVersion = '1.12.1'
         gdxControllersVersion = '2.2.4-SNAPSHOT'
         robovmVersion = '2.3.21'
     }
+    
     version = appVersionName
 
     repositories {
+        // Put snapshots repository first for gdx-controllers
+        maven { 
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+            content {
+                includeGroup "com.badlogicgames.gdx-controllers"
+            }
+        }
+        
+        // Then the other repositories
         google()
         mavenCentral()
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
 
+    // Added compiler options for warnings
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:deprecation"
+        options.compilerArgs << "-Xlint:unchecked"
+        options.deprecation = true
+    }
+}
+
+// Clean task for all projects
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+tasks.withType(CreateStartScripts).configureEach {
+    // Replace any usage of mainClassName with mainClass.set()
+    mainClass.set(project.mainClassName)
 }

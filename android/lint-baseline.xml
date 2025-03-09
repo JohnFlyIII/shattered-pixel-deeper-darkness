@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.8.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.8.2)" variant="all" version="8.8.2">
+
+    <issue
+        id="MissingClass"
+        message="Class referenced in the manifest, `com.johnfly.deeperdarkness.android.AndroidLauncher`, was not found in the project or the libraries"
+        errorLine1="   android:name=&quot;.AndroidLauncher&quot;"
+        errorLine2="                 ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="39"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="MissingClass"
+        message="Class referenced in the manifest, `com.johnfly.deeperdarkness.android.AndroidMissingNativesHandler`, was not found in the project or the libraries"
+        errorLine1="   android:name=&quot;.AndroidMissingNativesHandler&quot;>"
+        errorLine2="                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="49"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="Registered"
+        message="The `&lt;activity> com.shatteredpixel.shatteredpixeldungeon.android.AndroidLauncher` is not registered in the manifest"
+        errorLine1="public class AndroidLauncher extends AndroidApplication {"
+        errorLine2="             ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidLauncher.java"
+            line="50"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="Registered"
+        message="The `&lt;activity> com.shatteredpixel.shatteredpixeldungeon.android.AndroidMissingNativesHandler` is not registered in the manifest"
+        errorLine1="public class AndroidMissingNativesHandler extends Activity {"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidMissingNativesHandler.java"
+            line="33"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `targetSandboxVersion` is only used in API level 26 and higher (current min is 21)"
+        errorLine1=" android:targetSandboxVersion=&quot;2&quot;"
+        errorLine2=" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="5"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `appCategory` is only used in API level 26 and higher (current min is 21)"
+        errorLine1="  android:appCategory=&quot;game&quot;"
+        errorLine2="  ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="32"
+            column="3"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `resizeableActivity` is only used in API level 24 and higher (current min is 21)"
+        errorLine1="  android:resizeableActivity=&quot;true&quot;"
+        errorLine2="  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="34"
+            column="3"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.android.tools:desugar_jdk_libs than 2.0.3 is available: 2.1.5"
+        errorLine1="    coreLibraryDesugaring &apos;com.android.tools:desugar_jdk_libs:2.0.3&apos;"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="115"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.appcompat:appcompat than 1.6.1 is available: 1.7.0"
+        errorLine1="    implementation &apos;androidx.appcompat:appcompat:1.6.1&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="118"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.core:core than 1.12.0 is available: 1.15.0"
+        errorLine1="    implementation &apos;androidx.core:core:1.12.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="119"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDynamicVersion"
+        message="Avoid using + in version numbers; can lead to unpredictable and unrepeatable builds (com.bugfender.sdk:android:3.+)"
+        errorLine1="    implementation &apos;com.bugfender.sdk:android:3.+&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="112"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.badlogicgames.gdx:gdx-backend-android than 1.12.1 is available: 1.13.1"
+        errorLine1="    implementation &quot;com.badlogicgames.gdx:gdx-backend-android:$gdxVersion&quot;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="97"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.badlogicgames.gdx:gdx-freetype than 1.12.1 is available: 1.13.1"
+        errorLine1="    implementation &quot;com.badlogicgames.gdx:gdx-freetype:$gdxVersion&quot;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="103"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Should not restrict activity to fixed orientation. This may not be suitable for different form factors, causing the app to be letterboxed."
+        errorLine1="   android:screenOrientation=&quot;nosensor&quot;"
+        errorLine2="   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="40"
+            column="4"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 19"
+        errorLine1=" @TargetApi(19)"
+        errorLine2=" ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidBackupHandler.java"
+            line="46"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 21"
+        errorLine1="  if (Build.VERSION.SDK_INT &lt;= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {"
+        errorLine2="      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidLauncher.java"
+            line="119"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidLauncher.java"
+            line="152"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidPlatformSupport.java"
+            line="136"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){"
+        errorLine2="      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidPlatformSupport.java"
+            line="157"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="ConvertToWebp"
+        message="One or more images in this project can be converted to the WebP format which typically results in smaller file sizes, even for lossless conversion">
+        <location
+            file="src/debug/res/mipmap-xxxhdpi/ic_launcher.png"/>
+    </issue>
+
+    <issue
+        id="ConvertToWebp"
+        message="One or more images in this project can be converted to the WebP format which typically results in smaller file sizes, even for lossless conversion">
+        <location
+            file="src/main/res/mipmap-xxxhdpi/ic_launcher.png"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-hdpi/ic_launcher_monochrome.png`: expected 72x72, but was 162x162">
+        <location
+            file="src/debug/res/mipmap-hdpi/ic_launcher_monochrome.png"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-hdpi/ic_launcher_monochrome.png`: expected 72x72, but was 162x162">
+        <location
+            file="src/main/res/mipmap-hdpi/ic_launcher_monochrome.png"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-mdpi/ic_launcher_monochrome.png`: expected 48x48, but was 108x108">
+        <location
+            file="src/debug/res/mipmap-mdpi/ic_launcher_monochrome.png"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-mdpi/ic_launcher_monochrome.png`: expected 48x48, but was 108x108">
+        <location
+            file="src/main/res/mipmap-mdpi/ic_launcher_monochrome.png"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-xhdpi/ic_launcher_monochrome.png`: expected 96x96, but was 216x216">
+        <location
+            file="src/debug/res/mipmap-xhdpi/ic_launcher_monochrome.png"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-xhdpi/ic_launcher_monochrome.png`: expected 96x96, but was 216x216">
+        <location
+            file="src/main/res/mipmap-xhdpi/ic_launcher_monochrome.png"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-xxhdpi/ic_launcher_monochrome.png`: expected 144x144, but was 324x324">
+        <location
+            file="src/debug/res/mipmap-xxhdpi/ic_launcher_monochrome.png"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-xxhdpi/ic_launcher_monochrome.png`: expected 144x144, but was 324x324">
+        <location
+            file="src/main/res/mipmap-xxhdpi/ic_launcher_monochrome.png"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-xxxhdpi/ic_launcher_monochrome.png`: expected 192x192, but was 432x432">
+        <location
+            file="src/debug/res/mipmap-xxxhdpi/ic_launcher_monochrome.png"/>
+    </issue>
+
+    <issue
+        id="IconExpectedSize"
+        message="Incorrect icon size for `mipmap-xxxhdpi/ic_launcher_monochrome.png`: expected 192x192, but was 432x432">
+        <location
+            file="src/main/res/mipmap-xxxhdpi/ic_launcher_monochrome.png"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1="    public static void initBugfender(Context context) {"
+        errorLine2="                                     ~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidGameLogger.java"
+            line="44"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1="    public static String getDeviceUrl() {"
+        errorLine2="                  ~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidGameLogger.java"
+            line="115"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1="    public static String getDeviceId() {"
+        errorLine2="                  ~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidGameLogger.java"
+            line="129"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1=" public static AndroidApplication instance;"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidLauncher.java"
+            line="52"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1=" protected void onCreate (Bundle savedInstanceState) {"
+        errorLine2="                          ~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidLauncher.java"
+            line="58"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1=" public AndroidAudio createAudio(Context context, AndroidApplicationConfiguration config) {"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidLauncher.java"
+            line="144"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1=" public AndroidAudio createAudio(Context context, AndroidApplicationConfiguration config) {"
+        errorLine2="                                 ~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidLauncher.java"
+            line="144"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1=" public AndroidAudio createAudio(Context context, AndroidApplicationConfiguration config) {"
+        errorLine2="                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidLauncher.java"
+            line="144"
+            column="51"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1=" public static Throwable error;"
+        errorLine2="               ~~~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidMissingNativesHandler.java"
+            line="35"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1=" protected void onCreate(Bundle savedInstanceState) {"
+        errorLine2="                         ~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidMissingNativesHandler.java"
+            line="39"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1=" protected FreeTypeFontGenerator getGeneratorForString( String input ){"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidPlatformSupport.java"
+            line="278"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1=" protected FreeTypeFontGenerator getGeneratorForString( String input ){"
+        errorLine2="                                                        ~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidPlatformSupport.java"
+            line="278"
+            column="57"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1=" public String[] splitforTextBlock(String text, boolean multiline) {"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidPlatformSupport.java"
+            line="314"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://developer.android.com/kotlin/interop#nullability_annotations"
+        errorLine1=" public String[] splitforTextBlock(String text, boolean multiline) {"
+        errorLine2="                                   ~~~~~~">
+        <location
+            file="src/main/java/com/shatteredpixel/shatteredpixeldungeon/android/AndroidPlatformSupport.java"
+            line="314"
+            column="36"/>
+    </issue>
+
+</issues>

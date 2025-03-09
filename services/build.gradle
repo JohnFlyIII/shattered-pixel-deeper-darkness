@@ -1,4 +1,15 @@
 apply plugin: 'java-library'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-sourceCompatibility = targetCompatibility = appJavaCompatibility
+
+// Replace deprecated direct assignment with java block
+java {
+    sourceCompatibility = appJavaCompatibility
+    targetCompatibility = appJavaCompatibility
+}
+
+// Add compiler options for warnings
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:deprecation"
+    options.compilerArgs << "-Xlint:unchecked"
+}
