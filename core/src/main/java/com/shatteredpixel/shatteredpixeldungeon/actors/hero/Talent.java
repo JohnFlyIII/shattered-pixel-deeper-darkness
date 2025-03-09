@@ -59,6 +59,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HornOfPlenty;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.PocketWorkshop;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
@@ -199,6 +200,8 @@ public enum Talent {
 
 	//Artificer T1
 	FULL_TANK(192),
+	//Artificer T3
+	AETHERIC_EXPANSION(193, 3),
 
 	//universal T4
 	HEROIC_ENERGY(26, 4), //See icon() and title() for special logic for this one
@@ -566,6 +569,16 @@ public enum Talent {
 				if (item instanceof HolyTome){
 					if (!hero.belongings.lostInventory() || item.keptThroughLostInventory()) {
 						((HolyTome) item).activate(Dungeon.hero);
+					}
+				}
+			}
+		}
+
+		if (talent == AETHERIC_EXPANSION && hero.heroClass == HeroClass.ARTIFICER){
+			for (Item item : Dungeon.hero.belongings.backpack){
+				if (item instanceof PocketWorkshop){
+					if (!hero.belongings.lostInventory() || item.keptThroughLostInventory()) {
+						((PocketWorkshop) item).activate(Dungeon.hero);
 					}
 				}
 			}
@@ -1050,7 +1063,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, CLEANSE, LIGHT_READING);
 				break;
 			case ARTIFICER:
-				Collections.addAll(tierTalents, ENHANCED_RINGS, STRONGMAN);
+				Collections.addAll(tierTalents, ENHANCED_RINGS, AETHERIC_EXPANSION);
 				break;
 		}
 		for (Talent talent : tierTalents){
