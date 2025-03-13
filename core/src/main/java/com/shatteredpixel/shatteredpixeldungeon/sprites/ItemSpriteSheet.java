@@ -455,7 +455,6 @@ public class ItemSpriteSheet {
 	public static final int ARTIFACT_ROSE2      = ARTIFACTS+21;
 	public static final int ARTIFACT_ROSE3      = ARTIFACTS+22;
 	public static final int ARTIFACT_TOME       = ARTIFACTS+23;
-	public static final int ARTIFACT_WORKSHOP	= ARTIFACTS+24;
 	static{
 		assignItemRect(ARTIFACT_CLOAK,      9,  15);
 		assignItemRect(ARTIFACT_ARMBAND,    16, 13);
@@ -796,6 +795,12 @@ public class ItemSpriteSheet {
 		assignItemRect(CAVES_PAGE,  10, 11);
 		assignItemRect(CITY_PAGE,   10, 11);
 		assignItemRect(HALLS_PAGE,  10, 11);
+	}
+	
+	private static final int ARTIFACTS2  =                                  xy(1, 33);  //16 slots
+	public static final int ARTIFACT_WORKSHOP = ARTIFACTS2+0;
+	static{
+		assignItemRect(ARTIFACT_WORKSHOP,  15, 14);
 	}
 
 	//for smaller 8x8 icons that often accompany an item sprite

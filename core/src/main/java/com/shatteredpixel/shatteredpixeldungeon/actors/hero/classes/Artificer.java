@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.PocketWorkshop;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -68,6 +69,8 @@ public class Artificer extends HeroBase {
             hero.belongings.armor.affixSeal(new BrokenSeal());
             Catalog.setSeen(BrokenSeal.class);
         }
+
+        new PocketWorkshop().identify().collect();
 
         // Two potions of strength
         PotionOfStrength potion = new PotionOfStrength();
