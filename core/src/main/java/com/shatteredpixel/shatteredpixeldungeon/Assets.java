@@ -27,7 +27,9 @@ public class Assets {
     public static class Defaults {
         public static final String TEXTURE = "placeholders/missing_texture.png";
         public static final String SOUND = "placeholders/missing_sound.mp3";
-        public static final String MUSIC = "placeholders/missing_music.ogg";
+        public static final String MUSIC = "placeholders/missing_music.mp3";
+		public static final String FONT = "placeholders/missing_font.ttf";
+		public static final String SPRITE = "placeholders/missing_sprite.png";
     }
 
 	public static class Effects {
