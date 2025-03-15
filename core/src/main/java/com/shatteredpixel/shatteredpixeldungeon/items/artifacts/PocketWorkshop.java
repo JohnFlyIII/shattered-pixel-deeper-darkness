@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.utils.Random;
 import com.shatteredpixel.shatteredpixeldungeon.windows.artificer.WndArtificerSpells;
 import com.watabou.utils.Bundle;
 
@@ -133,6 +134,17 @@ public class PocketWorkshop extends Artifact {
     }
 
     public void spendCharge(float chargesSpent) {
+        // Check for Efficient Crafting talent
+        Hero hero = Dungeon.hero;
+        if (hero != null && hero.hasTalent(Talent.EFFICIENT_CRAFTING)) {
+            // 33% chance at level 1, 66% chance at level 2
+            float conserveChance = 0.33f * hero.pointsInTalent(Talent.EFFICIENT_CRAFTING);
+            if (Random.Float() < conserveChance) {
+                // Efficient crafting triggered - conserve 1 charge
+                chargesSpent = Math.max(0, chargesSpent - 1);
+            }
+        }
+        
         partialCharge -= chargesSpent;
         while (partialCharge < 0) {
             charge--;

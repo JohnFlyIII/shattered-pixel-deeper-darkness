@@ -104,9 +104,9 @@ public abstract class ArtificerSpell {
 	public void onSpellCast(PocketWorkshop pocketWorkshop, Hero hero){
 		Invisibility.dispel();
 
+		// Call spendCharge which handles Efficient Crafting talent
 		pocketWorkshop.spendCharge(chargeUse(hero));
 		Talent.onArtifactUsed(hero);
-
 	}
 
 	public static ArrayList<ArtificerSpell> getSpellList(Hero cleric, int tier){

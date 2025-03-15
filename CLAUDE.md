@@ -1,10 +1,18 @@
 # Artificer Class Implementation Notes
 
+## Installed CLI Tools
+
+- `ripgrep` (`rg`) - Fast, modern alternative to grep for searching code
+- `bat` - Cat replacement with syntax highlighting
+- `fd` - More user-friendly alternative to find
+- `jq` - JSON processor for handling data files
+
 ## Key Code Locations
 
 - Hero class definitions: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/hero/HeroClass.java`
 - Hero class implementations: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/hero/classes/`
-- Talents system: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/hero/Talent.java`
+- Talents system: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/hero/talents/Talent.java`
+- Additional talent files: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/hero/talents/` (TalentInit.java, TalentBuffs.java, TalentEffects.java, TalentSerialization.java)
 - Buffs implementation: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/buffs/`
 - Artificer spells/crafts: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/hero/spells/artificerspells/`
 - UI components: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/windows/artificer/`
