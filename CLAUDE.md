@@ -1,29 +1,37 @@
-# Artificer Abilities
+# Artificer Class Implementation Notes
 
-## Artificer T1 Talents
-- **Full Tank**: Eating food grants the Artificer X charges on magic or equipment effects
-  - +1: X=1
-  - +2: X=2
+## Key Code Locations
 
-The Full Tank talent allows the Artificer to gain charges when eating food. These charges can be used to power a wand even when it has 0 charges left.
+- Hero class definitions: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/hero/HeroClass.java`
+- Hero class implementations: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/hero/classes/`
+- Talents system: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/hero/Talent.java`
+- Buffs implementation: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/buffs/`
+- Artificer spells/crafts: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/hero/spells/artificerspells/`
+- UI components: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/windows/artificer/`
 
-## Implementation Notes
+## Implementation Strategy
 
-The talent works with the following ability types:
-- Wands: Can be used without charges
-- More equipment types to be implemented as needed:
-  - Weapon abilities
-  - Special items
-  - Rings
-  - Artifacts
+1. The Artificer class should be modeled after the Cleric in terms of mechanical structure
+2. "Crafts" should be implemented as spells mechanically, similar to Cleric spells
+3. Artificer uses PocketWorkshop artifact (similar to Cleric's HolyTome)
+4. Class-specific talents should be defined in the Talent.java enum
+5. Class-specific buffs should be added to the buffs directory
 
-## Current Progress
-- Implemented Full Tank talent
-- Implemented wand usage with Full Tank charges
-- Added talent to Artificer class
-- Updated messages for Full Tank talent
+## Development Steps
 
-## Future Enhancements
-- Expand the usage of Full Tank to work with other equipment types
-- Add more unique Artificer talents
-- Create T3 and T4 abilities to let the Artificer craft allies
+1. Define Artificer class abilities (already started in Artificer.java)
+2. Complete ArtificerSpell base class and spells under artificerspells/ directory
+3. Create class-specific talents in Talent.java
+4. Implement buffs for talents and abilities
+5. Finalize UI components for craft selection/management
+6. Add sprites and visual assets
+7. Implement subclasses and their mechanics
+
+## Reference Points
+
+- Use Cleric's implementation as a template:
+  - Cleric.java -> Artificer.java
+  - ClericSpell.java -> ArtificerSpell.java
+  - Cleric's spells -> Artificer's crafts
+  - HolyTome artifact -> PocketWorkshop artifact
+- Follow similar UI patterns in WndArtificerSpells.java

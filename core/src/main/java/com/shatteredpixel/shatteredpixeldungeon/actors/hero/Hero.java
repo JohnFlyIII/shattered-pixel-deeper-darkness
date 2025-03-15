@@ -180,10 +180,12 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+
 
 public class Hero extends Char {
 
