@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Ghoul;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
@@ -209,9 +210,9 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 
 		if (target instanceof Hero && ((Hero) target).hasTalent(Talent.COMBINED_ENERGY)
 				&& abil.energyCost() >= 5-((Hero) target).pointsInTalent(Talent.COMBINED_ENERGY)) {
-			Talent.CombinedEnergyAbilityTracker tracker = target.buff(Talent.CombinedEnergyAbilityTracker.class);
+			TalentBuffs.CombinedEnergyAbilityTracker tracker = target.buff(TalentBuffs.CombinedEnergyAbilityTracker.class);
 			if (tracker == null || !tracker.wepAbilUsed){
-				Buff.prolong(target, Talent.CombinedEnergyAbilityTracker.class, 5f).monkAbilused = true;
+				Buff.prolong(target, TalentBuffs.CombinedEnergyAbilityTracker.class, 5f).monkAbilused = true;
 			} else {
 				tracker.monkAbilused = true;
 				processCombinedEnergy(tracker);
@@ -231,7 +232,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 		return energy/energyCap() >= 1.2f - 0.2f*hero.pointsInTalent(Talent.MONASTIC_VIGOR);
 	}
 
-	public void processCombinedEnergy(Talent.CombinedEnergyAbilityTracker tracker){
+	public void processCombinedEnergy(TalentBuffs.CombinedEnergyAbilityTracker tracker){
 		energy = Math.min(energy+1, energyCap());
 		tracker.detach();
 		if (energy >= 1){

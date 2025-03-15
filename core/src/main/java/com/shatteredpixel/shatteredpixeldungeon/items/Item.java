@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
@@ -655,15 +656,15 @@ public class Item implements Bundlable {
 							if (i != null) i.onThrow(cell);
 							if (curUser.hasTalent(Talent.IMPROVISED_PROJECTILES)
 									&& !(Item.this instanceof MissileWeapon)
-									&& curUser.buff(Talent.ImprovisedProjectileCooldown.class) == null){
+									&& curUser.buff(TalentBuffs.ImprovisedProjectileCooldown.class) == null){
 								if (enemy != null && enemy.alignment != curUser.alignment){
 									Sample.INSTANCE.play(Assets.Sounds.HIT);
 									Buff.affect(enemy, Blindness.class, 1f + curUser.pointsInTalent(Talent.IMPROVISED_PROJECTILES));
-									Buff.affect(curUser, Talent.ImprovisedProjectileCooldown.class, 50f);
+									Buff.affect(curUser, TalentBuffs.ImprovisedProjectileCooldown.class, 50f);
 								}
 							}
-							if (user.buff(Talent.LethalMomentumTracker.class) != null){
-								user.buff(Talent.LethalMomentumTracker.class).detach();
+							if (user.buff(TalentBuffs.LethalMomentumTracker.class) != null){
+								user.buff(TalentBuffs.LethalMomentumTracker.class).detach();
 								user.next();
 							} else {
 								user.spendAndNext(delay);

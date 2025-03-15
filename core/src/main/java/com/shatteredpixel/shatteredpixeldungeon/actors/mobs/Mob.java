@@ -57,6 +57,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue.Shad
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ClericSpell;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.GuidingLight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Stasis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.DirectableAlly;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -882,12 +883,12 @@ public abstract class Mob extends Char {
 			if (cause == Dungeon.hero || cause instanceof Weapon || cause instanceof Weapon.Enchantment){
 				if (Dungeon.hero.hasTalent(Talent.LETHAL_MOMENTUM)
 						&& Random.Float() < 0.34f + 0.33f* Dungeon.hero.pointsInTalent(Talent.LETHAL_MOMENTUM)){
-					Buff.affect(Dungeon.hero, Talent.LethalMomentumTracker.class, 0f);
+					Buff.affect(Dungeon.hero, TalentBuffs.LethalMomentumTracker.class, 0f);
 				}
 				if (Dungeon.hero.heroClass != HeroClass.DUELIST
 						&& Dungeon.hero.hasTalent(Talent.LETHAL_HASTE)
-						&& Dungeon.hero.buff(Talent.LethalHasteCooldown.class) == null){
-					Buff.affect(Dungeon.hero, Talent.LethalHasteCooldown.class, 100f);
+						&& Dungeon.hero.buff(TalentBuffs.LethalHasteCooldown.class) == null){
+					Buff.affect(Dungeon.hero, TalentBuffs.LethalHasteCooldown.class, 100f);
 					Buff.affect(Dungeon.hero, GreaterHaste.class).set(2 + 2*Dungeon.hero.pointsInTalent(Talent.LETHAL_HASTE));
 				}
 			}
@@ -921,7 +922,7 @@ public abstract class Mob extends Char {
 
 		float dropBonus = RingOfWealth.dropChanceMultiplier( Dungeon.hero );
 
-		Talent.BountyHunterTracker bhTracker = Dungeon.hero.buff(Talent.BountyHunterTracker.class);
+		TalentBuffs.BountyHunterTracker bhTracker = Dungeon.hero.buff(TalentBuffs.BountyHunterTracker.class);
 		if (bhTracker != null){
 			Preparation prep = Dungeon.hero.buff(Preparation.class);
 			if (prep != null){

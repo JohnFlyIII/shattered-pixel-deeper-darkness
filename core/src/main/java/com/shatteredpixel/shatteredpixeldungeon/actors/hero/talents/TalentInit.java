@@ -21,33 +21,37 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
-import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 /**
- * Class that handles initialization and loading of hero talents
+ * Class handling initialization of talents for heroes
  */
-public class TalentInitializer {
+public class TalentInit {
 
+    /**
+     * Initialize talents for the hero
+     */
     public static void initClassTalents(Hero hero) {
         initClassTalents(hero.heroClass, hero.talents, hero.metamorphedTalents);
     }
 
+    /**
+     * Initialize talents for a class
+     */
     public static void initClassTalents(HeroClass cls, ArrayList<LinkedHashMap<Talent, Integer>> talents) {
         initClassTalents(cls, talents, new LinkedHashMap<>());
     }
 
+    /**
+     * Initialize talents for a class with potential replacements (for metamorphosis)
+     */
     public static void initClassTalents(HeroClass cls, ArrayList<LinkedHashMap<Talent, Integer>> talents, LinkedHashMap<Talent, Talent> replacements) {
         while (talents.size() < Talent.MAX_TALENT_TIERS) {
             talents.add(new LinkedHashMap<>());
@@ -158,10 +162,16 @@ public class TalentInitializer {
         //TBD
     }
 
+    /**
+     * Initialize subclass talents for the hero
+     */
     public static void initSubclassTalents(Hero hero) {
         initSubclassTalents(hero.subClass, hero.talents);
     }
 
+    /**
+     * Initialize talents for a subclass
+     */
     public static void initSubclassTalents(HeroSubClass cls, ArrayList<LinkedHashMap<Talent, Integer>> talents) {
         if (cls == HeroSubClass.NONE) return;
 
@@ -223,10 +233,16 @@ public class TalentInitializer {
         tierTalents.clear();
     }
 
+    /**
+     * Initialize armor ability talents for the hero
+     */
     public static void initArmorTalents(Hero hero) {
         initArmorTalents(hero.armorAbility, hero.talents);
     }
 
+    /**
+     * Initialize armor ability talents
+     */
     public static void initArmorTalents(ArmorAbility abil, ArrayList<LinkedHashMap<Talent, Integer>> talents) {
         if (abil == null) return;
 
@@ -236,104 +252,6 @@ public class TalentInitializer {
 
         for (Talent t : abil.talents()) {
             talents.get(3).put(t, 0);
-        }
-    }
-
-    private static final HashSet<String> removedTalents = new HashSet<>();
-    static {
-        //v2.4.0
-        removedTalents.add("TEST_SUBJECT");
-        removedTalents.add("TESTED_HYPOTHESIS");
-        //v2.2.0
-        removedTalents.add("EMPOWERING_SCROLLS");
-    }
-
-    private static final HashMap<String, String> renamedTalents = new HashMap<>();
-    static {
-        //v2.4.0
-        renamedTalents.put("SECONDARY_CHARGE", "VARIED_CHARGE");
-
-        //v2.2.0
-        renamedTalents.put("RESTORED_WILLPOWER", "LIQUID_WILLPOWER");
-        renamedTalents.put("ENERGIZING_UPGRADE", "INSCRIBED_POWER");
-        renamedTalents.put("MYSTICAL_UPGRADE", "INSCRIBED_STEALTH");
-        renamedTalents.put("RESTORED_NATURE", "LIQUID_NATURE");
-        renamedTalents.put("RESTORED_AGILITY", "LIQUID_AGILITY");
-        //v2.1.0
-        renamedTalents.put("LIGHTWEIGHT_CHARGE", "PRECISE_ASSAULT");
-        //v2.0.0 BETA
-        renamedTalents.put("LIGHTLY_ARMED", "UNENCUMBERED_SPIRIT");
-        //v2.0.0
-        renamedTalents.put("ARMSMASTERS_INTUITION", "VETERANS_INTUITION");
-    }
-
-    private static final String TALENT_TIER = "talents_tier_";
-    private static final String REPLACEMENTS = "replacements";
-    
-    public static void storeTalentsInBundle(Bundle bundle, Hero hero) {
-        for (int i = 0; i < Talent.MAX_TALENT_TIERS; i++) {
-            LinkedHashMap<Talent, Integer> tier = hero.talents.get(i);
-            Bundle tierBundle = new Bundle();
-
-            for (Talent talent : tier.keySet()) {
-                if (tier.get(talent) > 0) {
-                    tierBundle.put(talent.name(), tier.get(talent));
-                }
-                if (tierBundle.contains(talent.name())) {
-                    tier.put(talent, Math.min(tierBundle.getInt(talent.name()), talent.maxPoints()));
-                }
-            }
-            bundle.put(TALENT_TIER + (i + 1), tierBundle);
-        }
-
-        Bundle replacementsBundle = new Bundle();
-        for (Talent t : hero.metamorphedTalents.keySet()) {
-            replacementsBundle.put(t.name(), hero.metamorphedTalents.get(t));
-        }
-        bundle.put(REPLACEMENTS, replacementsBundle);
-    }
-
-    public static void restoreTalentsFromBundle(Bundle bundle, Hero hero) {
-        if (bundle.contains(REPLACEMENTS)) {
-            Bundle replacements = bundle.getBundle(REPLACEMENTS);
-            for (String key : replacements.getKeys()) {
-                String value = replacements.getString(key);
-                if (renamedTalents.containsKey(key)) key = renamedTalents.get(key);
-                if (renamedTalents.containsKey(value)) value = renamedTalents.get(value);
-                if (!removedTalents.contains(key) && !removedTalents.contains(value)) {
-                    try {
-                        hero.metamorphedTalents.put(Talent.valueOf(key), Talent.valueOf(value));
-                    } catch (Exception e) {
-                        ShatteredPixelDungeon.reportException(e);
-                    }
-                }
-            }
-        }
-
-        if (hero.heroClass != null) initClassTalents(hero);
-        if (hero.subClass != null) initSubclassTalents(hero);
-        if (hero.armorAbility != null) initArmorTalents(hero);
-
-        for (int i = 0; i < Talent.MAX_TALENT_TIERS; i++) {
-            LinkedHashMap<Talent, Integer> tier = hero.talents.get(i);
-            Bundle tierBundle = bundle.contains(TALENT_TIER + (i + 1)) ? bundle.getBundle(TALENT_TIER + (i + 1)) : null;
-
-            if (tierBundle != null) {
-                for (String tName : tierBundle.getKeys()) {
-                    int points = tierBundle.getInt(tName);
-                    if (renamedTalents.containsKey(tName)) tName = renamedTalents.get(tName);
-                    if (!removedTalents.contains(tName)) {
-                        try {
-                            Talent talent = Talent.valueOf(tName);
-                            if (tier.containsKey(talent)) {
-                                tier.put(talent, Math.min(points, talent.maxPoints()));
-                            }
-                        } catch (Exception e) {
-                            ShatteredPixelDungeon.reportException(e);
-                        }
-                    }
-                }
-            }
         }
     }
 }

@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HoldFast;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -259,7 +260,7 @@ public class Toolbar extends Component {
 							Buff.affect(Dungeon.hero, HoldFast.class).pos = Dungeon.hero.pos;
 						}
 						if (Dungeon.hero.hasTalent(Talent.PATIENT_STRIKE)){
-							Buff.affect(Dungeon.hero, Talent.PatientStrikeTracker.class).pos = Dungeon.hero.pos;
+							Buff.affect(Dungeon.hero, TalentBuffs.PatientStrikeTracker.class).pos = Dungeon.hero.pos;
 						}
 						Dungeon.hero.next();
 					} else {

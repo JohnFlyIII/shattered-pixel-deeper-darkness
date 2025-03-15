@@ -45,6 +45,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.mage.WildMagic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.DivineSense;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.GuidingLight;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
@@ -142,7 +143,7 @@ public abstract class Wand extends Item {
 
 	//not affected by enchantment proc chance changers
 	public static float procChanceMultiplier( Char attacker ){
-		if (attacker.buff(Talent.EmpoweredStrikeTracker.class) != null){
+		if (attacker.buff(TalentBuffs.EmpoweredStrikeTracker.class) != null){
 			return 1f + ((Hero)attacker).pointsInTalent(Talent.EMPOWERED_STRIKE)/2f;
 		}
 		return 1f;
@@ -237,9 +238,9 @@ public abstract class Wand extends Item {
 		if (target.alignment != Char.Alignment.ALLY
 				&& Dungeon.hero.heroClass != HeroClass.CLERIC
 				&& Dungeon.hero.hasTalent(Talent.SEARING_LIGHT)
-				&& Dungeon.hero.buff(Talent.SearingLightCooldown.class) == null){
+				&& Dungeon.hero.buff(TalentBuffs.SearingLightCooldown.class) == null){
 			Buff.affect(target, GuidingLight.Illuminated.class);
-			Buff.affect(Dungeon.hero, Talent.SearingLightCooldown.class, 20f);
+			Buff.affect(Dungeon.hero, TalentBuffs.SearingLightCooldown.class, 20f);
 		}
 
 		if (target.alignment != Char.Alignment.ALLY
@@ -531,13 +532,13 @@ public abstract class Wand extends Item {
 				&& charger != null && charger.target == Dungeon.hero
 				&& !Dungeon.hero.belongings.contains(this)){
 
-			Buff.prolong(Dungeon.hero, Talent.EmpoweredStrikeTracker.class, 10f);
+			Buff.prolong(Dungeon.hero, TalentBuffs.EmpoweredStrikeTracker.class, 10f);
 		}
 
 		if (Dungeon.hero.hasTalent(Talent.LINGERING_MAGIC)
 				&& charger != null && charger.target == Dungeon.hero){
 
-			Buff.prolong(Dungeon.hero, Talent.LingeringMagicTracker.class, 5f);
+			Buff.prolong(Dungeon.hero, TalentBuffs.LingeringMagicTracker.class, 5f);
 		}
 
 		if (Dungeon.hero.heroClass != HeroClass.CLERIC

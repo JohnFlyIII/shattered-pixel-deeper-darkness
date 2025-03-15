@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -169,7 +170,7 @@ public class MagesStaff extends MeleeWeapon {
 			ArtifactRecharge.chargeArtifacts(hero, hero.pointsInTalent(Talent.MYSTICAL_CHARGE)/2f);
 		}
 
-		Talent.EmpoweredStrikeTracker empoweredStrike = attacker.buff(Talent.EmpoweredStrikeTracker.class);
+		TalentBuffs.EmpoweredStrikeTracker empoweredStrike = attacker.buff(TalentBuffs.EmpoweredStrikeTracker.class);
 		if (empoweredStrike != null){
 			damage = Math.round( damage * (1f + Dungeon.hero.pointsInTalent(Talent.EMPOWERED_STRIKE)/6f));
 		}
@@ -223,7 +224,7 @@ public class MagesStaff extends MeleeWeapon {
 		int oldStaffcharges = this.wand != null ? this.wand.curCharges : 0;
 
 		if (owner == Dungeon.hero && Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION)){
-			Talent.WandPreservationCounter counter = Buff.affect(Dungeon.hero, Talent.WandPreservationCounter.class);
+			TalentBuffs.WandPreservationCounter counter = Buff.affect(Dungeon.hero, TalentBuffs.WandPreservationCounter.class);
 			if (counter.count() == 0){
 				counter.countUp(1);
 				this.wand.level(0);
@@ -437,7 +438,7 @@ public class MagesStaff extends MeleeWeapon {
 
 					String bodyText = Messages.get(MagesStaff.class, "imbue_desc", newLevel);
 					if (Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION)
-						&& Dungeon.hero.buff(Talent.WandPreservationCounter.class) == null){
+						&& Dungeon.hero.buff(TalentBuffs.WandPreservationCounter.class) == null){
 						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_talent");
 					} else {
 						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_lost");

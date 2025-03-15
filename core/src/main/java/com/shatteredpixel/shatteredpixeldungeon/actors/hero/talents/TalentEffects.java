@@ -29,19 +29,17 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.EnhancedRings;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FullTank;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PhysicalEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ScrollEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WandEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.DivineSense;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.RecallInscription;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -65,7 +63,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.Runestone;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfIntuition;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
-import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
@@ -78,6 +75,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
@@ -85,12 +83,12 @@ import com.watabou.utils.Reflection;
 import java.util.ArrayList;
 
 /**
- * Class that manages effects of hero talents
+ * Handles various talent effects and interactions with game mechanics
  */
 public class TalentEffects {
 
     /**
-     * Handles active talent effects triggered when a talent is upgraded
+     * Called when a talent is upgraded to handle special effects
      */
     public static void onTalentUpgraded(Hero hero, Talent talent) {
         //for metamorphosis
@@ -104,7 +102,7 @@ public class TalentEffects {
             }
         }
         if (talent == Talent.THIEFS_INTUITION && hero.pointsInTalent(Talent.THIEFS_INTUITION) == 2) {
-            if (hero.belongings.ring != null && !ShardOfOblivion.passiveIDDisabled()) {
+            if (hero.belongings.ring instanceof Ring && !ShardOfOblivion.passiveIDDisabled()) {
                 hero.belongings.ring.identify();
             }
             if (hero.belongings.misc instanceof Ring && !ShardOfOblivion.passiveIDDisabled()) {
@@ -117,7 +115,7 @@ public class TalentEffects {
             }
         }
         if (talent == Talent.THIEFS_INTUITION && hero.pointsInTalent(Talent.THIEFS_INTUITION) == 1) {
-            if (hero.belongings.ring != null) hero.belongings.ring.setKnown();
+            if (hero.belongings.ring instanceof Ring) hero.belongings.ring.setKnown();
             if (hero.belongings.misc instanceof Ring) ((Ring) hero.belongings.misc).setKnown();
         }
         if (talent == Talent.ADVENTURERS_INTUITION && hero.pointsInTalent(Talent.ADVENTURERS_INTUITION) == 2) {
@@ -187,7 +185,35 @@ public class TalentEffects {
     }
 
     /**
-     * Handles talent effects triggered by food consumption
+     * Calculate the item identification speed factor
+     */
+    public static float itemIDSpeedFactor(Hero hero, Item item) {
+        // 1.75x/2.5x speed with Huntress talent
+        float factor = 1f + 0.75f * hero.pointsInTalent(Talent.SURVIVALISTS_INTUITION);
+
+        // Affected by both Warrior(1.75x/2.5x) and Duelist(2.5x/inst.) talents
+        if (item instanceof MeleeWeapon) {
+            factor *= 1f + 1.5f * hero.pointsInTalent(Talent.ADVENTURERS_INTUITION); //instant at +2 (see onItemEquipped)
+            factor *= 1f + 0.75f * hero.pointsInTalent(Talent.VETERANS_INTUITION);
+        }
+        // Affected by both Warrior(2.5x/inst.) and Duelist(1.75x/2.5x) talents
+        if (item instanceof Armor) {
+            factor *= 1f + 0.75f * hero.pointsInTalent(Talent.ADVENTURERS_INTUITION);
+            factor *= 1f + hero.pointsInTalent(Talent.VETERANS_INTUITION); //instant at +2 (see onItemEquipped)
+        }
+        // 3x/instant for Mage (see Wand.wandUsed())
+        if (item instanceof com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand) {
+            factor *= 1f + 2.0f * hero.pointsInTalent(Talent.SCHOLARS_INTUITION);
+        }
+        // 2x/instant for Rogue (see onItemEqupped), also id's type on equip/on pickup
+        if (item instanceof Ring) {
+            factor *= 1f + hero.pointsInTalent(Talent.THIEFS_INTUITION);
+        }
+        return factor;
+    }
+
+    /**
+     * Effects that trigger when food is eaten
      */
     public static void onFoodEaten(Hero hero, float foodVal, Item foodSource) {
         if (hero.hasTalent(Talent.HEARTY_MEAL)) {
@@ -283,35 +309,7 @@ public class TalentEffects {
     }
 
     /**
-     * Calculates talent-affected item identification speed
-     */
-    public static float itemIDSpeedFactor(Hero hero, Item item) {
-        // 1.75x/2.5x speed with Huntress talent
-        float factor = 1f + 0.75f * hero.pointsInTalent(Talent.SURVIVALISTS_INTUITION);
-
-        // Affected by both Warrior(1.75x/2.5x) and Duelist(2.5x/inst.) talents
-        if (item instanceof MeleeWeapon) {
-            factor *= 1f + 1.5f * hero.pointsInTalent(Talent.ADVENTURERS_INTUITION); //instant at +2 (see onItemEquipped)
-            factor *= 1f + 0.75f * hero.pointsInTalent(Talent.VETERANS_INTUITION);
-        }
-        // Affected by both Warrior(2.5x/inst.) and Duelist(1.75x/2.5x) talents
-        if (item instanceof Armor) {
-            factor *= 1f + 0.75f * hero.pointsInTalent(Talent.ADVENTURERS_INTUITION);
-            factor *= 1f + hero.pointsInTalent(Talent.VETERANS_INTUITION); //instant at +2 (see onItemEquipped)
-        }
-        // 3x/instant for Mage (see Wand.wandUsed())
-        if (item instanceof Wand) {
-            factor *= 1f + 2.0f * hero.pointsInTalent(Talent.SCHOLARS_INTUITION);
-        }
-        // 2x/instant for Rogue (see onItemEqupped), also id's type on equip/on pickup
-        if (item instanceof Ring) {
-            factor *= 1f + hero.pointsInTalent(Talent.THIEFS_INTUITION);
-        }
-        return factor;
-    }
-
-    /**
-     * Handles talent effects triggered by potion use
+     * Effects that trigger when potions are used
      */
     public static void onPotionUsed(Hero hero, int cell, float factor) {
         if (hero.hasTalent(Talent.LIQUID_WILLPOWER)) {
@@ -375,7 +373,7 @@ public class TalentEffects {
     }
 
     /**
-     * Handles talent effects triggered by scroll use
+     * Effects that trigger when scrolls are used
      */
     public static void onScrollUsed(Hero hero, int pos, float factor, Class<?extends Item> cls) {
         if (hero.hasTalent(Talent.INSCRIBED_POWER)) {
@@ -401,7 +399,7 @@ public class TalentEffects {
     }
 
     /**
-     * Handles talent effects triggered by runestone use
+     * Effects that trigger when runestones are used
      */
     public static void onRunestoneUsed(Hero hero, int pos, Class<?extends Item> cls) {
         if (hero.hasTalent(Talent.RECALL_INSCRIPTION) && Runestone.class.isAssignableFrom(cls)) {
@@ -423,7 +421,7 @@ public class TalentEffects {
     }
 
     /**
-     * Handles talent effects triggered by artifact use
+     * Effects that trigger when artifacts are used
      */
     public static void onArtifactUsed(Hero hero) {
         if (hero.hasTalent(Talent.ENHANCED_RINGS)) {
@@ -451,7 +449,7 @@ public class TalentEffects {
     }
 
     /**
-     * Handles talent effects triggered by item equipping
+     * Effects that trigger when items are equipped
      */
     public static void onItemEquipped(Hero hero, Item item) {
         boolean identify = false;
@@ -474,7 +472,7 @@ public class TalentEffects {
     }
 
     /**
-     * Handles talent effects triggered by item collection
+     * Effects that trigger when items are collected
      */
     public static void onItemCollected(Hero hero, Item item) {
         if (hero.pointsInTalent(Talent.THIEFS_INTUITION) == 2) {
@@ -483,12 +481,12 @@ public class TalentEffects {
     }
 
     /**
-     * Handles talent effects that modify attack damage
+     * Effects that happen when attacking
      */
     public static int onAttackProc(Hero hero, Char enemy, int dmg) {
 
         if (hero.hasTalent(Talent.PROVOKED_ANGER)
-                && hero.buff(TalentBuffs.ProvokedAngerTracker.class) != null) {
+            && hero.buff(TalentBuffs.ProvokedAngerTracker.class) != null) {
             dmg += 1 + hero.pointsInTalent(Talent.PROVOKED_ANGER);
             hero.buff(TalentBuffs.ProvokedAngerTracker.class).detach();
         }

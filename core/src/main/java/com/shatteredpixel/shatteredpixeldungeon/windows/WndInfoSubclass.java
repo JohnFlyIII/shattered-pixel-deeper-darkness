@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentInit;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TalentButton;
@@ -38,8 +39,8 @@ public class WndInfoSubclass extends WndTitledMessage {
 		super( new HeroIcon(subCls), Messages.titleCase(subCls.title()), subCls.desc());
 
 		ArrayList<LinkedHashMap<Talent, Integer>> talentList = new ArrayList<>();
-		Talent.initClassTalents(cls, talentList);
-		Talent.initSubclassTalents(subCls, talentList);
+		TalentInit.initClassTalents(cls, talentList);
+		TalentInit.initSubclassTalents(subCls, talentList);
 
 		TalentsPane.TalentTierPane talentPane = new TalentsPane.TalentTierPane(talentList.get(2), 3, TalentButton.Mode.INFO);
 		talentPane.title.text( Messages.titleCase(Messages.get(WndHeroInfo.class, "talents")));

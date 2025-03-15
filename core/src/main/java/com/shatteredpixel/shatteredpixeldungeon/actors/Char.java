@@ -87,6 +87,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.BeamingRay;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.GuidingLight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.LifeLinkSpell;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ShieldOfLight;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Brute;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalSpire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing;
@@ -402,7 +403,7 @@ public abstract class Char extends Actor {
 			if (prep != null){
 				dmg = prep.damageRoll(this);
 				if (this == Dungeon.hero && Dungeon.hero.hasTalent(Talent.BOUNTY_HUNTER)) {
-					Buff.affect(Dungeon.hero, Talent.BountyHunterTracker.class, 0.0f);
+					Buff.affect(Dungeon.hero, TalentBuffs.BountyHunterTracker.class, 0.0f);
 				}
 			} else {
 				dmg = damageRoll();
@@ -535,7 +536,7 @@ public abstract class Char extends Actor {
 				}
 			}
 
-			Talent.CombinedLethalityAbilityTracker combinedLethality = buff(Talent.CombinedLethalityAbilityTracker.class);
+			TalentBuffs.CombinedLethalityAbilityTracker combinedLethality = buff(TalentBuffs.CombinedLethalityAbilityTracker.class);
 			if (combinedLethality != null && this instanceof Hero && ((Hero) this).belongings.attackingWeapon() instanceof MeleeWeapon && combinedLethality.weapon != ((Hero) this).belongings.attackingWeapon()){
 				if ( enemy.isAlive() && enemy.alignment != alignment && !Char.hasProp(enemy, Property.BOSS)
 						&& !Char.hasProp(enemy, Property.MINIBOSS) &&
@@ -552,7 +553,7 @@ public abstract class Char extends Actor {
 						DeathMark.processFearTheReaper(enemy);
 					}
 					if (enemy.sprite != null) {
-						enemy.sprite.showStatus(CharSprite.NEGATIVE, Messages.get(Talent.CombinedLethalityAbilityTracker.class, "executed"));
+						enemy.sprite.showStatus(CharSprite.NEGATIVE, Messages.get(TalentBuffs.CombinedLethalityAbilityTracker.class, "executed"));
 					}
 				}
 				combinedLethality.detach();
@@ -913,7 +914,7 @@ public abstract class Char extends Actor {
 
 		if (HP > 0 && shielded > 0 && shielding() == 0){
 			if (this instanceof Hero && ((Hero) this).hasTalent(Talent.PROVOKED_ANGER)){
-				Buff.affect(this, Talent.ProvokedAngerTracker.class, 5f);
+				Buff.affect(this, TalentBuffs.ProvokedAngerTracker.class, 5f);
 			}
 		}
 
@@ -1028,13 +1029,13 @@ public abstract class Char extends Actor {
 			if (ch.buff(SnipersMark.class) != null && ch.buff(SnipersMark.class).object == id()){
 				ch.buff(SnipersMark.class).detach();
 			}
-			if (ch.buff(Talent.FollowupStrikeTracker.class) != null
-					&& ch.buff(Talent.FollowupStrikeTracker.class).object == id()){
-				ch.buff(Talent.FollowupStrikeTracker.class).detach();
+			if (ch.buff(TalentBuffs.FollowupStrikeTracker.class) != null
+					&& ch.buff(TalentBuffs.FollowupStrikeTracker.class).object == id()){
+				ch.buff(TalentBuffs.FollowupStrikeTracker.class).detach();
 			}
-			if (ch.buff(Talent.DeadlyFollowupTracker.class) != null
-					&& ch.buff(Talent.DeadlyFollowupTracker.class).object == id()){
-				ch.buff(Talent.DeadlyFollowupTracker.class).detach();
+			if (ch.buff(TalentBuffs.DeadlyFollowupTracker.class) != null
+					&& ch.buff(TalentBuffs.DeadlyFollowupTracker.class).object == id()){
+				ch.buff(TalentBuffs.DeadlyFollowupTracker.class).detach();
 			}
 		}
 	}

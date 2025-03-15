@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
@@ -28,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.CounterBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
@@ -36,51 +37,22 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
 
 /**
- * Collection of buff classes used by hero talents
+ * Buffs used by the Talent system.
  */
 public class TalentBuffs {
 
-    // Generic buff classes for multiple talents
-    public static class CachedRationsDropped extends CounterBuff{{revivePersists = true;}}
-    public static class NatureBerriesDropped extends CounterBuff{{revivePersists = true;}}
-
-    // Warrior talents
     public static class ImprovisedProjectileCooldown extends FlavourBuff{
         public int icon() { return BuffIndicator.TIME; }
         public void tintIcon(Image icon) { icon.hardlight(0.15f, 0.2f, 0.5f); }
         public float iconFadePercent() { return Math.max(0, visualcooldown() / 50); }
     }
-    
     public static class LethalMomentumTracker extends FlavourBuff{}
     public static class StrikingWaveTracker extends FlavourBuff{}
-    public static class WarriorFoodImmunity extends FlavourBuff{
-        { actPriority = HERO_PRIO+1; }
-    }
-    
-    public static class ProvokedAngerTracker extends FlavourBuff{
-        { type = Buff.buffType.POSITIVE; }
-        public int icon() { return BuffIndicator.WEAPON; }
-        public void tintIcon(Image icon) { icon.hardlight(1.43f, 1.43f, 1.43f); }
-        public float iconFadePercent() { return Math.max(0, 1f - (visualcooldown() / 5)); }
-    }
-
-    // Mage talents
     public static class WandPreservationCounter extends CounterBuff{{revivePersists = true;}}
     public static class EmpoweredStrikeTracker extends FlavourBuff{
         //blast wave on-hit doesn't resolve instantly, so we delay detaching for it
         public boolean delayedDetach = false;
     }
-    public static class LingeringMagicTracker extends FlavourBuff{
-        { type = Buff.buffType.POSITIVE; }
-        public int icon() { return BuffIndicator.WEAPON; }
-        public void tintIcon(Image icon) { icon.hardlight(1.43f, 1.43f, 0f); }
-        public float iconFadePercent() { return Math.max(0, 1f - (visualcooldown() / 5)); }
-    }
-
-    // Rogue talents
-    public static class SuckerPunchTracker extends Buff{}
-    public static class BountyHunterTracker extends FlavourBuff{}
-    
     public static class ProtectiveShadowsTracker extends Buff {
         float barrierInc = 0.5f;
 
@@ -118,44 +90,19 @@ public class TalentBuffs {
             barrierInc = bundle.getFloat( BARRIER_INC );
         }
     }
-    
-    public static class FollowupStrikeTracker extends FlavourBuff{
-        public int object;
-        { type = Buff.buffType.POSITIVE; }
-        public int icon() { return BuffIndicator.INVERT_MARK; }
-        public void tintIcon(Image icon) { icon.hardlight(0f, 0.75f, 1f); }
-        public float iconFadePercent() { return Math.max(0, 1f - (visualcooldown() / 5)); }
-        private static final String OBJECT    = "object";
-        @Override
-        public void storeInBundle(Bundle bundle) {
-            super.storeInBundle(bundle);
-            bundle.put(OBJECT, object);
-        }
-        @Override
-        public void restoreFromBundle(Bundle bundle) {
-            super.restoreFromBundle(bundle);
-            object = bundle.getInt(OBJECT);
-        }
-    }
-
-    // Huntress talents
+    public static class BountyHunterTracker extends FlavourBuff{}
     public static class RejuvenatingStepsCooldown extends FlavourBuff{
         public int icon() { return BuffIndicator.TIME; }
         public void tintIcon(Image icon) { icon.hardlight(0f, 0.35f, 0.15f); }
-        public float iconFadePercent() { return GameMath.gate(0, visualcooldown() / (15 - 5*((Hero)target).pointsInTalent(Talent.REJUVENATING_STEPS)), 1); }
+        public float iconFadePercent() { return GameMath.gate(0, visualcooldown() / (15 - 5*Dungeon.hero.pointsInTalent(Talent.REJUVENATING_STEPS)), 1); }
     }
-    
     public static class RejuvenatingStepsFurrow extends CounterBuff{{revivePersists = true;}}
-    
     public static class SeerShotCooldown extends FlavourBuff{
         public int icon() { return target.buff(com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea.class) != null ? BuffIndicator.NONE : BuffIndicator.TIME; }
         public void tintIcon(Image icon) { icon.hardlight(0.7f, 0.4f, 0.7f); }
         public float iconFadePercent() { return Math.max(0, visualcooldown() / 20); }
     }
-    
     public static class SpiritBladesTracker extends FlavourBuff{}
-
-    // Duelist talents
     public static class PatientStrikeTracker extends Buff {
         public int pos;
         { type = Buff.buffType.POSITIVE; }
@@ -182,15 +129,12 @@ public class TalentBuffs {
             pos = bundle.getInt(POS);
         }
     }
-    
     public static class AggressiveBarrierCooldown extends FlavourBuff{
         public int icon() { return BuffIndicator.TIME; }
         public void tintIcon(Image icon) { icon.hardlight(0.35f, 0f, 0.7f); }
         public float iconFadePercent() { return Math.max(0, visualcooldown() / 50); }
     }
-    
     public static class LiquidAgilEVATracker extends FlavourBuff{}
-    
     public static class LiquidAgilACCTracker extends FlavourBuff{
         public int uses;
 
@@ -211,13 +155,11 @@ public class TalentBuffs {
             uses = bundle.getInt(USES);
         }
     }
-    
     public static class LethalHasteCooldown extends FlavourBuff{
         public int icon() { return BuffIndicator.TIME; }
         public void tintIcon(Image icon) { icon.hardlight(0.35f, 0f, 0.7f); }
         public float iconFadePercent() { return Math.max(0, visualcooldown() / 100); }
     }
-    
     public static class SwiftEquipCooldown extends FlavourBuff{
         public boolean secondUse;
         public boolean hasSecondUse(){
@@ -243,7 +185,6 @@ public class TalentBuffs {
             secondUse = bundle.getBoolean(SECOND_USE);
         }
     }
-    
     public static class DeadlyFollowupTracker extends FlavourBuff{
         public int object;
         { type = Buff.buffType.POSITIVE; }
@@ -262,14 +203,12 @@ public class TalentBuffs {
             object = bundle.getInt(OBJECT);
         }
     }
-    
     public static class PreciseAssaultTracker extends FlavourBuff{
         { type = buffType.POSITIVE; }
         public int icon() { return BuffIndicator.INVERT_MARK; }
         public void tintIcon(Image icon) { icon.hardlight(1f, 1f, 0.0f); }
         public float iconFadePercent() { return Math.max(0, 1f - (visualcooldown() / 5)); }
     }
-    
     public static class VariedChargeTracker extends Buff{
         public Class weapon;
 
@@ -285,11 +224,9 @@ public class TalentBuffs {
             weapon = bundle.getClass(WEAPON);
         }
     }
-    
     public static class CombinedLethalityAbilityTracker extends FlavourBuff{
-        public com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon weapon;
+        public MeleeWeapon weapon;
     }
-    
     public static class CombinedEnergyAbilityTracker extends FlavourBuff{
         public boolean monkAbilused = false;
         public boolean wepAbilUsed = false;
@@ -309,17 +246,13 @@ public class TalentBuffs {
             wepAbilUsed = bundle.getBoolean(WEP_ABIL_USED);
         }
     }
-    
     public static class CounterAbilityTacker extends FlavourBuff{}
-
-    // Cleric talents
     public static class SatiatedSpellsTracker extends Buff{
         @Override
         public int icon() {
             return BuffIndicator.SPELL_FOOD;
         }
     }
-    
     //used for metamorphed searing light
     public static class SearingLightCooldown extends FlavourBuff{
         @Override
@@ -328,5 +261,44 @@ public class TalentBuffs {
         }
         public void tintIcon(Image icon) { icon.hardlight(0f, 0f, 1f); }
         public float iconFadePercent() { return Math.max(0, visualcooldown() / 20); }
+    }
+
+    public static class ProvokedAngerTracker extends FlavourBuff{
+        { type = Buff.buffType.POSITIVE; }
+        public int icon() { return BuffIndicator.WEAPON; }
+        public void tintIcon(Image icon) { icon.hardlight(1.43f, 1.43f, 1.43f); }
+        public float iconFadePercent() { return Math.max(0, 1f - (visualcooldown() / 5)); }
+    }
+    public static class LingeringMagicTracker extends FlavourBuff{
+        { type = Buff.buffType.POSITIVE; }
+        public int icon() { return BuffIndicator.WEAPON; }
+        public void tintIcon(Image icon) { icon.hardlight(1.43f, 1.43f, 0f); }
+        public float iconFadePercent() { return Math.max(0, 1f - (visualcooldown() / 5)); }
+    }
+    public static class SuckerPunchTracker extends Buff{}
+    public static class FollowupStrikeTracker extends FlavourBuff{
+        public int object;
+        { type = Buff.buffType.POSITIVE; }
+        public int icon() { return BuffIndicator.INVERT_MARK; }
+        public void tintIcon(Image icon) { icon.hardlight(0f, 0.75f, 1f); }
+        public float iconFadePercent() { return Math.max(0, 1f - (visualcooldown() / 5)); }
+        private static final String OBJECT    = "object";
+        @Override
+        public void storeInBundle(Bundle bundle) {
+            super.storeInBundle(bundle);
+            bundle.put(OBJECT, object);
+        }
+        @Override
+        public void restoreFromBundle(Bundle bundle) {
+            super.restoreFromBundle(bundle);
+            object = bundle.getInt(OBJECT);
+        }
+    }
+
+    public static class CachedRationsDropped extends CounterBuff{{revivePersists = true;}}
+    public static class NatureBerriesDropped extends CounterBuff{{revivePersists = true;}}
+
+    public static class WarriorFoodImmunity extends FlavourBuff{
+        { actPriority = HERO_PRIO+1; }
     }
 }

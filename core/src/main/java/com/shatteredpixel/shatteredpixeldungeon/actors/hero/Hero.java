@@ -75,6 +75,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HallowedGroun
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyWard;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Smite;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
@@ -512,7 +513,7 @@ public class Hero extends Char {
 					//do nothing, this is not a regular attack so don't consume talent fx
 				} else if (wep instanceof Crossbow && buff(Crossbow.ChargedShot.class) != null){
 					//do nothing, this is not a regular attack so don't consume talent fx
-				} else if (buff(Talent.PreciseAssaultTracker.class) != null) {
+				} else if (buff(TalentBuffs.PreciseAssaultTracker.class) != null) {
 					// 2x/5x/inf. ACC for duelist if she just used a weapon ability
 					switch (pointsInTalent(Talent.PRECISE_ASSAULT)){
 						default: case 1:
@@ -522,11 +523,11 @@ public class Hero extends Char {
 						case 3:
 							accuracy *= Float.POSITIVE_INFINITY; break;
 					}
-					buff(Talent.PreciseAssaultTracker.class).detach();
-				} else if (buff(Talent.LiquidAgilACCTracker.class) != null){
+					buff(TalentBuffs.PreciseAssaultTracker.class).detach();
+				} else if (buff(TalentBuffs.LiquidAgilACCTracker.class) != null){
 					// 3x/inf. ACC, depending on talent level
 					accuracy *= pointsInTalent(Talent.LIQUID_AGILITY) == 2 ? Float.POSITIVE_INFINITY : 3f;
-					Talent.LiquidAgilACCTracker buff = buff(Talent.LiquidAgilACCTracker.class);
+					TalentBuffs.LiquidAgilACCTracker buff = buff(TalentBuffs.LiquidAgilACCTracker.class);
 					buff.uses--;
 					if (buff.uses <= 0) {
 						buff.detach();
@@ -564,7 +565,7 @@ public class Hero extends Char {
 		
 		evasion *= RingOfEvasion.evasionMultiplier( this );
 
-		if (buff(Talent.LiquidAgilEVATracker.class) != null){
+		if (buff(TalentBuffs.LiquidAgilEVATracker.class) != null){
 			if (pointsInTalent(Talent.LIQUID_AGILITY) == 1){
 				evasion *= 3f;
 			} else if (pointsInTalent(Talent.LIQUID_AGILITY) == 2){
@@ -757,8 +758,8 @@ public class Hero extends Char {
 	}
 	
 	public float attackDelay() {
-		if (buff(Talent.LethalMomentumTracker.class) != null){
-			buff(Talent.LethalMomentumTracker.class).detach();
+		if (buff(TalentBuffs.LethalMomentumTracker.class) != null){
+			buff(TalentBuffs.LethalMomentumTracker.class).detach();
 			return 0;
 		}
 
@@ -1392,11 +1393,11 @@ public class Hero extends Char {
 
 			if (heroClass != HeroClass.DUELIST
 					&& hasTalent(Talent.AGGRESSIVE_BARRIER)
-					&& buff(Talent.AggressiveBarrierCooldown.class) == null
+					&& buff(TalentBuffs.AggressiveBarrierCooldown.class) == null
 					&& (HP / (float)HT) < 0.20f*(1+pointsInTalent(Talent.AGGRESSIVE_BARRIER))){
 				Buff.affect(this, Barrier.class).setShield(3);
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.SHIELDING);
-				Buff.affect(this, Talent.AggressiveBarrierCooldown.class, 50f);
+				Buff.affect(this, TalentBuffs.AggressiveBarrierCooldown.class, 50f);
 
 			}
 			sprite.attack( enemy.pos );
@@ -1427,7 +1428,7 @@ public class Hero extends Char {
 			Buff.affect(this, HoldFast.class).pos = pos;
 		}
 		if (hasTalent(Talent.PATIENT_STRIKE)){
-			Buff.affect(Dungeon.hero, Talent.PatientStrikeTracker.class).pos = Dungeon.hero.pos;
+			Buff.affect(Dungeon.hero, TalentBuffs.PatientStrikeTracker.class).pos = Dungeon.hero.pos;
 		}
 		if (!fullRest) {
 			if (sprite != null) {
@@ -1585,7 +1586,7 @@ public class Hero extends Char {
 
 		dmg = (int)Math.ceil(dmg * RingOfTenacity.damageMultiplier( this ));
 
-		if (buff(Talent.WarriorFoodImmunity.class) != null){
+		if (buff(TalentBuffs.WarriorFoodImmunity.class) != null){
 			if (pointsInTalent(Talent.IRON_STOMACH) == 1)       dmg = Math.round(dmg*0.25f);
 			else if (pointsInTalent(Talent.IRON_STOMACH) == 2)  dmg = Math.round(dmg*0.00f);
 		}
@@ -1949,10 +1950,10 @@ public class Hero extends Char {
 			for (Item i : belongings) {
 				i.onHeroGainExp(percent, this);
 			}
-			if (buff(Talent.RejuvenatingStepsFurrow.class) != null){
-				buff(Talent.RejuvenatingStepsFurrow.class).countDown(percent*200f);
-				if (buff(Talent.RejuvenatingStepsFurrow.class).count() <= 0){
-					buff(Talent.RejuvenatingStepsFurrow.class).detach();
+			if (buff(TalentBuffs.RejuvenatingStepsFurrow.class) != null){
+				buff(TalentBuffs.RejuvenatingStepsFurrow.class).countDown(percent*200f);
+				if (buff(TalentBuffs.RejuvenatingStepsFurrow.class).count() <= 0){
+					buff(TalentBuffs.RejuvenatingStepsFurrow.class).detach();
 				}
 			}
 			if (buff(ElementalStrike.ElementalStrikeFurrowCounter.class) != null){
@@ -1973,9 +1974,9 @@ public class Hero extends Char {
 		while (this.exp >= maxExp()) {
 			this.exp -= maxExp();
 
-			if (buff(Talent.WandPreservationCounter.class) != null
+			if (buff(TalentBuffs.WandPreservationCounter.class) != null
 				&& pointsInTalent(Talent.WAND_PRESERVATION) == 2){
-				buff(Talent.WandPreservationCounter.class).detach();
+				buff(TalentBuffs.WandPreservationCounter.class).detach();
 			}
 
 			if (lvl < MAX_LEVEL) {

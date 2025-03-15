@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.NaturesPower;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
@@ -376,8 +377,8 @@ public class SpiritBow extends Weapon {
 				final Char enemy = Actor.findChar( cell );
 				
 				if (enemy == null){
-					if (user.buff(Talent.LethalMomentumTracker.class) != null){
-						user.buff(Talent.LethalMomentumTracker.class).detach();
+					if (user.buff(TalentBuffs.LethalMomentumTracker.class) != null){
+						user.buff(TalentBuffs.LethalMomentumTracker.class).detach();
 						user.next();
 					} else {
 						user.spendAndNext(castDelay(user, dst));
@@ -431,8 +432,8 @@ public class SpiritBow extends Weapon {
 											});
 											curUser.next();
 										} else {
-											if (user.buff(Talent.LethalMomentumTracker.class) != null){
-												user.buff(Talent.LethalMomentumTracker.class).detach();
+											if (user.buff(TalentBuffs.LethalMomentumTracker.class) != null){
+												user.buff(TalentBuffs.LethalMomentumTracker.class).detach();
 												user.next();
 											} else {
 												user.spendAndNext(castDelay(user, dst));
@@ -451,14 +452,14 @@ public class SpiritBow extends Weapon {
 			} else {
 
 				if (user.hasTalent(Talent.SEER_SHOT)
-						&& user.buff(Talent.SeerShotCooldown.class) == null){
+						&& user.buff(TalentBuffs.SeerShotCooldown.class) == null){
 					int shotPos = throwPos(user, dst);
 					if (Actor.findChar(shotPos) == null) {
 						RevealedArea a = Buff.affect(user, RevealedArea.class, 5 * user.pointsInTalent(Talent.SEER_SHOT));
 						a.depth = Dungeon.depth;
 						a.branch = Dungeon.branch;
 						a.pos = shotPos;
-						Buff.affect(user, Talent.SeerShotCooldown.class, 20f);
+						Buff.affect(user, TalentBuffs.SeerShotCooldown.class, 20f);
 					}
 				}
 

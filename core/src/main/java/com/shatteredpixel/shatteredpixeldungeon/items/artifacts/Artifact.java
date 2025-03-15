@@ -31,6 +31,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.GuidingLight;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentBuffs;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentEffects;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindofMisc;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -156,9 +158,9 @@ public class Artifact extends KindofMisc {
 		if (target.alignment != Char.Alignment.ALLY
 				&& Dungeon.hero.heroClass != HeroClass.CLERIC
 				&& Dungeon.hero.hasTalent(Talent.SEARING_LIGHT)
-				&& Dungeon.hero.buff(Talent.SearingLightCooldown.class) == null){
+				&& Dungeon.hero.buff(TalentBuffs.SearingLightCooldown.class) == null){
 			Buff.affect(target, GuidingLight.Illuminated.class);
-			Buff.affect(Dungeon.hero, Talent.SearingLightCooldown.class, 20f);
+			Buff.affect(Dungeon.hero, TalentBuffs.SearingLightCooldown.class, 20f);
 		}
 
 		if (target.alignment != Char.Alignment.ALLY

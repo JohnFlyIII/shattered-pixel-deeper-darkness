@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -107,8 +108,8 @@ abstract public class KindOfWeapon extends EquipableItem {
 
 		isSwiftEquipping = false;
 		if (hero.belongings.contains(this) && hero.hasTalent(Talent.SWIFT_EQUIP)){
-			if (hero.buff(Talent.SwiftEquipCooldown.class) == null
-					|| hero.buff(Talent.SwiftEquipCooldown.class).hasSecondUse()){
+			if (hero.buff(TalentBuffs.SwiftEquipCooldown.class) == null
+					|| hero.buff(TalentBuffs.SwiftEquipCooldown.class).hasSecondUse()){
 				isSwiftEquipping = true;
 			}
 		}
@@ -141,11 +142,11 @@ abstract public class KindOfWeapon extends EquipableItem {
 			hero.spendAndNext( timeToEquip(hero) );
 			if (isSwiftEquipping) {
 				GLog.i(Messages.get(this, "swift_equip"));
-				if (hero.buff(Talent.SwiftEquipCooldown.class) == null){
-					Buff.affect(hero, Talent.SwiftEquipCooldown.class, 19f)
+				if (hero.buff(TalentBuffs.SwiftEquipCooldown.class) == null){
+					Buff.affect(hero, TalentBuffs.SwiftEquipCooldown.class, 19f)
 							.secondUse = hero.pointsInTalent(Talent.SWIFT_EQUIP) == 2;
-				} else if (hero.buff(Talent.SwiftEquipCooldown.class).hasSecondUse()) {
-					hero.buff(Talent.SwiftEquipCooldown.class).secondUse = false;
+				} else if (hero.buff(TalentBuffs.SwiftEquipCooldown.class).hasSecondUse()) {
+					hero.buff(TalentBuffs.SwiftEquipCooldown.class).secondUse = false;
 				}
 				isSwiftEquipping = false;
 			}
@@ -162,8 +163,8 @@ abstract public class KindOfWeapon extends EquipableItem {
 
 		isSwiftEquipping = false;
 		if (hero.belongings.contains(this) && hero.hasTalent(Talent.SWIFT_EQUIP)){
-			if (hero.buff(Talent.SwiftEquipCooldown.class) == null
-					|| hero.buff(Talent.SwiftEquipCooldown.class).hasSecondUse()){
+			if (hero.buff(TalentBuffs.SwiftEquipCooldown.class) == null
+					|| hero.buff(TalentBuffs.SwiftEquipCooldown.class).hasSecondUse()){
 				isSwiftEquipping = true;
 			}
 		}
@@ -188,11 +189,11 @@ abstract public class KindOfWeapon extends EquipableItem {
 			hero.spendAndNext( timeToEquip(hero) );
 			if (isSwiftEquipping) {
 				GLog.i(Messages.get(this, "swift_equip"));
-				if (hero.buff(Talent.SwiftEquipCooldown.class) == null){
-					Buff.affect(hero, Talent.SwiftEquipCooldown.class, 19f)
+				if (hero.buff(TalentBuffs.SwiftEquipCooldown.class) == null){
+					Buff.affect(hero, TalentBuffs.SwiftEquipCooldown.class, 19f)
 							.secondUse = hero.pointsInTalent(Talent.SWIFT_EQUIP) == 2;
-				} else if (hero.buff(Talent.SwiftEquipCooldown.class).hasSecondUse()) {
-					hero.buff(Talent.SwiftEquipCooldown.class).secondUse = false;
+				} else if (hero.buff(TalentBuffs.SwiftEquipCooldown.class).hasSecondUse()) {
+					hero.buff(TalentBuffs.SwiftEquipCooldown.class).secondUse = false;
 				}
 				isSwiftEquipping = false;
 			}

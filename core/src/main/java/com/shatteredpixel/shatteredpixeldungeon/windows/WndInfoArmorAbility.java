@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentInit;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TalentButton;
@@ -39,7 +40,7 @@ public class WndInfoArmorAbility extends WndTitledMessage {
 		super( new HeroIcon(ability), Messages.titleCase(ability.name()), ability.desc());
 
 		ArrayList<LinkedHashMap<Talent, Integer>> talentList = new ArrayList<>();
-		Talent.initArmorTalents(ability, talentList);
+		TalentInit.initArmorTalents(ability, talentList);
 
 		Ratmogrify.useRatroicEnergy = ability instanceof Ratmogrify;
 		TalentsPane.TalentTierPane talentPane = new TalentsPane.TalentTierPane(talentList.get(3), 4, TalentButton.Mode.INFO);

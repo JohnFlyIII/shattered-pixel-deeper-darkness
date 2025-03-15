@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
@@ -107,8 +108,8 @@ public class MeleeWeapon extends Weapon {
 			usesTargeting = false;
 			if (!isEquipped(hero)) {
 				if (hero.hasTalent(Talent.SWIFT_EQUIP)){
-					if (hero.buff(Talent.SwiftEquipCooldown.class) == null
-						|| hero.buff(Talent.SwiftEquipCooldown.class).hasSecondUse()){
+					if (hero.buff(TalentBuffs.SwiftEquipCooldown.class) == null
+						|| hero.buff(TalentBuffs.SwiftEquipCooldown.class).hasSecondUse()){
 						execute(hero, AC_EQUIP);
 					} else if (hero.heroClass == HeroClass.DUELIST) {
 						GLog.w(Messages.get(this, "ability_need_equip"));
@@ -190,12 +191,12 @@ public class MeleeWeapon extends Weapon {
 	protected void afterAbilityUsed( Hero hero ){
 		hero.belongings.abilityWeapon = null;
 		if (hero.hasTalent(Talent.PRECISE_ASSAULT)){
-			Buff.prolong(hero, Talent.PreciseAssaultTracker.class, hero.cooldown()+4f);
+			Buff.prolong(hero, TalentBuffs.PreciseAssaultTracker.class, hero.cooldown()+4f);
 		}
 		if (hero.hasTalent(Talent.VARIED_CHARGE)){
-			Talent.VariedChargeTracker tracker = hero.buff(Talent.VariedChargeTracker.class);
+			TalentBuffs.VariedChargeTracker tracker = hero.buff(TalentBuffs.VariedChargeTracker.class);
 			if (tracker == null || tracker.weapon == getClass() || tracker.weapon == null){
-				Buff.affect(hero, Talent.VariedChargeTracker.class).weapon = getClass();
+				Buff.affect(hero, TalentBuffs.VariedChargeTracker.class).weapon = getClass();
 			} else {
 				tracker.detach();
 				Charger charger = Buff.affect(hero, Charger.class);
@@ -204,27 +205,27 @@ public class MeleeWeapon extends Weapon {
 			}
 		}
 		if (hero.hasTalent(Talent.COMBINED_LETHALITY)) {
-			Talent.CombinedLethalityAbilityTracker tracker = hero.buff(Talent.CombinedLethalityAbilityTracker.class);
+			TalentBuffs.CombinedLethalityAbilityTracker tracker = hero.buff(TalentBuffs.CombinedLethalityAbilityTracker.class);
 			if (tracker == null || tracker.weapon == this || tracker.weapon == null){
-				Buff.affect(hero, Talent.CombinedLethalityAbilityTracker.class, hero.cooldown()).weapon = this;
+				Buff.affect(hero, TalentBuffs.CombinedLethalityAbilityTracker.class, hero.cooldown()).weapon = this;
 			} else {
 				//we triggered the talent, so remove the tracker
 				tracker.detach();
 			}
 		}
 		if (hero.hasTalent(Talent.COMBINED_ENERGY)){
-			Talent.CombinedEnergyAbilityTracker tracker = hero.buff(Talent.CombinedEnergyAbilityTracker.class);
+			TalentBuffs.CombinedEnergyAbilityTracker tracker = hero.buff(TalentBuffs.CombinedEnergyAbilityTracker.class);
 			if (tracker == null || !tracker.monkAbilused){
-				Buff.prolong(hero, Talent.CombinedEnergyAbilityTracker.class, 5f).wepAbilUsed = true;
+				Buff.prolong(hero, TalentBuffs.CombinedEnergyAbilityTracker.class, 5f).wepAbilUsed = true;
 			} else {
 				tracker.wepAbilUsed = true;
 				Buff.affect(hero, MonkEnergy.class).processCombinedEnergy(tracker);
 			}
 		}
-		if (hero.buff(Talent.CounterAbilityTacker.class) != null){
+		if (hero.buff(TalentBuffs.CounterAbilityTacker.class) != null){
 			Charger charger = Buff.affect(hero, Charger.class);
 			charger.gainCharge(hero.pointsInTalent(Talent.COUNTER_ABILITY)*0.375f);
-			hero.buff(Talent.CounterAbilityTacker.class).detach();
+			hero.buff(TalentBuffs.CounterAbilityTacker.class).detach();
 		}
 	}
 

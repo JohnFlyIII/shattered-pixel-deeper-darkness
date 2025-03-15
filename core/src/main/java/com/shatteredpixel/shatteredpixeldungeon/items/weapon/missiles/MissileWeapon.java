@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.TalentBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
@@ -235,12 +236,12 @@ abstract public class MissileWeapon extends Weapon {
 			//metamorphed seer shot logic
 			if (curUser.hasTalent(Talent.SEER_SHOT)
 					&& curUser.heroClass != HeroClass.HUNTRESS
-					&& curUser.buff(Talent.SeerShotCooldown.class) == null){
+					&& curUser.buff(TalentBuffs.SeerShotCooldown.class) == null){
 				if (Actor.findChar(cell) == null) {
 					RevealedArea a = Buff.affect(curUser, RevealedArea.class, 5 * curUser.pointsInTalent(Talent.SEER_SHOT));
 					a.depth = Dungeon.depth;
 					a.pos = cell;
-					Buff.affect(curUser, Talent.SeerShotCooldown.class, 20f);
+					Buff.affect(curUser, TalentBuffs.SeerShotCooldown.class, 20f);
 				}
 			}
 
