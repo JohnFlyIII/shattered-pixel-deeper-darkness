@@ -38,7 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.ModularInfusionRelay;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
@@ -61,8 +61,8 @@ public class Artificer extends HeroBase {
 
         // Based on Huntress with additional items
         (hero.belongings.weapon = new Gloves()).identify();
-        SpiritBow bow = new SpiritBow();
-        bow.identify().collect();
+        ModularInfusionRelay relay = new ModularInfusionRelay();
+        relay.identify().collect();
 
         // Add Warrior's seal
         if (hero.belongings.armor != null) {
@@ -95,7 +95,7 @@ public class Artificer extends HeroBase {
         Wand wand = (Wand) Generator.random(Generator.Category.WAND);
         wand.identify().collect();
 
-        Dungeon.quickslot.setSlot(0, bow);
+        Dungeon.quickslot.setSlot(0, relay);
 
         new PotionOfMindVision().identify();
         new ScrollOfLullaby().identify();

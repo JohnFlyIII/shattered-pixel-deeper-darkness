@@ -16,6 +16,8 @@
 - Buffs implementation: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/buffs/`
 - Artificer spells/crafts: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/actors/hero/spells/artificerspells/`
 - UI components: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/windows/artificer/`
+- Weapons implementation: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/items/weapon/`
+- Text/message translations: `/core/src/main/assets/messages/`
 
 ## Implementation Strategy
 
@@ -24,6 +26,7 @@
 3. Artificer uses PocketWorkshop artifact (similar to Cleric's HolyTome)
 4. Class-specific talents should be defined in the Talent.java enum
 5. Class-specific buffs should be added to the buffs directory
+6. ModularInfusionRelay weapon similar to Huntress's SpiritBow for ranged combat
 
 ## Development Steps
 
@@ -43,3 +46,17 @@
   - Cleric's spells -> Artificer's crafts
   - HolyTome artifact -> PocketWorkshop artifact
 - Follow similar UI patterns in WndArtificerSpells.java
+- Huntress SpiritBow -> ModularInfusionRelay for ranged weapon implementation
+
+## Implemented Components
+
+1. **PocketWorkshop**: Artificer's primary artifact for crafting, based on Cleric's HolyTome
+2. **ArtificerSpell/TargetedArtificerSpell**: Base classes for implementing crafting abilities
+3. **ModularInfusionRelay**: Artificer's special weapon that fires energy bolts (based on SpiritBow)
+4. **SeekingMine**: First crafting ability - a magical tracking explosive that deals 2-6 damage
+
+## Message Locations
+- Item descriptions: `/core/src/main/assets/messages/items/items.properties`
+- Hero/spell descriptions: `/core/src/main/assets/messages/actors/actors.properties`
+- Add new entries for each newly created class and ability
+- Message format keys follow the Java class path structure
