@@ -109,18 +109,27 @@ public abstract class ArtificerSpell {
 		Talent.onArtifactUsed(hero);
 	}
 
-	public static ArrayList<ArtificerSpell> getSpellList(Hero cleric, int tier){
+	public static ArrayList<ArtificerSpell> getSpellList(Hero artificer, int tier){
 		ArrayList<ArtificerSpell> spells = new ArrayList<>();
 
-
-
-
+		if (tier == 1) {
+			spells.add(SeekingMine.INSTANCE);
+			// Add other tier 1 spells as they are implemented
+		} else if (tier == 2) {
+			// Tier 2 spells will go here
+		} else if (tier == 3) {
+			// Tier 3 spells will go here
+		} else if (tier == 4) {
+			// Tier 4 spells will go here
+		}
 
 		return spells;
 	}
 
 	public static ArrayList<ArtificerSpell> getAllSpells() {
 		ArrayList<ArtificerSpell> spells = new ArrayList<>();
-				return spells;
+		spells.add(SeekingMine.INSTANCE);
+		// Add all other spells as they are implemented
+		return spells;
 	}
 }
