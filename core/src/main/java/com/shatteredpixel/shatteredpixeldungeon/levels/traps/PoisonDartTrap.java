@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AethericCloaking;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -55,6 +56,10 @@ public class PoisonDartTrap extends Trap {
 	}
 	
 	protected boolean canTarget( Char ch ){
+		// Skip targeting if character has AethericCloaking
+		if (ch instanceof Hero && ((Hero)ch).buff(AethericCloaking.class) != null) {
+			return false;
+		}
 		return true;
 	}
 	

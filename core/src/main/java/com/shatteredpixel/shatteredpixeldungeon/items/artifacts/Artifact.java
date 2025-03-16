@@ -52,6 +52,9 @@ public class Artifact extends KindofMisc {
 	//levelCap is the artifact's maximum level
 	protected int levelCap = 0;
 
+	// Used in higher level craftings
+	protected int spareParts = 0;
+
 	//the current artifact charge
 	protected int charge = 0;
 	//the build towards next charge, usually rolls over at 1.
@@ -62,6 +65,22 @@ public class Artifact extends KindofMisc {
 
 	//used by some artifacts to keep track of duration of effects or cooldowns to use.
 	protected int cooldown = 0;
+
+	public int getSparePartsCount(){
+		return this.spareParts;
+	}
+
+	public int addSpareParts(int partsToAddCount){
+		if(partsToAddCount <0) { partsToAddCount =0;}
+		spareParts += partsToAddCount;
+		return spareParts;
+	}
+
+	public int consumeSpareParts(int partsToUseCount){
+		if(partsToUseCount < 0) { partsToUseCount =0;}
+		spareParts -= partsToUseCount;
+		return spareParts;
+	}
 
 	@Override
 	public boolean doEquip( final Hero hero ) {

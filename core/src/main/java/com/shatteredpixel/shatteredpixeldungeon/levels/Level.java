@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AethericCloaking;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SmokeScreen;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Web;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.WellWater;
@@ -1213,6 +1214,12 @@ public abstract class Level implements Bundlable {
 				Sample.INSTANCE.play(Assets.Sounds.TRAP);
 				discover(cell);
 				timeFreeze.setDelayedPress(cell);
+				
+			} else if (Dungeon.hero.pos == cell && Dungeon.hero.buff(AethericCloaking.class) != null) {
+				// Hero has Aetheric Cloaking active, don't trigger trap but still discover it
+				Sample.INSTANCE.play(Assets.Sounds.MELD);
+				discover(cell);
+				GLog.i(Messages.get(AethericCloaking.class, "trap_bypass"));
 				
 			} else {
 				if (Dungeon.hero.pos == cell) {

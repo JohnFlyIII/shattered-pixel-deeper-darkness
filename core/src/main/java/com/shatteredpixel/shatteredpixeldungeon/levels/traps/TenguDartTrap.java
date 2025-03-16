@@ -24,6 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AethericCloaking;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Tengu;
 
 public class TenguDartTrap extends PoisonDartTrap {
@@ -44,6 +46,10 @@ public class TenguDartTrap extends PoisonDartTrap {
 	
 	@Override
 	protected boolean canTarget(Char ch) {
+		// Skip targeting if character has AethericCloaking
+		if (ch instanceof Hero && ((Hero)ch).buff(AethericCloaking.class) != null) {
+			return false;
+		}
 		return !(ch instanceof Tengu);
 	}
 }

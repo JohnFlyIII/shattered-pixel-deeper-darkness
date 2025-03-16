@@ -81,7 +81,7 @@ public class TalentInit {
                 Collections.addAll(tierTalents, Talent.SATIATED_SPELLS, Talent.HOLY_INTUITION, Talent.SEARING_LIGHT, Talent.SHIELD_OF_LIGHT);
                 break;
             case ARTIFICER:
-                Collections.addAll(tierTalents, Talent.FULL_TANK, Talent.EFFICIENT_CRAFTING, Talent.PROVOKED_ANGER, Talent.IRON_WILL);
+                Collections.addAll(tierTalents, Talent.FULL_TANK, Talent.EFFICIENT_CRAFTING, Talent.AETHERIC_CAPACITOR, Talent.AETHERIC_CLOAKING);
                 break;
         }
         for (Talent talent : tierTalents) {

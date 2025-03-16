@@ -6,8 +6,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AethericCloaking;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -25,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 import com.shatteredpixel.shatteredpixeldungeon.windows.artificer.WndArtificerSpells;
 import com.watabou.utils.Bundle;
@@ -38,18 +41,31 @@ public class PocketWorkshop extends Artifact {
 
         exp = 0;
         levelCap = 10;
+        spareParts = 0;
 
-        charge = Math.min(level()+3, 10);
+        charge = Math.min(level()+3, getMaxChargeCap());
         partialCharge = 0;
-        chargeCap = Math.min(level()+3, 10);
+        chargeCap = Math.min(level()+3, getMaxChargeCap());
 
         defaultAction = AC_CRAFT;
 
         unique = true;
         bones = false;
     }
+    
+    // Helper method to calculate the maximum charge capacity based on Aetheric Capacitor talent
+    private int getMaxChargeCap() {
+        int maxCap = 10;
+        if (Dungeon.hero != null && Dungeon.hero.hasTalent(Talent.AETHERIC_CAPACITOR)) {
+            maxCap += Dungeon.hero.pointsInTalent(Talent.AETHERIC_CAPACITOR);
+        }
+        return maxCap;
+    }
+
+
 
     public static final String AC_CRAFT = "CRAFT";
+    public static final String AC_CLOAK = "CLOAK";
 
     @Override
     public ArrayList<String> actions(Hero hero) {
@@ -58,6 +74,13 @@ public class PocketWorkshop extends Artifact {
                 && !cursed
                 && hero.buff(MagicImmune.class) == null) {
             actions.add(AC_CRAFT);
+            
+            // Add cloaking action if hero has the talent and it's not on cooldown
+            if (hero.hasTalent(Talent.AETHERIC_CLOAKING) 
+                    && hero.buff(AethericCloaking.AethericCloakingCooldown.class) == null
+                    && charge >= 1) {
+                actions.add(AC_CLOAK);
+            }
         }
         return actions;
     }
@@ -76,6 +99,26 @@ public class PocketWorkshop extends Artifact {
                 GLog.i(Messages.get(this, "cursed"));
             } else {
                 GameScene.show(new WndArtificerSpells(this, hero, false));
+            }
+        } else if (action.equals(AC_CLOAK)) {
+            if (!isEquipped(hero) && !hero.hasTalent(Talent.AETHERIC_EXPANSION)) {
+                GLog.i(Messages.get(Artifact.class, "need_to_equip"));
+            } else if (cursed) {
+                GLog.i(Messages.get(this, "cursed"));
+            } else if (hero.buff(AethericCloaking.AethericCloakingCooldown.class) != null) {
+                GLog.i(Messages.get(this, "cooling_down"));
+            } else if (charge < 1) {
+                GLog.i(Messages.get(this, "no_charge"));
+            } else {
+                // Activate aetheric cloaking
+                AethericCloaking.activate(hero);
+                spendCharge(1);
+                hero.sprite.operate(hero.pos);
+                hero.spend(1f); // Costs 1 turn to activate
+                hero.busy();
+                Sample.INSTANCE.play(Assets.Sounds.MELD);
+                GLog.i(Messages.get(this, "cloaking_active"));
+                hero.next();
             }
         }
     }
@@ -188,10 +231,23 @@ public class PocketWorkshop extends Artifact {
             updateQuickslot();
         }
     }
+    
+    // Called when the Aetheric Capacitor talent is upgraded to recalculate charge cap
+    public void recalculateChargeCap() {
+        int newCap = Math.min(level()+3, getMaxChargeCap());
+        if (newCap > chargeCap) {
+            chargeCap = newCap;
+            if (charge == chargeCap-1) {
+                // If charge was at max, set it to new max
+                charge = chargeCap;
+            }
+            updateQuickslot();
+        }
+    }
 
     @Override
     public Item upgrade() {
-        chargeCap = Math.min(chargeCap + 1, 10);
+        chargeCap = Math.min(chargeCap + 1, getMaxChargeCap());
         return super.upgrade();
     }
 
@@ -236,6 +292,7 @@ public class PocketWorkshop extends Artifact {
     }
 
     private static final String QUICK_CLS = "quick_cls";
+    private static final String SPARE_PARTS = "spare_parts";
 
     @Override
     public void storeInBundle(Bundle bundle) {
@@ -243,6 +300,7 @@ public class PocketWorkshop extends Artifact {
         if (quickAbility != null) {
             bundle.put(QUICK_CLS, quickAbility.getClass());
         }
+        bundle.put(SPARE_PARTS, spareParts);
     }
 
     @Override
@@ -255,6 +313,9 @@ public class PocketWorkshop extends Artifact {
                     quickAbility = ability;
                 }
             }
+        }
+        if (bundle.contains(SPARE_PARTS)) {
+            spareParts = bundle.getInt(SPARE_PARTS);
         }
     }
 
