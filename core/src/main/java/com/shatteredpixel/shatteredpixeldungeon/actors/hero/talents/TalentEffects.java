@@ -177,15 +177,18 @@ public class TalentEffects {
                 }
             }
         }
-        
+
         // Handle Aetheric Capacitor talent upgrade
         if (talent == Talent.AETHERIC_CAPACITOR && hero.heroClass == HeroClass.ARTIFICER) {
-            for (Item item : Dungeon.hero.belongings.backpack) {
+            // Check equipped artifact
+            if (hero.belongings.artifact instanceof PocketWorkshop) {
+                ((PocketWorkshop) hero.belongings.artifact).recalculateChargeCap();
+            }
+
+            // Check backpack
+            for (Item item : hero.belongings.backpack) {
                 if (item instanceof PocketWorkshop) {
-                    if (!hero.belongings.lostInventory() || item.keptThroughLostInventory()) {
-                        // Recalculate charge cap based on the upgraded talent
-                        ((PocketWorkshop) item).recalculateChargeCap();
-                    }
+                    ((PocketWorkshop) item).recalculateChargeCap();
                 }
             }
         }

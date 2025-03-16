@@ -48,7 +48,7 @@ public class SeekingMine extends TargetedArtificerSpell {
 
     @Override
     public int icon() {
-        return HeroIcon.NONE; // Replace with appropriate icon when available
+        return HeroIcon.SPECTRAL_BLADES; // Using an existing icon as placeholder until we have a dedicated one
     }
 
     @Override

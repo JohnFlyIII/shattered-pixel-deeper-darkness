@@ -73,6 +73,10 @@ public abstract class ArtificerSpell {
 		return 1;
 	}
 
+	public int level() { return 0; }
+
+	public int maxLevel(){ return 0; }
+
 	public boolean canCast( Hero hero ){
 		return true;
 	}
@@ -115,6 +119,9 @@ public abstract class ArtificerSpell {
 		if (tier == 1) {
 			spells.add(SeekingMine.INSTANCE);
 			spells.add(MechanistsDisassembly.INSTANCE);
+			if (artificer.hasTalent(Talent.AETHERIC_CLOAKING)) {
+				spells.add(TrapCloaker.INSTANCE);
+			}
 			// Add other tier 1 spells as they are implemented
 		} else if (tier == 2) {
 			// Tier 2 spells will go here
@@ -131,6 +138,7 @@ public abstract class ArtificerSpell {
 		ArrayList<ArtificerSpell> spells = new ArrayList<>();
 		spells.add(SeekingMine.INSTANCE);
 		spells.add(MechanistsDisassembly.INSTANCE);
+		spells.add(TrapCloaker.INSTANCE);
 		// Add all other spells as they are implemented
 		return spells;
 	}

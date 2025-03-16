@@ -55,7 +55,7 @@ public class MechanistsDisassembly extends TargetedArtificerSpell {
 
     @Override
     public int icon() {
-        return HeroIcon.NONE; // Replace with appropriate icon when available
+        return HeroIcon.SMOKE_BOMB; // Using an existing icon as placeholder until we have a dedicated one
     }
 
     @Override
@@ -90,6 +90,7 @@ public class MechanistsDisassembly extends TargetedArtificerSpell {
                         disarmTrapWithVisualEffect(trap, cell);
                         workshop.addSpareParts(PARTS_GAINED);
                         GLog.p(Messages.get(MechanistsDisassembly.class, "disarm_success", PARTS_GAINED));
+                        GLog.p("You have " + workshop.getSpareParts() + " spare parts." );
                     } else {
                         // Failed to disassemble safely, trigger the trap
                         GLog.w(Messages.get(MechanistsDisassembly.class, "disarm_failure"));

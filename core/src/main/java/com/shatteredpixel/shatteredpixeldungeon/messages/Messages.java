@@ -26,6 +26,7 @@ import com.badlogic.gdx.utils.I18NBundle;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -34,7 +35,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IllegalFormatException;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /*
 	Simple wrapper class for libGDX I18NBundles.
@@ -45,25 +49,22 @@ import java.util.Locale;
  */
 public class Messages {
 
-	private static ArrayList<I18NBundle> bundles;
+	private static final String PACKAGE_PREFIX = "com.shatteredpixel.shatteredpixeldungeon.";
+	public static final String NO_TEXT_FOUND = "!!!NO TEXT FOUND!!!";
+
+	private static List<I18NBundle> bundles;
 	private static Languages lang;
 	private static Locale locale;
 
-	public static final String NO_TEXT_FOUND = "!!!NO TEXT FOUND!!!";
+	private static final Map<String, DecimalFormat> formatters = new HashMap<>();
 
-	public static Languages lang(){
-		return lang;
-	}
+	//Words which should not be capitalized in title case, mostly prepositions which appear ingame
+	//This list is not comprehensive!
+	private static final Set<String> noCaps = new HashSet<>(
+			Arrays.asList("a", "an", "and", "of", "by", "to", "the", "x", "for")
+	);
 
-	public static Locale locale(){
-		return locale;
-	}
-
-	/**
-	 * Setup Methods
-	 */
-
-	private static String[] prop_files = new String[]{
+	private static final String[] BUNDLE_FILES = new String[]{
 			Assets.Messages.ACTORS,
 			Assets.Messages.ITEMS,
 			Assets.Messages.JOURNAL,
@@ -75,144 +76,191 @@ public class Messages {
 			Assets.Messages.WINDOWS
 	};
 
-	static{
-		formatters = new HashMap<>();
+	static {
 		setup(SPDSettings.language());
 	}
 
-	public static void setup( Languages lang ){
+	public static Languages lang() {
+		return lang;
+	}
+
+	public static Locale locale() {
+		return locale;
+	}
+
+	/**
+	 * Setup Methods
+	 */
+	public static void setup(Languages language) {
 		//seeing as missing keys are part of our process, this is faster than throwing an exception
 		I18NBundle.setExceptionOnMissingKey(false);
 
 		//store language and locale info for various string logic
-		Messages.lang = lang;
+		Messages.lang = language;
 		Locale bundleLocal;
-		if (lang == Languages.ENGLISH){
+		if (language == Languages.ENGLISH) {
 			locale = Locale.ENGLISH;
 			bundleLocal = Locale.ROOT; //english is source, uses root locale for fetching bundle
 		} else {
-			locale = new Locale(lang.code());
+			locale = new Locale(language.code());
 			bundleLocal = locale;
 		}
 		formatters.clear();
 
 		//strictly match the language code when fetching bundles however
 		bundles = new ArrayList<>();
-		for (String file : prop_files) {
+		for (String file : BUNDLE_FILES) {
 			bundles.add(I18NBundle.createBundle(Gdx.files.internal(file), bundleLocal));
 		}
 	}
 
-
-
 	/**
 	 * Resource grabbing methods
 	 */
-
-	public static String get(String key, Object...args){
+	public static String get(String key, Object... args) {
 		return get(null, key, args);
 	}
 
-	public static String get(Object o, String k, Object...args){
-		return get(o.getClass(), k, args);
+	public static String get(Object o, String k, Object... args) {
+		return o == null ? get((Class)null, k, args) : get(o.getClass(), k, args);
 	}
 
-	public static String get(Class c, String k, Object...args){
-		String key;
-		if (c != null){
-			key = c.getName().replace("com.shatteredpixel.shatteredpixeldungeon.", "");
-			key += "." + k;
-		} else
-			key = k;
+	public static String get(Class c, String k, Object... args) {
+		return getWithRecursion(c, k, args, new ArrayList<>());
+	}
 
-		String value = getFromBundle(key.toLowerCase(Locale.ENGLISH));
-		if (value != null){
-			if (args.length > 0) return format(value, args);
-			else return value;
+	/**
+	 * Helper method that implements the recursive lookup with cycle detection
+	 */
+	private static String getWithRecursion(Class c, String k, Object[] args, List<Class> visitedClasses) {
+		// Build the key
+		String fullKey = buildKey(c, k);
+
+		// Try to get the value from bundles
+		String value = getFromBundle(fullKey.toLowerCase(Locale.ENGLISH));
+
+		if (value != null) {
+			// Found a value, format if necessary and return
+			return args.length > 0 ? format(value, args) : value;
+		} else if (c != null && c.getSuperclass() != null && !visitedClasses.contains(c.getSuperclass())) {
+			// If no value found and there's a parent class, try with it
+			// Add current class to visited set to prevent cycles
+			visitedClasses.add(c);
+			return getWithRecursion(c.getSuperclass(), k, args, visitedClasses);
 		} else {
-			//this is so child classes can inherit properties from their parents.
-			//in cases where text is commonly grabbed as a utility from classes that aren't mean to be instantiated
-			//(e.g. flavourbuff.dispTurns()) using .class directly is probably smarter to prevent unnecessary recursive calls.
-			if (c != null && c.getSuperclass() != null){
-				return get(c.getSuperclass(), k, args);
-			} else {
-				return NO_TEXT_FOUND;
-			}
+			// No value found and no more parent classes to try, or we've already visited this class
+			logMissingText(c, k);
+			return NO_TEXT_FOUND;
 		}
 	}
 
-	private static String getFromBundle(String key){
+	/**
+	 * Build a key from a class and local key
+	 */
+	private static String buildKey(Class c, String k) {
+		if (c != null) {
+			return c.getName().replace(PACKAGE_PREFIX, "") + "." + k;
+		} else {
+			return k;
+		}
+	}
+
+	/**
+	 * Log detailed information about missing text
+	 */
+	private static void logMissingText(Class c, String k) {
+		// Build a more informative log message
+		if (c != null) {
+			GLog.w("** Text not found for key: %s.%s (class: %s)",
+					c.getName().replace(PACKAGE_PREFIX, ""),
+					k,
+					c.getSimpleName());
+		} else {
+			GLog.w("** Text not found for key: %s (no class provided)", k);
+		}
+
+		// Add stack trace info to see where the call came from
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		if (stackTrace.length >= 4) {
+			// We need to skip Messages class methods to find the actual caller
+			StackTraceElement caller = stackTrace[3];
+			GLog.w("** Called from: %s.%s (line %d)",
+					caller.getClassName(),
+					caller.getMethodName(),
+					caller.getLineNumber());
+		}
+	}
+
+	private static String getFromBundle(String key) {
 		String result;
-		for (I18NBundle b : bundles){
+		for (I18NBundle b : bundles) {
 			result = b.get(key);
 			//if it isn't the return string for no key found, return it
-			if (result.length() != key.length()+6 || !result.contains(key)){
+			if (result.length() != key.length() + 6 || !result.contains(key)) {
 				return result;
 			}
 		}
 		return null;
 	}
 
-
-
 	/**
 	 * String Utility Methods
 	 */
-
-	public static String format( String format, Object...args ) {
+	public static String format(String format, Object... args) {
 		try {
 			return String.format(locale(), format, args);
 		} catch (IllegalFormatException e) {
-			ShatteredPixelDungeon.reportException( new Exception("formatting error for the string: " + format, e) );
+			ShatteredPixelDungeon.reportException(new Exception("formatting error for the string: " + format, e));
 			return format;
 		}
 	}
 
-	private static HashMap<String, DecimalFormat> formatters;
-
-	public static String decimalFormat( String format, double number ){
-		if (!formatters.containsKey(format)){
+	public static String decimalFormat(String format, double number) {
+		if (!formatters.containsKey(format)) {
 			formatters.put(format, new DecimalFormat(format, DecimalFormatSymbols.getInstance(locale())));
 		}
 		return formatters.get(format).format(number);
 	}
 
-	public static String capitalize( String str ){
-		if (str.length() == 0)  return str;
-		else                    return str.substring( 0, 1 ).toUpperCase(locale) + str.substring( 1 );
+	public static String capitalize(String str) {
+		if (str.length() == 0) return str;
+		else return str.substring(0, 1).toUpperCase(locale) + str.substring(1);
 	}
 
-	//Words which should not be capitalized in title case, mostly prepositions which appear ingame
-	//This list is not comprehensive!
-	private static final HashSet<String> noCaps = new HashSet<>(
-			Arrays.asList("a", "an", "and", "of", "by", "to", "the", "x", "for")
-	);
+	public static String titleCase(String str) {
+		if (str.length() == 0) return str;
 
-	public static String titleCase( String str ){
 		//English capitalizes every word except for a few exceptions
-		if (lang == Languages.ENGLISH){
-			String result = "";
+		if (lang == Languages.ENGLISH) {
+			StringBuilder result = new StringBuilder();
 			//split by any unicode space character
-			for (String word : str.split("(?<=\\p{Zs})")){
-				if (noCaps.contains(word.trim().toLowerCase(Locale.ENGLISH).replaceAll(":|[0-9]", ""))){
-					result += word;
+			for (String word : str.split("(?<=\\p{Zs})")) {
+				if (shouldNotCapitalize(word.trim())) {
+					result.append(word);
 				} else {
-					result += capitalize(word);
+					result.append(capitalize(word));
 				}
 			}
 			//first character is always capitalized.
-			return capitalize(result);
+			return capitalize(result.toString());
 		}
 
 		//Otherwise, use sentence case
 		return capitalize(str);
 	}
 
-	public static String upperCase( String str ){
+	/**
+	 * Helper method to determine if a word should not be capitalized in title case
+	 */
+	private static boolean shouldNotCapitalize(String word) {
+		return noCaps.contains(word.toLowerCase(Locale.ENGLISH).replaceAll(":|[0-9]", ""));
+	}
+
+	public static String upperCase(String str) {
 		return str.toUpperCase(locale);
 	}
 
-	public static String lowerCase( String str ){
+	public static String lowerCase(String str) {
 		return str.toLowerCase(locale);
 	}
 }

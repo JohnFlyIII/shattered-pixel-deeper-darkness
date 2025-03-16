@@ -28,45 +28,113 @@ import com.watabou.utils.Signal;
 public class GLog {
 
 	public static final String TAG = "GAME";
-	
-	public static final String POSITIVE		= "++ ";
-	public static final String NEGATIVE		= "-- ";
-	public static final String WARNING		= "** ";
-	public static final String HIGHLIGHT	= "@@ ";
 
-	public static final String NEW_LINE	    = "\n";
-	
+	public static final String POSITIVE = "++ ";
+	public static final String NEGATIVE = "-- ";
+	public static final String WARNING = "** ";
+	public static final String HIGHLIGHT = "@@ ";
+	public static final String DEBUG = "DB ";
+	public static final String NEW_LINE = "\n";
+
 	public static Signal<String> update = new Signal<>();
 
-	public static void newLine(){
-		update.dispatch( NEW_LINE );
+	public static void newLine() {
+		update.dispatch(NEW_LINE);
 	}
-	
-	public static void i( String text, Object... args ) {
+
+	public static void i(String text, Object... args) {
+		if (args.length > 0) {
+			text = Messages.format(text, args);
+		}
 
 		GameLogger.i("Info", text);
+		DeviceCompat.log(TAG, text);
+		update.dispatch(text);
+	}
 
-				if (args.length > 0) {
-			text = Messages.format( text, args );
+	public static void p(String text, Object... args) {
+		if (args.length > 0) {
+			text = Messages.format(text, args);
 		}
-		
-		DeviceCompat.log( TAG, text );
-		update.dispatch( text );
+
+		String prefixedText = POSITIVE + text;
+
+		GameLogger.i("Positive", text);
+		DeviceCompat.log(TAG, prefixedText);
+		update.dispatch(prefixedText);
 	}
-	
-	public static void p( String text, Object... args ) {
-		i( POSITIVE + text, args );
+
+	public static void n(String text, Object... args) {
+		if (args.length > 0) {
+			text = Messages.format(text, args);
+		}
+
+		String prefixedText = NEGATIVE + text;
+
+		GameLogger.i("Negative", text);
+		DeviceCompat.log(TAG, prefixedText);
+		update.dispatch(prefixedText);
 	}
-	
-	public static void n( String text, Object... args ) {
-		i( NEGATIVE + text, args );
+
+	public static void w(String text, Object... args) {
+		if (args.length > 0) {
+			text = Messages.format(text, args);
+		}
+
+		String prefixedText = WARNING + text;
+
+		GameLogger.w("Warning", text);
+		DeviceCompat.log(TAG, prefixedText);
+		update.dispatch(prefixedText);
 	}
-	
-	public static void w( String text, Object... args ) {
-		i( WARNING + text, args );
+
+	public static void h(String text, Object... args) {
+		if (args.length > 0) {
+			text = Messages.format(text, args);
+		}
+
+		String prefixedText = HIGHLIGHT + text;
+
+		GameLogger.i("Highlight", text);
+		DeviceCompat.log(TAG, prefixedText);
+		update.dispatch(prefixedText);
 	}
-	
-	public static void h( String text, Object... args ) {
-		i( HIGHLIGHT + text, args );
+
+	public static void d(String text, Object... args) {
+		if (args.length > 0) {
+			text = Messages.format(text, args);
+		}
+
+		String prefixedText = DEBUG + text;
+
+		GameLogger.d("Debug", text);
+		DeviceCompat.log(TAG, prefixedText);
+		update.dispatch(prefixedText);
+	}
+
+	/**
+	 * Logs an error message
+	 */
+	public static void e(String text, Object... args) {
+		if (args.length > 0) {
+			text = Messages.format(text, args);
+		}
+
+		GameLogger.e("Error", text);
+		DeviceCompat.log(TAG, "ERROR: " + text);
+		update.dispatch("ERROR: " + text);
+	}
+
+	/**
+	 * Logs a message with formatted arguments but doesn't dispatch to the game UI
+	 * Useful for debug logging that shouldn't appear in-game
+	 */
+	public static void logOnly(String text, Object... args) {
+		if (args.length > 0) {
+			text = Messages.format(text, args);
+		}
+
+		GameLogger.d("LogOnly", text);
+		DeviceCompat.log(TAG, "LOG: " + text);
 	}
 }
