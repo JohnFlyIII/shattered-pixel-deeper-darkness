@@ -114,6 +114,7 @@ public abstract class ArtificerSpell {
 
 		if (tier == 1) {
 			spells.add(SeekingMine.INSTANCE);
+			spells.add(MechanistsDisassembly.INSTANCE);
 			// Add other tier 1 spells as they are implemented
 		} else if (tier == 2) {
 			// Tier 2 spells will go here
@@ -129,6 +130,7 @@ public abstract class ArtificerSpell {
 	public static ArrayList<ArtificerSpell> getAllSpells() {
 		ArrayList<ArtificerSpell> spells = new ArrayList<>();
 		spells.add(SeekingMine.INSTANCE);
+		spells.add(MechanistsDisassembly.INSTANCE);
 		// Add all other spells as they are implemented
 		return spells;
 	}
