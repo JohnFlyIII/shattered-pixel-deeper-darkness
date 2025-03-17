@@ -114,7 +114,7 @@ public class TalentInit {
                 Collections.addAll(tierTalents, Talent.ENLIGHTENING_MEAL, Talent.RECALL_INSCRIPTION, Talent.SUNRAY, Talent.DIVINE_SENSE, Talent.BLESS);
                 break;
             case ARTIFICER:
-                Collections.addAll(tierTalents, Talent.ENERGIZING_MEAL, Talent.REJUVENATING_STEPS, Talent.HEIGHTENED_SENSES, Talent.MYSTICAL_MEAL, Talent.SILENT_STEPS);
+                Collections.addAll(tierTalents, Talent.ENERGIZING_MEAL, Talent.REJUVENATING_STEPS, Talent.HEIGHTENED_SENSES, Talent.MYSTICAL_MEAL, Talent.CLOCKWORK_RECLAMATION);
                 break;
         }
         for (Talent talent : tierTalents) {

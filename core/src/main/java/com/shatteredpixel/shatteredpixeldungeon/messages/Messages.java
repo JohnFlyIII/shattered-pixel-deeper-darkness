@@ -125,9 +125,17 @@ public class Messages {
 		return o == null ? get((Class)null, k, args) : get(o.getClass(), k, args);
 	}
 
-	public static String get(Class c, String k, Object... args) {
-		return getWithRecursion(c, k, args, new ArrayList<>());
-	}
+	public static String get(Class<?> c, String k, Object... args) {
+		var result = getWithRecursion(c, k, args, new ArrayList<>());
+		if(result.equals(NO_TEXT_FOUND))
+		{
+			// Build the key
+			String fullKey = buildKey(c, k).toLowerCase(Locale.ENGLISH);
+
+			logMissingText(c, fullKey);
+		}
+        return result;
+    }
 
 	/**
 	 * Helper method that implements the recursive lookup with cycle detection
