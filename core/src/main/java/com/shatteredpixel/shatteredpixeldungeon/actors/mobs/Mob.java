@@ -63,10 +63,12 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Surprise;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Wound;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.EnergyParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.PocketWorkshop;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
@@ -890,6 +892,39 @@ public abstract class Mob extends Char {
 						&& Dungeon.hero.buff(TalentBuffs.LethalHasteCooldown.class) == null){
 					Buff.affect(Dungeon.hero, TalentBuffs.LethalHasteCooldown.class, 100f);
 					Buff.affect(Dungeon.hero, GreaterHaste.class).set(2 + 2*Dungeon.hero.pointsInTalent(Talent.LETHAL_HASTE));
+				}
+				
+				// Clockwork Reclamation talent for Artificer
+				if (Dungeon.hero.heroClass == HeroClass.ARTIFICER 
+						&& Dungeon.hero.hasTalent(Talent.CLOCKWORK_RECLAMATION)) {
+					
+					int talentLevel = Dungeon.hero.pointsInTalent(Talent.CLOCKWORK_RECLAMATION);
+					float chance = 0.15f * talentLevel;
+					
+					if (Random.Float() < chance) {
+						// Calculate max potential parts (50% of XP, min 1)
+						int maxParts = Math.max(1, Math.round(EXP * 0.5f));
+						
+						// Calculate actual parts based on talent level
+						float partPercent = talentLevel == 3 ? 1f : (talentLevel == 2 ? 0.5f : 0.25f);
+						int parts = Math.max(1, Math.round(maxParts * partPercent));
+						
+						// Find PocketWorkshop and add parts
+						for (Item item : Dungeon.hero.belongings.backpack) {
+							if (item instanceof PocketWorkshop) {
+								((PocketWorkshop) item).addSpareParts(parts);
+								
+								// Show visual effect and message
+								if (Dungeon.level.heroFOV[pos]) {
+									Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(parts), FloatingText.GOLD);
+									CellEmitter.get(pos).burst(EnergyParticle.FACTORY, 8);
+									GLog.p(Messages.get(Talent.class, "clockwork_reclamation_proc", parts));
+									Sample.INSTANCE.play(Assets.Sounds.GOLD);
+								}
+								break;
+							}
+						}
+					}
 				}
 			}
 

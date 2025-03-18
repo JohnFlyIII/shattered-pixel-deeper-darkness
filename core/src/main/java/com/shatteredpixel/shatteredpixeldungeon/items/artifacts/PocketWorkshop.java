@@ -127,6 +127,23 @@ public class PocketWorkshop extends Artifact {
     public static final String AC_CLOAK = "CLOAK";
 
     @Override
+    public String desc() {
+        String desc = Messages.get(this, "desc");
+
+        desc += "\n\n" + Messages.get(this, "stats", charge, chargeCap, spareParts);
+
+        if (isEquipped(Dungeon.hero)) {
+            if (cursed) {
+                desc += "\n\n" + Messages.get(this, "cursed_worn");
+            }
+        } else if (cursed && cursedKnown) {
+            desc += "\n\n" + Messages.get(this, "cursed_unworn");
+        }
+
+        return desc;
+    }
+
+    @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);
         if ((isEquipped(hero) || hero.hasTalent(Talent.AETHERIC_EXPANSION))

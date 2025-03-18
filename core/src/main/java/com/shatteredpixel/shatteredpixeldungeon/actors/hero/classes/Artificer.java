@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.PocketWorkshop;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -72,21 +73,12 @@ public class Artificer extends HeroBase {
 
         new PocketWorkshop().identify().collect();
 
+        new PotionOfExperience().quantity(10).identify().collect();
         // Two potions of strength
-        PotionOfStrength potion = new PotionOfStrength();
-        potion.identify();
-        potion.collect();
-        potion = new PotionOfStrength();
-        potion.identify();
-        potion.collect();
+        new PotionOfStrength().quantity(2).identify().collect();
 
         // Two scrolls of upgrade
-        ScrollOfUpgrade scroll = new ScrollOfUpgrade();
-        scroll.identify();
-        scroll.collect();
-        scroll = new ScrollOfUpgrade();
-        scroll.identify();
-        scroll.collect();
+        new ScrollOfUpgrade().quantity(2).identify().collect();
 
         // Add a random ring
         Ring ring = (Ring) Generator.random(Generator.Category.RING);
