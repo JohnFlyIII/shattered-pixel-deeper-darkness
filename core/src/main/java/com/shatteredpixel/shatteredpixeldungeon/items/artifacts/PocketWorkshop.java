@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 import com.shatteredpixel.shatteredpixeldungeon.windows.artificer.WndArtificerSpells;
+import com.shatteredpixel.shatteredpixeldungeon.windows.artificer.WndInfuseEssence;
 import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;
@@ -108,6 +109,11 @@ public class PocketWorkshop extends Artifact {
         return bonus;
     }
 
+    // Gets the current charge value
+    public int getCharges(){
+        return charge;
+    }
+
     // Public getter for the total maximum charge capacity
     public int getMaxCharges() {
         return chargeCap;
@@ -150,7 +156,6 @@ public class PocketWorkshop extends Artifact {
                 && !cursed
                 && hero.buff(MagicImmune.class) == null) {
             actions.add(AC_CRAFT);
-
        }
         return actions;
     }
@@ -243,8 +248,8 @@ public class PocketWorkshop extends Artifact {
         // Check for Efficient Crafting talent
         Hero hero = Dungeon.hero;
         if (hero != null && hero.hasTalent(Talent.EFFICIENT_CRAFTING)) {
-            // 33% chance at level 1, 66% chance at level 2
-            float conserveChance = 0.33f * Math.min(hero.pointsInTalent(Talent.EFFICIENT_CRAFTING), 2);
+            // 25% chance at level 1, 50% chance at level 2
+            float conserveChance = 0.25f * Math.min(hero.pointsInTalent(Talent.EFFICIENT_CRAFTING), 2);
             if (Random.Float() < conserveChance) {
                 // Efficient crafting triggered - conserve 1 charge
                 GLog.p(Messages.get(this, "efficient_crafting_proc"));

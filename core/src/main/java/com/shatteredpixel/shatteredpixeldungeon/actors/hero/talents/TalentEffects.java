@@ -177,6 +177,9 @@ public class TalentEffects {
                 }
             }
         }
+        
+        // No special effects needed on talent upgrade for INFUSE_ESSENCE
+        // It will be used through a window interface when the hero chooses to use it
 
         // Handle Aetheric Capacitor talent upgrade
         if (talent == Talent.AETHERIC_CAPACITOR && hero.heroClass == HeroClass.ARTIFICER) {

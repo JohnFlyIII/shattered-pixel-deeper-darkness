@@ -70,6 +70,7 @@ public class Speck extends Image {
 	public static final int STORM       = 117;
 	public static final int INFERNO     = 118;
 	public static final int BLIZZARD    = 119;
+	public static final int GEAR        = 120;
 	
 	private static final int SIZE = 7;
 	

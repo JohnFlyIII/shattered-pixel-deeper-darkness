@@ -2031,6 +2031,34 @@ public class Hero extends Char {
 		return 5 + lvl * 5;
 	}
 	
+	/**
+	 * Reduces the hero's level by the specified amount.
+	 * Also reduces max HP, attack, and defense stats.
+	 * 
+	 * @param levels Number of levels to lose
+	 * @return true if successful, false if hero would go below level 1
+	 */
+	public boolean loseLevel(int levels) {
+		if (lvl <= levels) {
+			return false; // Cannot reduce below level 1
+		}
+		
+		lvl -= levels;
+		exp = 0; // Reset experience to zero
+		
+		// Reduce HP (5 per level lost)
+		updateHT(false);
+		
+		// Reduce attack and defense
+		attackSkill -= levels;
+		defenseSkill -= levels;
+		
+		sprite.showStatus(CharSprite.NEGATIVE, Messages.get(Hero.class, "level_down", levels, levels));
+		GLog.w(Messages.get(Hero.class, "level_down", levels, levels));
+		
+		return true;
+	}
+	
 	public boolean isStarving() {
 		return Buff.affect(this, Hunger.class).isStarving();
 	}

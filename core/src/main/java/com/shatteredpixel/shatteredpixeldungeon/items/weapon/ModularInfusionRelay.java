@@ -51,7 +51,7 @@ public class ModularInfusionRelay extends Weapon {
 	public static final String AC_SHOOT	= "SHOOT";
 	
 	{
-		image = ItemSpriteSheet.SPIRIT_BOW; // Placeholder until a new sprite is created
+		image = ItemSpriteSheet.MODULAR_INFUSION_RELAY; // Changed from SPIRIT_BOW to match the actual icon
 		
 		defaultAction = AC_SHOOT;
 		usesTargeting = true;

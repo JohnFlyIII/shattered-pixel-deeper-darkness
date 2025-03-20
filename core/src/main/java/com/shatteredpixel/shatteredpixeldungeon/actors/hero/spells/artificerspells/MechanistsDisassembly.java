@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.PocketWorkshop;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -48,7 +49,7 @@ public class MechanistsDisassembly extends TargetedArtificerSpell {
     public static final MechanistsDisassembly INSTANCE = new MechanistsDisassembly();
     
     // Base chance the trap is not triggered when disassembling
-    private static final float BASE_SAFETY_CHANCE = 0.25f;
+    private static final float BASE_SAFETY_CHANCE = 0.10f; // 10% base chance plus 10% per workshop level
     
     // Parts gained from successful disassembly
     private static final int PARTS_GAINED = 10;
@@ -83,7 +84,10 @@ public class MechanistsDisassembly extends TargetedArtificerSpell {
                 
                 if (trap != null && trap.visible) {
                     // Found a visible trap to disassemble
-                    boolean success = Random.Float() < BASE_SAFETY_CHANCE;
+                    // Calculate success chance: 10% + 10% per workshop level (capped at 100%)
+                    int workshopLevel = workshop != null ? workshop.level() : 0;
+                    float successChance = Math.min(1.0f, BASE_SAFETY_CHANCE + (0.10f * workshopLevel));
+                    boolean success = Random.Float() < successChance;
                     
                     if (success) {
                         // Successfully disassembled without triggering
@@ -134,6 +138,31 @@ public class MechanistsDisassembly extends TargetedArtificerSpell {
     }
 
     public String desc(){
-        return Messages.get(this, "desc") + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+        // Get the workshop level for display in the description
+        int workshopLevel = 0;
+        if (Dungeon.hero != null) {
+            // Check equipped artifact
+            if (Dungeon.hero.belongings.artifact instanceof PocketWorkshop) {
+                workshopLevel = Dungeon.hero.belongings.artifact.level();
+            } else {
+                // Check inventory
+                for (Item item : Dungeon.hero.belongings.backpack) {
+                    if (item instanceof PocketWorkshop) {
+                        workshopLevel = item.level();
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Calculate success chance for the description (10% + 10% per level, cap at 100%)
+        float successChance = Math.min(1.0f, BASE_SAFETY_CHANCE + (0.10f * workshopLevel));
+        int successPercent = Math.round(successChance * 100);
+        
+        // Create a description that includes success chance information
+        String baseDesc = Messages.get(this, "desc");
+        String chanceInfo = "\n\nCurrently has a " + successPercent + "% chance to succeed based on your workshop level (" + workshopLevel + ").";
+        
+        return baseDesc + chanceInfo + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
     }
 }

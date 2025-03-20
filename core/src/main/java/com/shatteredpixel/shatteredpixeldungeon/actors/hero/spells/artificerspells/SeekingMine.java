@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.PocketWorkshop;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -81,8 +82,10 @@ public class SeekingMine extends TargetedArtificerSpell {
 
                 Char ch = Actor.findChar( aim.collisionPos );
                 if (ch != null) {
-                    // Deal 2-6 damage as specified
-                    ch.damage(Random.NormalIntRange(2, 6), SeekingMine.this);
+                    // Deal 2-6 damage plus workshop level
+                    PocketWorkshop workshop = getWorkshopForHero(hero);
+                    int workshopLevel = workshop != null ? workshop.level() : 0;
+                    ch.damage(Random.NormalIntRange(2, 6) + workshopLevel, SeekingMine.this);
                     Sample.INSTANCE.play(Assets.Sounds.BLAST, 1, Random.Float(0.87f, 1.15f));
                     ch.sprite.burst(0xFFCC3300, 5); // Orange/red explosion effect
                 } else {
@@ -103,6 +106,36 @@ public class SeekingMine extends TargetedArtificerSpell {
     }
 
     public String desc(){
-        return Messages.get(this, "desc") + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+        // Get the workshop level for display in the description
+        int workshopLevel = 0;
+        if (Dungeon.hero != null) {
+            PocketWorkshop workshop = getWorkshopForHero(Dungeon.hero);
+            if (workshop != null) {
+                workshopLevel = workshop.level();
+            }
+        }
+        
+        // Create a description that includes workshop level information
+        String baseDesc = Messages.get(this, "desc");
+        String damageInfo = "\n\nCurrently deals " + (2 + workshopLevel) + "-" + (6 + workshopLevel) + " damage based on your workshop level (" + workshopLevel + ").";
+        
+        return baseDesc + damageInfo + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
+    }
+    
+    // Helper method to get the workshop
+    private PocketWorkshop getWorkshopForHero(Hero hero) {
+        // First check if equipped
+        if (hero.belongings.artifact instanceof PocketWorkshop) {
+            return (PocketWorkshop) hero.belongings.artifact;
+        }
+        
+        // Otherwise check inventory
+        for (Item item : hero.belongings.backpack) {
+            if (item instanceof PocketWorkshop) {
+                return (PocketWorkshop) item;
+            }
+        }
+        
+        return null;
     }
 }

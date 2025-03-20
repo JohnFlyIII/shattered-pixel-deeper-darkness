@@ -18,6 +18,9 @@
 - UI components: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/windows/artificer/`
 - Weapons implementation: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/items/weapon/`
 - Text/message translations: `/core/src/main/assets/messages/`
+- Sprites and images: `/core/src/main/assets/interfaces/` and `/core/src/main/assets/sprites/`
+- Item sprite definitions: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/sprites/ItemSpriteSheet.java`
+- Asset references: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/Assets.java`
 
 ## Implementation Strategy
 
@@ -27,6 +30,21 @@
 4. Class-specific talents should be defined in the Talent.java enum
 5. Class-specific buffs should be added to the buffs directory
 6. ModularInfusionRelay weapon similar to Huntress's SpiritBow for ranged combat
+
+### Craft Implementation Guidelines
+
+1. **All abilities should be implemented as craftable items** in the Craft menu, not as direct buttons on the PocketWorkshop
+2. To add a new ability:
+   - Create a new class extending ArtificerSpell in the artificerspells package
+   - Implement the INSTANCE singleton pattern with the required methods
+   - Add the ability to the getSpellList and getAllSpells methods in ArtificerSpell.java
+   - Add appropriate talent checks if the ability requires a talent
+3. **Never add new action buttons to the PocketWorkshop itself** - all functionality should go through the crafting system
+4. Each craft should:
+   - Have a proper icon and description
+   - Specify charge cost via chargeUse() method
+   - Implement onCast() for its behavior
+   - Call onSpellCast() to handle charge consumption and other standard behaviors
 
 ## Development Steps
 
@@ -54,8 +72,36 @@
 2. **ArtificerSpell/TargetedArtificerSpell**: Base classes for implementing crafting abilities
 3. **ModularInfusionRelay**: Artificer's special weapon that fires energy bolts (based on SpiritBow)
 4. **SeekingMine**: First crafting ability - a magical tracking explosive that deals 2-6 damage
-5. **Aetheric Capacitor**: Tier 1 talent that increases PocketWorkshop maximum charge capacity
-6. **Aetheric Cloaking**: Tier 1 talent that allows the Artificer to be invisible to traps
+5. **MechanistsDisassembly**: Crafting ability that breaks down traps into spare parts
+6. **TrapCloaker**: Crafting ability that allows the hero to pass through traps safely
+7. **InfuseEssence**: Crafting ability that transfers hero levels to upgrade equipment
+8. **Aetheric Capacitor**: Tier 1 talent that increases PocketWorkshop maximum charge capacity
+9. **Aetheric Cloaking**: Tier 1 talent that allows the Artificer to be invisible to traps
+10. **Infuse Essence**: Tier 2 talent that allows spending hero levels and spare parts to upgrade equipment
+
+### Hero Level Reduction System
+
+The `loseLevel(int levels)` method in Hero.java provides a robust implementation for reducing hero levels:
+
+1. It properly reduces level count and resets experience to zero
+2. Reduces max HP by 5 points per level lost
+3. Reduces attackSkill and defenseSkill stats
+4. Provides appropriate visual feedback to the player
+5. Safety checks to prevent reducing below level 1
+
+This system can be used whenever an ability should cost hero levels. To use it:
+
+```java
+// Check if hero can lose levels first
+if (hero.lvl <= levelCost) {
+    return false; // Cannot afford the level cost
+}
+
+// Apply the level reduction
+hero.loseLevel(levelCost);
+
+// Now the hero is at a lower level with reduced stats
+```
 
 ## Message Locations
 - Item descriptions: `/core/src/main/assets/messages/items/items.properties`
@@ -122,7 +168,15 @@
    - `onTalentUpgraded(Hero hero, Talent talent)`: Called when a talent is upgraded
    - Contains specialized methods for different effect types (food, potions, etc.)
 
-4. **actors.properties**: (`/core/src/main/assets/messages/actors/actors.properties`)
+4. **TalentIcon.java**: (`/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/ui/TalentIcon.java`)
+   - Handles rendering of talent icons from the talent sprite sheet
+   - Used in talent selection screens and talent buttons
+
+5. **talent_icons.png**: (`/core/src/main/assets/interfaces/talent_icons.png`)
+   - Sprite sheet containing all talent icons organized in a grid
+   - Icons are 16×16 pixels each, arranged in rows of 16 icons
+
+6. **actors.properties**: (`/core/src/main/assets/messages/actors/actors.properties`)
    - Contains text for talent names and descriptions
    - Format: `talent.TALENT_NAME.title=Talent Name`
    - Format: `talent.TALENT_NAME.desc=Talent description with details about each rank`
@@ -327,3 +381,75 @@ This implementation creates a comprehensive system where:
 - Use `hero.next()` to proceed to the next turn
 - Add feedback with GLog.i/w/n for user visibility
 - Use appropriate sound effects with `Sample.INSTANCE.play()`
+
+## UI Components and Windows
+
+### Important UI Paths
+- Base UI components: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/ui/`
+- Window implementations: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/windows/`
+- Artificer-specific windows: `/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/windows/artificer/`
+- Interface assets: `/core/src/main/assets/interfaces/`
+
+### Common UI Components
+- **Window**: Base class for all popup windows
+- **IconTitle**: Title bar with icon and text, used at the top of most windows
+- **RedButton**: Standard button with red highlight 
+- **RenderedTextBlock**: Text block that supports formatting and wrapping
+- **ScrollPane**: Container that allows scrolling through content
+- **ScrollingListPane**: Specialized list with scrolling support
+- **ItemSlot**: UI element for displaying items with their icons
+- **InventoryPane**: Grid display of inventory items
+
+### Window Implementation Patterns
+- Most windows extend the `Window` class
+- Use `IconTitle` for consistent title bars
+- For lists, use `ScrollingListPane` with custom `ListItem` implementations
+- For confirmation dialogs, show a second window with yes/no options
+- Message text should use `Messages.get()` for localization
+- Use `layout()` method to position components and set window size
+
+### Window Examples
+- **WndInfuseEssence**: Artificer window for upgrading items using hero levels
+- **WndUpgrade**: General upgrade window for template reference
+- **WndArtificerSpells**: Lists available crafts/spells for the Artificer
+- **WndTitledMessage**: Simple titled message window with text content
+- **WndOptions**: Dialog window with multiple options to choose from
+
+### Common Window Structure
+```java
+public class WndExample extends Window {
+    
+    private static final int WIDTH = 120;        // Standard window width
+    private static final int MARGIN = 2;         // Standard margin
+    private static final int BUTTON_HEIGHT = 16; // Standard button height
+    
+    public WndExample(Item item) {
+        super();
+        
+        // Create title section with item icon
+        IconTitle titlebar = new IconTitle(item);
+        titlebar.setRect(0, 0, WIDTH, 0);
+        add(titlebar);
+        
+        // Add descriptive text
+        RenderedTextBlock text = PixelScene.renderTextBlock(
+            Messages.get(this, "text"), 6);
+        text.maxWidth(WIDTH);
+        text.setPos(0, titlebar.bottom() + MARGIN);
+        add(text);
+        
+        // Add a button
+        RedButton button = new RedButton(Messages.get(this, "button")) {
+            @Override
+            protected void onClick() {
+                // Handle button click
+                hide();
+            }
+        };
+        button.setRect(0, text.bottom() + MARGIN, WIDTH, BUTTON_HEIGHT);
+        add(button);
+        
+        // Resize window to fit content
+        resize(WIDTH, (int)button.bottom());
+    }
+}

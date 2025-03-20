@@ -899,15 +899,13 @@ public abstract class Mob extends Char {
 						&& Dungeon.hero.hasTalent(Talent.CLOCKWORK_RECLAMATION)) {
 					
 					int talentLevel = Dungeon.hero.pointsInTalent(Talent.CLOCKWORK_RECLAMATION);
-					float chance = 0.15f * talentLevel;
+					float chance = talentLevel == 1 ? 0.33f : 0.66f;
 					
 					if (Random.Float() < chance) {
-						// Calculate max potential parts (50% of XP, min 1)
-						int maxParts = Math.max(1, Math.round(EXP * 0.5f));
-						
-						// Calculate actual parts based on talent level
-						float partPercent = talentLevel == 3 ? 1f : (talentLevel == 2 ? 0.5f : 0.25f);
-						int parts = Math.max(1, Math.round(maxParts * partPercent));
+						// Calculate max potential parts based on talent level
+						// T1: up to 50% of exp, T2: up to 100% of exp
+						float maxPercent = talentLevel == 1 ? 0.5f : 1.0f;
+						int parts = Math.max(1, Math.round(EXP * maxPercent));
 						
 						// Find PocketWorkshop and add parts
 						for (Item item : Dungeon.hero.belongings.backpack) {

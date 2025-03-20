@@ -71,9 +71,11 @@ public class Artificer extends HeroBase {
             Catalog.setSeen(BrokenSeal.class);
         }
 
-        new PocketWorkshop().identify().collect();
+        var workshop = new PocketWorkshop().identify();
+        ((PocketWorkshop)workshop).addSpareParts(200);
+        workshop.collect();
 
-        new PotionOfExperience().quantity(10).identify().collect();
+        new PotionOfExperience().quantity(20).identify().collect();
         // Two potions of strength
         new PotionOfStrength().quantity(2).identify().collect();
 
