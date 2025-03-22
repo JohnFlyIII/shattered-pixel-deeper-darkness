@@ -81,8 +81,7 @@ public class TalentInit {
                 Collections.addAll(tierTalents, Talent.SATIATED_SPELLS, Talent.HOLY_INTUITION, Talent.SEARING_LIGHT, Talent.SHIELD_OF_LIGHT);
                 break;
             case ARTIFICER:
-                Collections.addAll(tierTalents, Talent.FULL_TANK, Talent.EFFICIENT_CRAFTING, Talent.AETHERIC_CAPACITOR, Talent.AETHERIC_CLOAKING, 
-                                  Talent.MECHANICAL_ASSISTANT, Talent.AETHERIC_SCANNER);
+                Collections.addAll(tierTalents, Talent.FULL_TANK, Talent.EFFICIENT_CRAFTING, Talent.AETHERIC_CAPACITOR, Talent.AETHERIC_CLOAKING);
                 break;
         }
         for (Talent talent : tierTalents) {
@@ -115,7 +114,7 @@ public class TalentInit {
                 Collections.addAll(tierTalents, Talent.ENLIGHTENING_MEAL, Talent.RECALL_INSCRIPTION, Talent.SUNRAY, Talent.DIVINE_SENSE, Talent.BLESS);
                 break;
             case ARTIFICER:
-                Collections.addAll(tierTalents, Talent.ENERGIZING_MEAL, Talent.INFUSE_ESSENCE, Talent.HEIGHTENED_SENSES, Talent.MYSTICAL_MEAL, Talent.CLOCKWORK_RECLAMATION);
+                Collections.addAll(tierTalents, Talent.ENERGIZING_MEAL, Talent.INFUSE_ESSENCE, Talent.CLOCKWORK_RECLAMATION, Talent.MECHANICAL_ASSISTANT, Talent.AETHERIC_SCANNER);
                 break;
         }
         for (Talent talent : tierTalents) {
