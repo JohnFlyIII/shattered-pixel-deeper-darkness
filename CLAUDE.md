@@ -356,6 +356,32 @@ This implementation creates a comprehensive system where:
 
 ## Common Implementation Patterns
 
+### Finding Items in Inventory
+Several utility methods are available in the `Belongings` class to find items:
+
+1. Check if a specific item exists:
+   ```java
+   Dungeon.hero.belongings.contains(item)
+   ```
+
+2. Find an item of a specific class:
+   ```java
+   PocketWorkshop workshop = Dungeon.hero.belongings.getItem(PocketWorkshop.class);
+   if (workshop != null) {
+       // The hero has a PocketWorkshop
+   }
+   ```
+
+3. Find all items of a specific class:
+   ```java
+   ArrayList<PocketWorkshop> workshops = Dungeon.hero.belongings.getAllItems(PocketWorkshop.class);
+   ```
+
+4. Find similar items:
+   ```java
+   Item similar = Dungeon.hero.belongings.getSimilar(itemToCompare);
+   ```
+
 ### Adding an Action to Artifacts (like PocketWorkshop)
 1. Define a constant for the action: `public static final String AC_CLOAK = "CLOAK";`
 2. Add the action in the `actions()` method with appropriate conditions

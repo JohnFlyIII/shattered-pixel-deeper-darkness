@@ -9,7 +9,6 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AethericCloaking;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.artificerspells.TrapCloaker;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
@@ -31,7 +30,6 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 import com.shatteredpixel.shatteredpixeldungeon.windows.artificer.WndArtificerSpells;
-import com.shatteredpixel.shatteredpixeldungeon.windows.artificer.WndInfuseEssence;
 import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;
@@ -105,7 +103,6 @@ public class PocketWorkshop extends Artifact {
         }
 
         // Could add other sources of bonus charges here
-
         return bonus;
     }
 
@@ -130,8 +127,7 @@ public class PocketWorkshop extends Artifact {
     }
 
     public static final String AC_CRAFT = "CRAFT";
-    public static final String AC_CLOAK = "CLOAK";
-
+    
     @Override
     public String desc() {
         String desc = Messages.get(this, "desc");
@@ -175,20 +171,7 @@ public class PocketWorkshop extends Artifact {
                 Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
                 GameScene.show(new WndArtificerSpells(this, hero, false));
             }
-        } else if (action.equals(AC_CLOAK)) {
-            if (!isEquipped(hero) && !hero.hasTalent(Talent.AETHERIC_EXPANSION)) {
-                GLog.i(Messages.get(Artifact.class, "need_to_equip"));
-            } else if (cursed) {
-                GLog.i(Messages.get(this, "cursed"));
-            } else {
-                // Use the TrapCloaker spell if available
-                ArtificerSpell cloaker = TrapCloaker.INSTANCE;
-                if (cloaker != null && cloaker.canCast(hero) && canCast(hero, cloaker)) {
-                    Sample.INSTANCE.play(Assets.Sounds.MELD);
-                    cloaker.onCast(this, hero);
-                }
-            }
-        }
+        } 
     }
 
     // Used to ensure workshop has variable targeting logic for whatever ability is being used
@@ -333,8 +316,6 @@ public class PocketWorkshop extends Artifact {
 
     @Override
     public Item upgrade() {
-        // Store old level
-        int oldLevel = level();
 
         // Call parent upgrade which increments level
         super.upgrade();

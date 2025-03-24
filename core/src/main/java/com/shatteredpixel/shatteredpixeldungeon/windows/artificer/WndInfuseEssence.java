@@ -190,7 +190,8 @@ public class WndInfuseEssence extends Window {
     private void infuseItem(Item item) {
         int talentLevel = hero.pointsInTalent(Talent.INFUSE_ESSENCE);
         int levelCost = (talentLevel == 1) ? 2 : 1;
-        int partsCost = 200 - (talentLevel - 1) * 50;
+        int partsCost = (talentLevel == 1) ? 150 : 75;
+
         
         // Check if hero has enough levels
         if (hero.lvl < levelCost + 1) {

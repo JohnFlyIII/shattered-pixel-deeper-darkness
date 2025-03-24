@@ -38,7 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.PocketWorkshop;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfAccuracy;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.MirrorSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ClockworkAutomatonSprite;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -46,7 +46,7 @@ import com.watabou.utils.Random;
 public class ClockworkAutomaton extends NPC {
 	
 	{
-		spriteClass = MirrorSprite.class; // Using MirrorSprite as placeholder until proper sprite is created
+		spriteClass = ClockworkAutomatonSprite.class; // Using custom sprite class for automaton
 		
 		HP = HT = 15; // Slightly more durable than prismatic image
 		defenseSkill = 1;

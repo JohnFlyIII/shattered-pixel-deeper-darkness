@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.artificerspells;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.PocketWorkshop;

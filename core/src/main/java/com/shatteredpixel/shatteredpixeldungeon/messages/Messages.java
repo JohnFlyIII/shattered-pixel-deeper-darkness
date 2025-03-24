@@ -122,7 +122,7 @@ public class Messages {
 	}
 
 	public static String get(Object o, String k, Object... args) {
-		return o == null ? get((Class)null, k, args) : get(o.getClass(), k, args);
+		return o == null ? get((Class<?>)null, k, args) : get(o.getClass(), k, args);
 	}
 
 	public static String get(Class<?> c, String k, Object... args) {
@@ -131,7 +131,6 @@ public class Messages {
 		{
 			// Build the key
 			String fullKey = buildKey(c, k).toLowerCase(Locale.ENGLISH);
-
 			logMissingText(c, fullKey);
 		}
         return result;
@@ -140,7 +139,7 @@ public class Messages {
 	/**
 	 * Helper method that implements the recursive lookup with cycle detection
 	 */
-	private static String getWithRecursion(Class c, String k, Object[] args, List<Class> visitedClasses) {
+	private static String getWithRecursion(Class<?> c, String k, Object[] args, List<Class<?>> visitedClasses) {
 		// Build the key
 		String fullKey = buildKey(c, k);
 
@@ -165,7 +164,7 @@ public class Messages {
 	/**
 	 * Build a key from a class and local key
 	 */
-	private static String buildKey(Class c, String k) {
+	private static String buildKey(Class<?> c, String k) {
 		if (c != null) {
 			return c.getName().replace(PACKAGE_PREFIX, "") + "." + k;
 		} else {
@@ -176,15 +175,13 @@ public class Messages {
 	/**
 	 * Log detailed information about missing text
 	 */
-	private static void logMissingText(Class c, String k) {
+	private static void logMissingText(Class<?> c, String k) {
 		// Build a more informative log message
 		if (c != null) {
-			GLog.w("** Text not found for key: %s.%s (class: %s)",
-					c.getName().replace(PACKAGE_PREFIX, ""),
-					k,
-					c.getSimpleName());
+			GLog.d("** Text not found for class: \n (fullkey: %s)",
+					c, k);
 		} else {
-			GLog.w("** Text not found for key: %s (no class provided)", k);
+			GLog.d("** Text not found for key: %s (no class provided)", k);
 		}
 
 		// Add stack trace info to see where the call came from
@@ -192,7 +189,7 @@ public class Messages {
 		if (stackTrace.length >= 4) {
 			// We need to skip Messages class methods to find the actual caller
 			StackTraceElement caller = stackTrace[3];
-			GLog.w("** Called from: %s.%s (line %d)",
+			GLog.d("** Called from: %s.%s (line %d)",
 					caller.getClassName(),
 					caller.getMethodName(),
 					caller.getLineNumber());
@@ -231,12 +228,12 @@ public class Messages {
 	}
 
 	public static String capitalize(String str) {
-		if (str.length() == 0) return str;
+		if (str.isEmpty()) return str;
 		else return str.substring(0, 1).toUpperCase(locale) + str.substring(1);
 	}
 
 	public static String titleCase(String str) {
-		if (str.length() == 0) return str;
+		if (str.isEmpty()) return str;
 
 		//English capitalizes every word except for a few exceptions
 		if (lang == Languages.ENGLISH) {
@@ -266,9 +263,5 @@ public class Messages {
 
 	public static String upperCase(String str) {
 		return str.toUpperCase(locale);
-	}
-
-	public static String lowerCase(String str) {
-		return str.toLowerCase(locale);
 	}
 }

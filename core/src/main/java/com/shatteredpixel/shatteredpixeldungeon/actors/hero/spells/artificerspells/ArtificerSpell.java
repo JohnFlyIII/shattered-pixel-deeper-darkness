@@ -22,45 +22,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.artificerspells;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.talents.Talent;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.AscendedForm;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.PowerOfMany;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.AuraOfProtection;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.BeamingRay;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.BlessSpell;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.artificerspells.AethericScanner;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.artificerspells.ClockworkCompanion;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.BodyForm;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Cleanse;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.DivineIntervention;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.DivineSense;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Flash;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.GuidingLight;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HallowedGround;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyIntuition;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyLance;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyWard;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyWeapon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Judgement;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.LayOnHands;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.LifeLinkSpell;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.MindForm;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.MnemonicPrayer;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Radiance;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.RecallInscription;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ShieldOfLight;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Smite;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.SpiritForm;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Stasis;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Sunray;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.WallOfLight;
-import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.PocketWorkshop;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
@@ -124,22 +88,17 @@ public abstract class ArtificerSpell {
 			if (artificer.hasTalent(Talent.AETHERIC_CLOAKING)) {
 				spells.add(TrapCloaker.INSTANCE);
 			}
-			if (artificer.hasTalent(Talent.MECHANICAL_ASSISTANT)) {
-				spells.add(ClockworkCompanion.INSTANCE);
-			}
-			if (artificer.hasTalent(Talent.AETHERIC_SCANNER)) {
-				spells.add(AethericScanner.INSTANCE);
-			}
 			// Add other tier 1 spells as they are implemented
 		} else if (tier == 2) {
 			// Tier 2 spells will go here
 			if (artificer.hasTalent(Talent.INFUSE_ESSENCE)) {
-				try {
-					Class.forName("com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.artificerspells.InfuseEssence");
 					spells.add(InfuseEssence.INSTANCE);
-				} catch (ClassNotFoundException e) {
-					// Not implemented yet, that's fine
-				}
+			}
+			if (artificer.hasTalent(Talent.AETHERIC_SCANNER)) {
+				spells.add(AethericScanner.INSTANCE);
+			}
+			if (artificer.hasTalent(Talent.MECHANICAL_ASSISTANT)) {
+				spells.add(ClockworkCompanion.INSTANCE);
 			}
 		} else if (tier == 3) {
 			// Tier 3 spells will go here
@@ -157,13 +116,7 @@ public abstract class ArtificerSpell {
 		spells.add(TrapCloaker.INSTANCE);
 		spells.add(ClockworkCompanion.INSTANCE);
 		spells.add(AethericScanner.INSTANCE);
-		// Check if InfuseEssence class exists yet
-		try {
-			Class.forName("com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.artificerspells.InfuseEssence");
-			spells.add(InfuseEssence.INSTANCE);
-		} catch (ClassNotFoundException e) {
-			// Not implemented yet, that's fine
-		}
+		spells.add(InfuseEssence.INSTANCE);
 		// Add all other spells as they are implemented
 		return spells;
 	}
