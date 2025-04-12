@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.artificerspe
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -57,7 +58,7 @@ public class AethericScanner extends ArtificerSpell {
 
         int talentLevel = hero.pointsInTalent(Talent.AETHERIC_SCANNER);
         int workshopLevel = workshop != null ? workshop.level() : 0;
-        
+
         // Calculate effect duration based on talent level
         int duration;
         if (talentLevel == 1) {
@@ -65,20 +66,23 @@ public class AethericScanner extends ArtificerSpell {
         } else {
             duration = 10 + (2 * workshopLevel);
         }
-        
+
         // Calculate vision radius based on talent level
         int visionRadius = talentLevel == 1 ? 2 : 3;
 
         // Apply the effect
         Buff.affect(hero, WallScanner.class, duration).radius = visionRadius;
         hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(duration), BuffIndicator.MIND_VISION);
-        
+
         Sample.INSTANCE.play(Assets.Sounds.SCAN);
         SpellSprite.show(hero, SpellSprite.VISION);
+
+        // Update field of view and fog
+        Dungeon.observe();
         GameScene.updateFog();
-        
+
         GLog.i(Messages.get(this, "activated", visionRadius, duration));
-        
+
         onSpellCast(workshop, hero);
         return;
     }
@@ -91,73 +95,90 @@ public class AethericScanner extends ArtificerSpell {
     public String desc() {
         int talentLevel = Dungeon.hero != null ? Dungeon.hero.pointsInTalent(Talent.AETHERIC_SCANNER) : 0;
         int workshopLevel = 0;
-        
+
         for (PocketWorkshop workshop : getWorkshopsForHero(Dungeon.hero)) {
             if (workshop != null) {
                 workshopLevel = workshop.level();
                 break;
             }
         }
-        
+
         int duration = talentLevel == 2 ? (10 + (2 * workshopLevel)) : (5 + workshopLevel);
         int radius = talentLevel == 2 ? 3 : 2;
-        
+
         String baseDesc = Messages.get(this, "desc");
         String currentEffect = "\n\n" + Messages.get(this, "current_effect", radius, duration);
-        
+
         return baseDesc + currentEffect + "\n\n" + Messages.get(this, "charge_cost", (int)chargeUse(Dungeon.hero));
     }
-    
+
     // Helper method to get all workshops the hero has
     private PocketWorkshop[] getWorkshopsForHero(Hero hero) {
         if (hero == null) return new PocketWorkshop[0];
-        
+
         java.util.List<PocketWorkshop> workshops = new java.util.ArrayList<>();
-        
+
         // Check equipped artifact
         if (hero.belongings.artifact instanceof PocketWorkshop) {
             workshops.add((PocketWorkshop) hero.belongings.artifact);
         }
-        
+
         // Check inventory
         for (com.shatteredpixel.shatteredpixeldungeon.items.Item item : hero.belongings.backpack) {
             if (item instanceof PocketWorkshop) {
                 workshops.add((PocketWorkshop) item);
             }
         }
-        
+
         return workshops.toArray(new PocketWorkshop[0]);
     }
-    
+
     // Buff that provides vision through walls
     public static class WallScanner extends FlavourBuff {
         public int radius = 2;
-        
+
+        @Override
+        public boolean attachTo(Char target) {
+            if (super.attachTo(target)) {
+                // Force an immediate observe to update field of view
+                Dungeon.observe();
+                return true;
+            }
+            return false;
+        }
+
         @Override
         public int icon() {
             return BuffIndicator.MIND_VISION;
         }
-        
+
         @Override
         public void tintIcon(Image icon) {
             icon.hardlight(0.5f, 0.8f, 1.0f); // Blue tint
         }
-        
+
         @Override
         public String toString() {
             return Messages.get(this, "name");
         }
-        
+
         @Override
         public String desc() {
             return Messages.get(this, "desc", radius, dispTurns());
         }
-        
+
         @Override
         public void detach() {
             super.detach();
             Dungeon.observe();
             GameScene.updateFog();
+        }
+
+        @Override
+        public boolean act() {
+            // Update field of view on each turn to ensure continuous scanning
+            Dungeon.observe();
+            return super.act();
         }
     }
 }
