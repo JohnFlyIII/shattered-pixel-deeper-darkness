@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.tiles;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
+import com.watabou.noosa.Image;
 
 import java.util.HashSet;
 
@@ -119,4 +120,20 @@ public class DungeonWallsTilemap extends DungeonTilemap {
 		return true;
 	}
 	
+	/**
+	 * Creates an image of a tile for rendering outside the main tilemap.
+	 * 
+	 * @param pos The position of the tile
+	 * @param tile The tile type
+	 * @return An image of the tile
+	 */
+	public static Image tile(int pos, int tile) {
+		DungeonWallsTilemap instance = new DungeonWallsTilemap();
+		int visual = instance.getTileVisual(pos, tile, false);
+		if (visual < 0) return null;
+
+		Image img = new Image(instance.texture);
+		img.frame(instance.tileset.get(visual));
+		return img;
+	}
 }

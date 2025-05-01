@@ -127,47 +127,96 @@ public class EntranceRoom extends StandardRoom {
 
 	}
 
+	/**
+	 * List of possible entrance room types.
+	 * This array defines the order for the probability arrays below.
+	 * 
+	 * Index mapping:
+	 * 0 = EntranceRoom (basic entrance)
+	 * 1 = WaterBridgeEntranceRoom (water-themed entrance with bridge)
+	 * 2 = CircleBasinEntranceRoom (circular water basin entrance)
+	 * 3 = ChasmBridgeEntranceRoom (chasm with bridge entrance)
+	 * 4 = PillarsEntranceRoom (entrance room with pillars)
+	 * 5 = CaveEntranceRoom (cave-themed entrance)
+	 * 6 = CavesFissureEntranceRoom (entrance with cave fissures)
+	 * 7 = HallwayEntranceRoom (hallway-style entrance)
+	 * 8 = StatuesEntranceRoom (entrance with statues)
+	 * 9 = ChasmEntranceRoom (chasm entrance without bridge)
+	 * 10 = RitualEntranceRoom (ritual-themed entrance)
+	 */
 	private static ArrayList<Class<?extends StandardRoom>> rooms = new ArrayList<>();
 	static {
+		// Index 0: Basic entrance room
 		rooms.add(EntranceRoom.class);
 
-
+		// Indexes 1-2: Water-themed entrances
 		rooms.add(WaterBridgeEntranceRoom.class);
 		rooms.add(CircleBasinEntranceRoom.class);
 
+		// Indexes 3-4: Chasm and pillar entrances
 		rooms.add(ChasmBridgeEntranceRoom.class);
 		rooms.add(PillarsEntranceRoom.class);
 
+		// Indexes 5-6: Cave-themed entrances
 		rooms.add(CaveEntranceRoom.class);
 		rooms.add(CavesFissureEntranceRoom.class);
 
+		// Indexes 7-8: Hallway and statue entrances
 		rooms.add(HallwayEntranceRoom.class);
 		rooms.add(StatuesEntranceRoom.class);
 
+		// Indexes 9-10: Chasm and ritual entrances
 		rooms.add(ChasmEntranceRoom.class);
 		rooms.add(RitualEntranceRoom.class);
 	}
 
-	private static float[][] chances = new float[27][];
+	/**
+	 * Room probability distributions for each dungeon depth.
+	 * Each array defines the relative chance of selecting each entrance room type.
+	 * The position in the array corresponds to the room index defined above.
+	 * Higher values mean higher probability of selection.
+	 */
+	private static float[][] chances = new float[41][];
 	static {
+		// Sewers (Levels 1-2): Only basic entrance
 		chances[1] =  new float[]{1,  0,0, 0,0, 0,0, 0,0, 0,0};
 		chances[2] =  chances[1];
+		
+		// Sewers (Levels 3-5): Basic entrance (3/10), water entrances (7/10)
 		chances[3] =  new float[]{3,  6,1, 0,0, 0,0, 0,0, 0,0};
 		chances[5] =  chances[4] = chances[3];
 
+		// Prison (Levels 6-10): Basic entrance (2/10), chasm/pillar entrances (8/10)
 		chances[6] =  new float[]{2,  0,0, 4,4, 0,0, 0,0, 0,0};
 		chances[10] = chances[9] = chances[8] = chances[7] = chances[6];
 
+		// Caves (Levels 11-15): Basic entrance (2/10), cave entrances (8/10)
 		chances[11] = new float[]{2,  0,0, 0,0, 4,4, 0,0, 0,0};
 		chances[15] = chances[14] = chances[13] = chances[12] = chances[11];
 
+		// City (Levels 16-20): Basic entrance (2/10), hallway/statue entrances (8/10)
 		chances[16] = new float[]{2,  0,0, 0,0, 0,0, 4,4, 0,0};
 		chances[20] = chances[19] = chances[18] = chances[17] = chances[16];
 
+		// Halls (Levels 21-26): Basic entrance (3/10), chasm/ritual entrances (7/10)
 		chances[21] = new float[]{3,  0,0, 0,0, 0,0, 0,0, 6,1};
 		chances[26] = chances[25] = chances[24] = chances[23] = chances[22] = chances[21];
+		
+		// Purgatory levels (30-39): Similar to halls levels
+		// Basic entrance (3/10), chasm/ritual entrances (7/10)
+		chances[30] = new float[]{3,  0,0, 0,0, 0,0, 0,0, 6,1};
+		chances[39] = chances[38] = chances[37] = chances[36] = chances[35] = chances[34] = chances[33] = chances[32] = chances[31] = chances[30];
+		
+		// Merchant level (Level 40): Only basic entrance
+		chances[40] = new float[]{1,  0,0, 0,0, 0,0, 0,0, 0,0};
 	}
 
+	/**
+	 * Creates an appropriate entrance room for the current dungeon depth.
+	 * Uses weighted random selection based on the probability distributions defined above.
+	 * 
+	 * @return A new instance of the selected entrance room type
+	 */
 	public static StandardRoom createEntrance(){
 		return Reflection.newInstance(rooms.get(Random.chances(chances[Dungeon.depth])));
 	}

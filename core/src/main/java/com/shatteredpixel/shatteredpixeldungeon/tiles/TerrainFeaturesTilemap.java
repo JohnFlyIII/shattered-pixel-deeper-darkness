@@ -37,8 +37,8 @@ public class TerrainFeaturesTilemap extends DungeonTilemap {
 
 	private static TerrainFeaturesTilemap instance;
 
-	private SparseArray<Plant> plants;
-	private SparseArray<Trap> traps;
+	protected SparseArray<Plant> plants;
+	protected SparseArray<Trap> traps;
 
 	public TerrainFeaturesTilemap(SparseArray<Plant> plants, SparseArray<Trap> traps) {
 		super(Assets.Environment.TERRAIN_FEATURES);
@@ -52,9 +52,13 @@ public class TerrainFeaturesTilemap extends DungeonTilemap {
 
 		instance = this;
 	}
+	
+	public TerrainFeaturesTilemap(String tex) {
+		super(tex);
+	}
 
 	protected int getTileVisual(int pos, int tile, boolean flat){
-		if (traps.get(pos) != null){
+		if (traps != null && traps.get(pos) != null){
 			Trap trap = traps.get(pos);
 			if (!trap.visible)
 				return -1;
@@ -62,7 +66,7 @@ public class TerrainFeaturesTilemap extends DungeonTilemap {
 				return (trap.active ? trap.color : Trap.BLACK) + (trap.shape * 16);
 		}
 
-		if (plants.get(pos) != null){
+		if (plants != null && plants.get(pos) != null){
 			return plants.get(pos).image + 7*16;
 		}
 

@@ -87,6 +87,7 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.FogOfWar;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.GridTileMap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.RaisedTerrainTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.TerrainFeaturesTilemap;
+import com.shatteredpixel.shatteredpixeldungeon.tiles.TilemapFactory;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.WallBlockingTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
@@ -262,7 +263,7 @@ public class GameScene extends PixelScene {
 
 		DungeonTileSheet.setupVariance(Dungeon.level.map.length, Dungeon.seedCurDepth());
 		
-		tiles = new DungeonTerrainTilemap();
+		tiles = TilemapFactory.createDungeonTilemap();
 		terrain.add( tiles );
 
 		customTiles = new Group();
@@ -275,7 +276,7 @@ public class GameScene extends PixelScene {
 		visualGrid = new GridTileMap();
 		terrain.add( visualGrid );
 
-		terrainFeatures = new TerrainFeaturesTilemap(Dungeon.level.plants, Dungeon.level.traps);
+		terrainFeatures = TilemapFactory.createTerrainFeaturesTilemap(Dungeon.level.plants, Dungeon.level.traps);
 		terrain.add(terrainFeatures);
 		
 		levelVisuals = Dungeon.level.addVisuals();
@@ -312,7 +313,7 @@ public class GameScene extends PixelScene {
 		raisedTerrain = new RaisedTerrainTilemap();
 		add( raisedTerrain );
 
-		walls = new DungeonWallsTilemap();
+		walls = TilemapFactory.createWallsTilemap();
 		add(walls);
 
 		customWalls = new Group();

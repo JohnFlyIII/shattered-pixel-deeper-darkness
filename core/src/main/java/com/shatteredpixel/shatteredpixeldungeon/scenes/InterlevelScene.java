@@ -74,7 +74,7 @@ public class InterlevelScene extends PixelScene {
 	private static float fadeTime;
 	
 	public enum Mode {
-		DESCEND, ASCEND, CONTINUE, RESURRECT, RETURN, FALL, RESET, NONE
+		DESCEND, ASCEND, CONTINUE, RESURRECT, RETURN, FALL, RESET, NONE, DEEPER
 	}
 	public static Mode mode;
 
@@ -128,6 +128,7 @@ public class InterlevelScene extends PixelScene {
 				seed = GamesInProgress.check(GamesInProgress.curSlot).seed;
 				break;
 			case DESCEND:
+			case DEEPER:
 				if (Dungeon.hero == null){
 					loadingDepth = 1;
 					fadeTime = SLOW_FADE;
@@ -407,6 +408,7 @@ public class InterlevelScene extends PixelScene {
 
 						switch (mode) {
 							case DESCEND:
+							case DEEPER:
 								descend();
 								break;
 							case ASCEND:

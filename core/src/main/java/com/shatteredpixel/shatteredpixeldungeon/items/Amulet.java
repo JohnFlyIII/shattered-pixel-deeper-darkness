@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.AmuletScene;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.Game;
 
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 public class Amulet extends Item {
 	
 	private static final String AC_END = "END";
+	private static final String AC_DEEPER = "DEEPER";
 	
 	{
 		image = ItemSpriteSheet.AMULET;
@@ -51,9 +53,11 @@ public class Amulet extends Item {
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		if (hero.buff(AscensionChallenge.class) != null){
-			actions.clear();
+			// Allow "GO DEEPER" even during Ascension Challenge
+			actions.add(AC_DEEPER);
 		} else {
 			actions.add(AC_END);
+			actions.add(AC_DEEPER);
 		}
 		return actions;
 	}
@@ -65,7 +69,22 @@ public class Amulet extends Item {
 
 		if (action.equals(AC_END)) {
 			showAmuletScene( false );
+		} else if (action.equals(AC_DEEPER)) {
+			// Go deeper into the dungeon
+			goDeeper();
 		}
+	}
+	
+	private void goDeeper() {
+		InterlevelScene.mode = InterlevelScene.Mode.DEEPER;
+		// Set the destination to level 30 (Purgatory)
+		InterlevelScene.curTransition = new com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition(
+			Dungeon.level, -1, 
+			com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition.Type.REGULAR_EXIT,
+			30, 0,
+			com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition.Type.REGULAR_ENTRANCE
+		);
+		Game.switchScene(InterlevelScene.class);
 	}
 	
 	@Override

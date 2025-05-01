@@ -1334,13 +1334,11 @@ public abstract class Level implements Bundlable {
 				sense = Math.max( wallScanner.radius, sense );
 
 				// Also mark tiles as mapped when using wall scanner
-				int cx = c.pos % width();
-				int cy = c.pos / width();
 				int radius = wallScanner.radius;
 
 				for (int y = Math.max(0, cy - radius); y <= Math.min(height()-1, cy + radius); y++) {
 					for (int x = Math.max(0, cx - radius); x <= Math.min(width()-1, cx + radius); x++) {
-						if (distance(cx, cy, x, y) <= radius) {
+						if (Math.sqrt(Math.pow(cx-x, 2) + Math.pow(cy-y, 2)) <= radius) {
 							int cell = x + y * width();
 							mapped[cell] = true;
 

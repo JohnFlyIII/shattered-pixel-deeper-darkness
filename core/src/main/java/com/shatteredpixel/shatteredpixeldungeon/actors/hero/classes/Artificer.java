@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.PocketWorkshop;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -88,6 +89,9 @@ public class Artificer extends HeroBase {
 
         Wand wand = (Wand) Generator.random(Generator.Category.WAND);
         wand.identify().collect();
+        
+        // Add the Amulet of Yendor to the Artificer's starting inventory
+        new Amulet().collect();
 
         Dungeon.quickslot.setSlot(0, relay);
 

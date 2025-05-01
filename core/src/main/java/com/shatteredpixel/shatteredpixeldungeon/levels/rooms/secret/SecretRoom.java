@@ -34,67 +34,158 @@ import java.util.Arrays;
 public abstract class SecretRoom extends SpecialRoom {
 	
 	
+	/**
+	 * List of all possible secret room types.
+	 * These rooms are hidden behind walls and typically contain valuable rewards.
+	 * 
+	 * Room types:
+	 * - SecretGardenRoom: A hidden garden with plants and dew
+	 * - SecretLaboratoryRoom: A laboratory with potions and experimental equipment
+	 * - SecretLibraryRoom: A hidden library with scrolls and books
+	 * - SecretLarderRoom: A food storage area with rations and other edibles
+	 * - SecretWellRoom: A room containing a special well
+	 * - SecretRunestoneRoom: A chamber containing magical runestones
+	 * - SecretArtilleryRoom: A weaponry cache with ranged weapons
+	 * - SecretChestChasmRoom: A room with a chest near a chasm
+	 * - SecretHoneypotRoom: A hidden apiary with honeypots
+	 * - SecretHoardRoom: A treasure room with gold and valuables
+	 * - SecretMazeRoom: A small, maze-like chamber
+	 * - SecretSummoningRoom: A ritual room for summoning
+	 */
 	private static final ArrayList<Class<? extends SecretRoom>> ALL_SECRETS = new ArrayList<>( Arrays.asList(
 			SecretGardenRoom.class, SecretLaboratoryRoom.class, SecretLibraryRoom.class,
 			SecretLarderRoom.class, SecretWellRoom.class, SecretRunestoneRoom.class,
 			SecretArtilleryRoom.class, SecretChestChasmRoom.class, SecretHoneypotRoom.class,
 			SecretHoardRoom.class, SecretMazeRoom.class, SecretSummoningRoom.class));
 	
+	/**
+	 * Track which secret rooms are available for the current game run.
+	 * This list is shuffled at the start of each run and rooms are drawn from it in a queue-like manner.
+	 */
 	public static ArrayList<Class<? extends SecretRoom>> runSecrets = new ArrayList<>();
 
-	//this is the number of secret rooms per region (whole value),
-	// plus the chance for an extra secret room (fractional value)
+	/**
+	 * Base number of secret rooms per region.
+	 * - The whole number part is the guaranteed number of secret rooms
+	 * - The fractional part is the chance for an extra secret room
+	 * 
+	 * Values:
+	 * - Index 0 (Sewers): 2.00 → 2 rooms guaranteed
+	 * - Index 1 (Prison): 2.25 → 2 rooms guaranteed, 25% chance for a 3rd
+	 * - Index 2 (Caves): 2.50 → 2 rooms guaranteed, 50% chance for a 3rd
+	 * - Index 3 (City): 2.75 → 2 rooms guaranteed, 75% chance for a 3rd
+	 * - Index 4 (Halls): 3.00 → 3 rooms guaranteed
+	 */
 	private static float[] baseRegionSecrets = new float[]{2f, 2.25f, 2.5f, 2.75f, 3.0f};
+	
+	/**
+	 * Tracks how many secret rooms are left to be placed in each region for the current run.
+	 * Initialized at the start of each run based on baseRegionSecrets.
+	 */
 	private static int[] regionSecretsThisRun = new int[5];
 	
+	/**
+	 * Initialize secret room distribution for a new game run.
+	 * This determines how many secret rooms will appear in each region
+	 * and shuffles the available room types.
+	 */
 	public static void initForRun(){
-		
+		// Create a copy of the base values to avoid modifying them
 		float[] regionChances = baseRegionSecrets.clone();
 		
+		// Determine number of secret rooms for each region
 		for (int i = 0; i < regionSecretsThisRun.length; i++){
+			// Always include the whole number part
 			regionSecretsThisRun[i] = (int)regionChances[i];
+			// Check for fractional part (chance for an extra room)
 			if (Random.Float() < regionChances[i] % 1f){
 				regionSecretsThisRun[i]++;
 			}
 		}
 		
+		// Initialize the room pool and shuffle it for randomization
 		runSecrets = new ArrayList<>(ALL_SECRETS);
 		Random.shuffle(runSecrets);
-		
 	}
 	
-	public static int secretsForFloor(int depth){
-		if (depth == 1) return 0;
-		
-		int region = depth/5;
-		int floor = depth%5;
-		
-		int floorsLeft = 5 - floor;
-		
-		float secrets;
-		if (floorsLeft == 0) {
-			secrets = regionSecretsThisRun[region];
-		} else {
-			secrets = regionSecretsThisRun[region] / (float)floorsLeft;
-			if (Random.Float() < secrets % 1f){
-				secrets = (float)Math.ceil(secrets);
-			} else {
-				secrets = (float)Math.floor(secrets);
-			}
-		}
-		
-		regionSecretsThisRun[region] -= (int)secrets;
-		return (int)secrets;
-	}
-	
-	public static SecretRoom createRoom(){
+	/**
+ * Calculate how many secret rooms should appear on a specific floor.
+ * This distributes the region's secret rooms across its floors.
+ * 
+ * @param depth The current dungeon depth
+ * @return The number of secret rooms to generate on this floor
+ */
+public static int secretsForFloor(int depth){
+    int secrets;
+    int region;
+    int floor;
+    int floorsLeft;
+    
+    if(depth < 30) {
+        // Special case: no secret rooms on floor 1
+        if (depth == 1) return 0;
+        
+        // Calculate which region this depth belongs to (5 floors per region)
+        region = depth/5;
+        floor = depth%5;
+        
+        // How many floors are left in this region
+        floorsLeft = 5 - floor;
+    } else {
+        // For depth >= 30, use 10 floors per region
+        // Region 6 starts at depth 30
+        region = 5 + (depth - 30)/10;
+        floor = (depth - 30)%10;
+        
+        // How many floors are left in this region
+        floorsLeft = 10 - floor;
 
-		//60% chance for front of queue, 30% chance for next, 10% for one after that
+		// Ensure the region is within bounds of our array
+        // If we're accessing a region beyond our current array size,
+        // use the values from the last defined region (index 4)
+        if (region >= regionSecretsThisRun.length) {
+            region = 4; // Use values from the Halls region
+        }
+    }
+    
+    // Calculate secrets for the floor
+    if (floorsLeft == 0) {
+        // Last floor in region gets all remaining secrets
+        secrets = regionSecretsThisRun[region];
+    } else {
+        // Distribute remaining secrets across remaining floors
+        float secretsFloat = regionSecretsThisRun[region] / (float)floorsLeft;
+        // Randomly determine if we round up or down based on the fractional part
+        if (Random.Float() < secretsFloat % 1f){
+            secrets = (int)Math.ceil(secretsFloat);
+        } else {
+            secrets = (int)Math.floor(secretsFloat);
+        }
+    }
+    
+    // Reduce the region's remaining secret count
+    regionSecretsThisRun[region] -= secrets;
+    return secrets;
+}
+	
+	/**
+	 * Creates a new secret room from the available room types.
+	 * Uses a weighted selection system that prioritizes rooms near the front of the queue.
+	 * 
+	 * @return A newly created secret room instance
+	 */
+	public static SecretRoom createRoom(){
+		// Weighted chance selection:
+		// - 60% chance to choose the first room in the queue
+		// - 30% chance to choose the second room
+		// - 10% chance to choose the third room
 		int index = Random.chances(new float[]{6, 3, 1});
 		while (index >= runSecrets.size()) index--;
 
-		SecretRoom r = Reflection.newInstance(runSecrets.get( index ));
+		// Create an instance of the selected room type
+		SecretRoom r = Reflection.newInstance(runSecrets.get(index));
 		
+		// Move the selected room to the back of the queue
 		runSecrets.add(runSecrets.remove(index));
 		
 		return r;

@@ -51,15 +51,20 @@ public class Assets {
 		public static final String TILES_CAVES  = "environment/tiles_caves.png";
 		public static final String TILES_CITY   = "environment/tiles_city.png";
 		public static final String TILES_HALLS  = "environment/tiles_halls.png";
+		public static final String TILES_PURGATORY = "environment/tiles_purgatory.png";
 
 		public static final String TILES_CAVES_CRYSTAL  = "environment/tiles_caves_crystal.png";
 		public static final String TILES_CAVES_GNOLL    = "environment/tiles_caves_gnoll.png";
+		
+		// High-resolution (64x64) tiles for Purgatory levels
+		public static final String TILES_PURGATORY_FEATURES = "environment/tiles_terrain_features.png";
 
 		public static final String WATER_SEWERS = "environment/water0.png";
 		public static final String WATER_PRISON = "environment/water1.png";
 		public static final String WATER_CAVES  = "environment/water2.png";
 		public static final String WATER_CITY   = "environment/water3.png";
 		public static final String WATER_HALLS  = "environment/water4.png";
+		public static final String WATER_PURGATORY = "environment/water5.png";
 
 		public static final String WEAK_FLOOR       = "environment/custom_tiles/weak_floor.png";
 		public static final String SEWER_BOSS       = "environment/custom_tiles/sewer_boss.png";
@@ -69,6 +74,7 @@ public class Assets {
 		public static final String CAVES_BOSS       = "environment/custom_tiles/caves_boss.png";
 		public static final String CITY_BOSS        = "environment/custom_tiles/city_boss.png";
 		public static final String HALLS_SP         = "environment/custom_tiles/halls_special.png";
+		public static final String PURGATORY_BOSS   = "environment/custom_tiles/purgatory_boss.png";
 	}
 	
 	//TODO include other font assets here? Some are platform specific though...
@@ -156,6 +162,12 @@ public class Assets {
 		public static final String HALLS_TENSE          = "music/halls_tense.ogg";
 		public static final String HALLS_BOSS           = "music/halls_boss.ogg";
 		public static final String HALLS_BOSS_FINALE    = "music/halls_boss_finale.ogg";
+		
+		public static final String PURGATORY_1          = "music/sewers_1.ogg";
+		public static final String PURGATORY_2          = "music/sewers_2.ogg";
+		public static final String PURGATORY_3          = "music/sewers_3.ogg";
+		public static final String PURGATORY_TENSE      = "music/sewers_tense.ogg";
+		public static final String PURGATORY_BOSS       = "music/sewers_boss.ogg";
 	}
 
 	public static class Sounds {

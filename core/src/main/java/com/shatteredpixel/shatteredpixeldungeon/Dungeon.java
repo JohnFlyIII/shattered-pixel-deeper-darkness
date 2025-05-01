@@ -64,7 +64,10 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.HallsBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.HallsLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.LastLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.levels.MerchantLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.MiningLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.PurgatoryLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.PurgatoryBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.PrisonBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.PrisonLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.RegularLevel;
@@ -357,6 +360,23 @@ public class Dungeon {
 					break;
 				case 26:
 					level = new LastLevel();
+					break;
+				case 30:
+				case 31:
+				case 32:
+				case 33:
+				case 34:
+				case 35:
+				case 36:
+				case 37:
+				case 38:
+					level = new PurgatoryLevel();
+					break;
+				case 39:
+					level = new PurgatoryBossLevel();
+					break;
+				case 40:
+					level = new MerchantLevel();
 					break;
 				default:
 					level = new DeadEndLevel();
@@ -812,7 +832,7 @@ public class Dungeon {
 		}
 
 		droppedItems = new SparseArray<>();
-		for (int i=1; i <= 26; i++) {
+		for (int i=1; i <= 40; i++) {
 
 			//dropped items
 			ArrayList<Item> items = new ArrayList<>();

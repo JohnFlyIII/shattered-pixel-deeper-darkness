@@ -60,6 +60,7 @@ public class AmuletScene extends PixelScene {
 
 	StyledButton btnExit = null;
 	StyledButton btnStay = null;
+	StyledButton btnDeeper = null;
 	
 	@Override
 	public void create() {
@@ -82,6 +83,7 @@ public class AmuletScene extends PixelScene {
 				Badges.saveGlobal();
 				btnExit.enable(false);
 				btnStay.enable(false);
+				btnDeeper.enable(false);
 
 				AmuletScene.this.add(new Delayer(0.1f){
 					@Override
@@ -114,15 +116,37 @@ public class AmuletScene extends PixelScene {
 				onBackPressed();
 				btnExit.enable(false);
 				btnStay.enable(false);
+				btnDeeper.enable(false);
 			}
 		};
 		btnStay.icon(Icons.CLOSE.get());
 		btnStay.setSize( WIDTH, BTN_HEIGHT );
 		add( btnStay );
 		
+		btnDeeper = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(this, "deeper") ) {
+			@Override
+			protected void onClick() {
+				InterlevelScene.mode = InterlevelScene.Mode.DEEPER;
+				// Set the destination to level 30 (Purgatory)
+				InterlevelScene.curTransition = new com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition(
+					Dungeon.level, -1, 
+					com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition.Type.REGULAR_EXIT,
+					30, 0,
+					com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition.Type.REGULAR_ENTRANCE
+				);
+				Game.switchScene(InterlevelScene.class);
+				btnExit.enable(false);
+				btnStay.enable(false);
+				btnDeeper.enable(false);
+			}
+		};
+		btnDeeper.icon(Icons.STAIRS.get());
+		btnDeeper.setSize( WIDTH, BTN_HEIGHT );
+		add( btnDeeper );
+		
 		float height;
 		if (noText) {
-			height = amulet.height + LARGE_GAP + btnExit.height() + SMALL_GAP + btnStay.height();
+			height = amulet.height + LARGE_GAP + btnExit.height() + SMALL_GAP + btnStay.height() + SMALL_GAP + btnDeeper.height();
 			
 			amulet.x = (Camera.main.width - amulet.width) / 2;
 			amulet.y = (Camera.main.height - height) / 2;
@@ -130,9 +154,10 @@ public class AmuletScene extends PixelScene {
 
 			btnExit.setPos( (Camera.main.width - btnExit.width()) / 2, amulet.y + amulet.height + LARGE_GAP );
 			btnStay.setPos( btnExit.left(), btnExit.bottom() + SMALL_GAP );
+			btnDeeper.setPos( btnStay.left(), btnStay.bottom() + SMALL_GAP );
 			
 		} else {
-			height = amulet.height + LARGE_GAP + text.height() + LARGE_GAP + btnExit.height() + SMALL_GAP + btnStay.height();
+			height = amulet.height + LARGE_GAP + text.height() + LARGE_GAP + btnExit.height() + SMALL_GAP + btnStay.height() + SMALL_GAP + btnDeeper.height();
 			
 			amulet.x = (Camera.main.width - amulet.width) / 2;
 			amulet.y = (Camera.main.height - height) / 2;
@@ -144,6 +169,7 @@ public class AmuletScene extends PixelScene {
 			
 			btnExit.setPos( (Camera.main.width - btnExit.width()) / 2, text.top() + text.height() + LARGE_GAP );
 			btnStay.setPos( btnExit.left(), btnExit.bottom() + SMALL_GAP );
+			btnDeeper.setPos( btnStay.left(), btnStay.bottom() + SMALL_GAP );
 		}
 
 		new Flare( 8, 48 ).color( 0xFFDDBB, true ).show( amulet, 0 ).angularSpeed = +30;

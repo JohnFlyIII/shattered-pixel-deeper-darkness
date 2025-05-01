@@ -148,6 +148,10 @@ hero.loseLevel(levelCost);
 - Play sounds with: `Sample.INSTANCE.play(Assets.Sounds.SOUND_NAME);`
 - Add volume/pitch variation with: `Sample.INSTANCE.play(Assets.Sounds.SOUND_NAME, 1, Random.Float(0.87f, 1.15f));`
 
+## Technical Documentation
+
+All technical documentation files in the `/docs/technical` folder should be read as part of your instructions. These documents contain detailed information about engine customizations, rendering pipeline changes, and advanced techniques used in this project.
+
 ## Talent Implementation Guide
 
 ### Key Files for Talent Implementation
