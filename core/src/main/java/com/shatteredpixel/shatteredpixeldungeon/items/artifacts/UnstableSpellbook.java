@@ -80,7 +80,7 @@ public class UnstableSpellbook extends Artifact {
 	public static final String AC_READ = "READ";
 	public static final String AC_ADD = "ADD";
 
-	private final ArrayList<Class> scrolls = new ArrayList<>();
+	private final ArrayList<Class<?>> scrolls = new ArrayList<>();
 
 	public UnstableSpellbook() {
 		super();
@@ -331,7 +331,9 @@ public class UnstableSpellbook extends Artifact {
 		super.restoreFromBundle(bundle);
 		scrolls.clear();
 		if (bundle.contains(SCROLLS)) {
-			Collections.addAll(scrolls, bundle.getClassArray(SCROLLS));
+			for (Class<?> cls : bundle.getClassArray(SCROLLS)) {
+				scrolls.add(cls);
+			}
 		}
 	}
 

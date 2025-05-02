@@ -103,8 +103,8 @@ public class YogDzewa extends Mob {
 		return null;
 	}
 
-	private ArrayList<Class> fistSummons = new ArrayList<>();
-	private ArrayList<Class> challengeSummons = new ArrayList<>();
+	private ArrayList<Class<?>> fistSummons = new ArrayList<>();
+	private ArrayList<Class<?>> challengeSummons = new ArrayList<>();
 	{
 		//offset seed slightly to avoid output patterns
 		Random.pushGenerator(Dungeon.seedCurDepth()+1);
@@ -125,7 +125,7 @@ public class YogDzewa extends Mob {
 		Random.popGenerator();
 	}
 
-	private ArrayList<Class> regularSummons = new ArrayList<>();
+	private ArrayList<Class<?>> regularSummons = new ArrayList<>();
 	{
 		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
 			for (int i = 0; i < 6; i++){
@@ -291,9 +291,11 @@ public class YogDzewa extends Mob {
 
 			while (summonCooldown <= 0){
 
-				Class<?extends Mob> cls = regularSummons.remove(0);
+				Class<?> temp = regularSummons.remove(0);
+				@SuppressWarnings("unchecked")
+				Class<? extends Mob> cls = (Class<? extends Mob>) temp;
 				Mob summon = Reflection.newInstance(cls);
-				regularSummons.add(cls);
+				regularSummons.add(temp);
 
 				int spawnPos = -1;
 				for (int i : PathFinder.NEIGHBOURS8){
@@ -620,11 +622,17 @@ public class YogDzewa extends Mob {
 		summonCooldown = bundle.getFloat(SUMMON_CD);
 
 		fistSummons.clear();
-		Collections.addAll(fistSummons, bundle.getClassArray(FIST_SUMMONS));
+		for (Class<?> cls : bundle.getClassArray(FIST_SUMMONS)) {
+			fistSummons.add(cls);
+		}
 		challengeSummons.clear();
-		Collections.addAll(challengeSummons, bundle.getClassArray(CHALLENGE_SUMMONS));
+		for (Class<?> cls : bundle.getClassArray(CHALLENGE_SUMMONS)) {
+			challengeSummons.add(cls);
+		}
 		regularSummons.clear();
-		Collections.addAll(regularSummons, bundle.getClassArray(REGULAR_SUMMONS));
+		for (Class<?> cls : bundle.getClassArray(REGULAR_SUMMONS)) {
+			regularSummons.add(cls);
+		}
 
 		for (int i : bundle.getIntArray(TARGETED_CELLS)){
 			targetedCells.add(i);

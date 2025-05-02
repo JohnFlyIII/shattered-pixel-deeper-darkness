@@ -84,7 +84,7 @@ public class SandalsOfNature extends Artifact {
 	public static final String AC_FEED = "FEED";
 	public static final String AC_ROOT = "ROOT";
 
-	public ArrayList<Class> seeds = new ArrayList<>();
+	public ArrayList<Class<?>> seeds = new ArrayList<>();
 	public Class curSeedEffect = null;
 
 	private static final HashMap<Class<? extends Plant.Seed>, Integer> seedColors = new HashMap<>();
@@ -257,7 +257,9 @@ public class SandalsOfNature extends Artifact {
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle(bundle);
 		if (bundle.contains(SEEDS) && bundle.getClassArray(SEEDS) != null) {
-			Collections.addAll(seeds, bundle.getClassArray(SEEDS));
+			for (Class<?> cls : bundle.getClassArray(SEEDS)) {
+				seeds.add(cls);
+			}
 		}
 		curSeedEffect = bundle.getClass(CUR_SEED_EFFECT);
 

@@ -38,7 +38,7 @@ public class Statistics {
 	public static int piranhasKilled;
 	public static int ankhsUsed;
 	//tracks every item type 'seen' this run (i.e. would be added to catalogs)
-	public static HashSet<Class> itemTypesDiscovered = new HashSet<>();
+	public static HashSet<Class<?>> itemTypesDiscovered = new HashSet<>();
 
 	//These are used for score calculation
 	// some are built incrementally, most are assigned when full score is calculated
@@ -212,7 +212,11 @@ public class Statistics {
 		ankhsUsed		= bundle.getInt( ANKHS );
 
 		if (bundle.contains( ITEM_TYPES_DISCOVERED )) {
-			itemTypesDiscovered = new HashSet<>(Arrays.asList(bundle.getClassArray(ITEM_TYPES_DISCOVERED)));
+			Class<?>[] classes = bundle.getClassArray(ITEM_TYPES_DISCOVERED);
+			itemTypesDiscovered.clear();
+			for (Class<?> cls : classes) {
+				itemTypesDiscovered.add(cls);
+			}
 		} else {
 			itemTypesDiscovered.clear();
 		}

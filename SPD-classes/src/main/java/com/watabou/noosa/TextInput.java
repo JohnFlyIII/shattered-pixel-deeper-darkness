@@ -47,7 +47,7 @@ import com.watabou.utils.Point;
 public class TextInput extends Component {
 
 	private Stage stage;
-	private Container container;
+	private Container<TextField> container;
 	private TextField textField;
 
 	private Skin skin;

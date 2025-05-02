@@ -261,7 +261,9 @@ public class Belongings implements Iterable<Item> {
 		for (Item item : this) {
 			if (itemClass.isInstance( item )) {
 				if (!lostInvent || item.keptThroughLostInventory()) {
-					result.add((T) item);
+					@SuppressWarnings("unchecked")
+					T castedItem = (T) item;
+					result.add(castedItem);
 				}
 			}
 		}

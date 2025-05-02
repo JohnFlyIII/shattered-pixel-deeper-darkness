@@ -285,7 +285,7 @@ public class Generator {
 		//some generator categories can have ordering within that category as well
 		// note that sub category ordering doesn't need to always include items that belong
 		// to that categories superclass, e.g. bombs are ordered within thrown weapons
-		private static final HashMap<Class, ArrayList<Class>> subOrderings = new HashMap<>();
+		private static final HashMap<Class, ArrayList<Class<?>>> subOrderings = new HashMap<>();
 		static {
 			subOrderings.put(Trinket.class, new ArrayList<>(Arrays.asList(Trinket.class, TrinketCatalyst.class)));
 			subOrderings.put(MissileWeapon.class, new ArrayList<>(Arrays.asList(MissileWeapon.class, Bomb.class)));
@@ -297,7 +297,7 @@ public class Generator {
 		public static int order( Item item ) {
 			int catResult = -1, subResult = 0;
 			for (int i=0; i < values().length; i++) {
-				ArrayList<Class> subOrdering = subOrderings.get(values()[i].superClass);
+				ArrayList<Class<?>> subOrdering = subOrderings.get(values()[i].superClass);
 				if (subOrdering != null){
 					for (int j=0; j < subOrdering.size(); j++){
 						if (subOrdering.get(j).isInstance(item)){
