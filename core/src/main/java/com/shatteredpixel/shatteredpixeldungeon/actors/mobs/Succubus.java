@@ -55,11 +55,19 @@ public class Succubus extends Mob {
 	{
 		spriteClass = SuccubusSprite.class;
 		
-		HP = HT = 80;
-		defenseSkill = 25;
-		viewDistance = Light.DISTANCE;
+		// Set base stats directly for clarity
+		baseHT = 80;
+		HP = HT = baseHT;
+		baseDefenseSkill = 25;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 40;
+		baseDamageMin = 25;
+		baseDamageMax = 30;
+		baseMaxDR = 10; // 0-10 damage reduction
+		baseEXP = 12;
+		EXP = baseEXP;
 		
-		EXP = 12;
+		viewDistance = Light.DISTANCE;
 		maxLvl = 25;
 		
 		loot = Generator.Category.SCROLL;
@@ -68,10 +76,7 @@ public class Succubus extends Mob {
 		properties.add(Property.DEMONIC);
 	}
 	
-	@Override
-	public int damageRoll() {
-		return Random.NormalIntRange( 25, 30 );
-	}
+
 	
 	@Override
 	public int attackProc( Char enemy, int damage ) {
@@ -161,13 +166,13 @@ public class Succubus extends Mob {
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 40;
+		// Pass null to get the base implementation
+		if (target == null) return baseAttackSkill;
+		// Otherwise use the parent's scaled implementation
+		return super.attackSkill(target);
 	}
 	
-	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 10);
-	}
+
 
 	@Override
 	public Item createLoot() {

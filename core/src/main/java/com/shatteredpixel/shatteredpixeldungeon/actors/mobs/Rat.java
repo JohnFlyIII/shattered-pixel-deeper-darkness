@@ -33,8 +33,17 @@ public class Rat extends Mob {
 	{
 		spriteClass = RatSprite.class;
 		
-		HP = HT = 8;
-		defenseSkill = 2;
+		// Set base stats directly for clarity
+		baseHT = 8;
+		HP = HT = baseHT;
+		baseDefenseSkill = 2;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 8;
+		baseDamageMin = 1;
+		baseDamageMax = 4;
+		baseMaxDR = 1; // 0-1 damage reduction
+		baseEXP = 1;
+		EXP = baseEXP;
 
 		maxLvl = 5;
 	}
@@ -48,20 +57,17 @@ public class Rat extends Mob {
 		return super.act();
 	}
 
-	@Override
-	public int damageRoll() {
-		return Random.NormalIntRange( 1, 4 );
-	}
+
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 8;
+		// Pass null to get the base implementation
+		if (target == null) return baseAttackSkill;
+		// Otherwise use the parent's scaled implementation
+		return super.attackSkill(target);
 	}
 	
-	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 1);
-	}
+
 
 	private static final String RAT_ALLY = "rat_ally";
 

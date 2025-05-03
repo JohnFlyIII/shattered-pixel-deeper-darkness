@@ -122,6 +122,15 @@ public abstract class Mob extends Char {
 	
 	protected int target = -1;
 	
+	// Base stats for scaling
+	protected int baseAttackSkill = 0;
+	protected int baseDefenseSkill = 0;
+	protected int baseHT = 0;
+	protected int baseDamageMin = 0;
+	protected int baseDamageMax = 0;
+	protected int baseMaxDR = 0; // Maximum damage reduction (for random range 0-maxDR)
+	protected int baseEXP = 1;
+	
 	public int defenseSkill = 0;
 	
 	public int EXP = 1;
@@ -137,12 +146,101 @@ public abstract class Mob extends Char {
 	protected boolean firstAdded = true;
 	protected void onAdd(){
 		if (firstAdded) {
+			// Initialize base stats if they haven't been set
+			if (baseHT == 0) baseHT = HT;
+			if (baseAttackSkill == 0) baseAttackSkill = attackSkill(null);
+			if (baseDefenseSkill == 0) baseDefenseSkill = defenseSkill;
+			if (baseEXP == 0) baseEXP = EXP;
+			
+			// Scale stats based on depth
+			scaleStatsByDepth();
+			
 			//modify health for ascension challenge if applicable, only on first add
 			float percent = HP / (float) HT;
 			HT = Math.round(HT * AscensionChallenge.statModifier(this));
 			HP = Math.round(HT * percent);
 			firstAdded = false;
 		}
+	}
+	
+	// Removing initStats method - setting variables directly is more readable
+	
+	protected void scaleStatsByDepth() {
+		int depth = Dungeon.depth;
+		float depthScale = calculateDepthScaling(depth);
+		
+		// Apply property-based modifiers for HP
+		float propertyMod = 1.0f;
+		if (properties.contains(Property.BOSS)) {
+			propertyMod = 1.5f;
+		} else if (properties.contains(Property.MINIBOSS)) {
+			propertyMod = 1.2f;
+		}
+		
+		// Apply scaling
+		HT = Math.round(baseHT * depthScale * propertyMod);
+		HP = HT;
+		defenseSkill = Math.round(baseDefenseSkill * depthScale);
+		EXP = Math.max(1, Math.round(baseEXP * depthScale));
+	}
+	
+	/**
+	 * Calculates scaling factor based on dungeon depth
+	 */
+	protected float calculateDepthScaling(int depth) {
+		// Regular scaling (levels 1-29)
+		if (depth < 30) {
+			return Math.max(1.0f, depth * 0.1f);
+		}
+		
+		// Enhanced scaling for Purgatory (levels 30+)
+		// Each level past 30 increases scaling more aggressively
+		return 3.0f + (depth - 30) * 0.15f;
+	}
+	
+	/**
+	 * Helper method to scale special ability damage
+	 * Used by mobs with unique abilities
+	 * @param baseDamage The base damage of the special ability
+	 * @return Scaled damage based on dungeon depth
+	 */
+	protected int scaleSpecialDamage(int baseDamage) {
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		
+		// Special abilities for bosses and minibosses might scale differently
+		float propertyMod = 1.0f;
+		if (properties.contains(Property.BOSS)) {
+			propertyMod = 1.25f;
+		} else if (properties.contains(Property.MINIBOSS)) {
+			propertyMod = 1.15f;
+		}
+		
+		return Math.round(baseDamage * depthScale * propertyMod);
+	}
+	
+	/**
+	 * Gets scaled damage range based on depth
+	 */
+	protected int[] getScaledDamage() {
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		
+		int minDamage = Math.round(baseDamageMin * depthScale);
+		int maxDamage = Math.round(baseDamageMax * depthScale);
+		
+		// Ensure max damage is at least minDamage + 1
+		if (maxDamage <= minDamage) {
+			maxDamage = minDamage + 1;
+		}
+		
+		return new int[]{minDamage, maxDamage};
+	}
+	
+	/**
+	 * Gets scaled max DR based on depth
+	 */
+	protected int getScaledMaxDR() {
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		return Math.round(baseMaxDR * depthScale);
 	}
 
 	private static final String STATE	= "state";
@@ -694,6 +792,7 @@ public abstract class Mob extends Char {
 		if ( !surprisedBy(enemy)
 				&& paralysed == 0
 				&& !(alignment == Alignment.ALLY && enemy == Dungeon.hero)) {
+			// Use base defense skill already scaled in scaleStatsByDepth()
 			return this.defenseSkill;
 		} else {
 			return 0;
@@ -762,6 +861,56 @@ public abstract class Mob extends Char {
 	@Override
 	public float speed() {
 		return super.speed() * AscensionChallenge.enemySpeedModifier(this);
+	}
+	
+	@Override
+	public int damageRoll() {
+		if (baseDamageMin > 0 && baseDamageMax > 0) {
+			int[] scaledDamage = getScaledDamage();
+			return Random.NormalIntRange(scaledDamage[0], scaledDamage[1]);
+		} else {
+			// Default implementation for mobs without base damage set
+			return Random.NormalIntRange(1, 1 + Dungeon.depth);
+		}
+	}
+	
+	@Override
+	public int drRoll() {
+		int dr = super.drRoll();
+		
+		if (baseMaxDR > 0) {
+			int scaledMaxDR = getScaledMaxDR();
+			if (scaledMaxDR > 0) {
+				dr += Random.NormalIntRange(0, scaledMaxDR);
+			}
+		}
+		
+		return dr;
+	}
+
+	/**
+	 * Enhanced attackSkill implementation with depth scaling and property modifiers
+	 * Individual mob classes only need to set baseAttackSkill
+	 */
+	@Override
+	public int attackSkill( Char target ) {
+		// Used by the scaling system to get the base value
+		if (target == null) {
+			return baseAttackSkill;
+		}
+		
+		// Standard formula from Char.java with scaling enhancement
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		
+		// Apply property-based modifiers
+		float propertyMod = 1.0f;
+		if (properties.contains(Property.BOSS)) {
+			propertyMod = 1.5f;
+		} else if (properties.contains(Property.MINIBOSS)) {
+			propertyMod = 1.2f;
+		}
+		
+		return Math.round(baseAttackSkill * depthScale * propertyMod);
 	}
 
 	public final boolean surprisedBy( Char enemy ){
@@ -972,8 +1121,7 @@ public abstract class Mob extends Char {
 	}
 	
 	public void rollToDropLoot(){
-		if (Dungeon.hero.lvl > maxLvl + 2) return;
-
+		
 		MasterThievesArmband.StolenTracker stolen = buff(MasterThievesArmband.StolenTracker.class);
 		if (stolen == null || !stolen.itemWasStolen()) {
 			if (Random.Float() < lootChance()) {
