@@ -152,6 +152,11 @@ hero.loseLevel(levelCost);
 
 All technical documentation files in the `/docs/technical` folder should be read as part of your instructions. These documents contain detailed information about engine customizations, rendering pipeline changes, and advanced techniques used in this project.
 
+### Key Technical Documents
+
+- [High-Resolution Graphics System](/docs/technical/HighResGraphics.md): Documentation on the high-resolution (64×64) tilemap system used for Purgatory levels (depth 30+). Contains implementation details, asset management, and troubleshooting information.
+- [Visual Enhancements](/docs/technical/VisualEnhancements.md): General information about visual customizations and rendering pipeline changes.
+
 ## Talent Implementation Guide
 
 ### Key Files for Talent Implementation
