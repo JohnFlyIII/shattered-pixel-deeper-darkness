@@ -38,11 +38,15 @@ public class HighResDungeonTerrainTilemap extends DungeonTerrainTilemap {
     public static final float SCALE_FACTOR = 0.25f; // Scale down by 4x to match standard size
 
     public HighResDungeonTerrainTilemap() {
+        // Call parent no-arg constructor (which calls DungeonTilemap with tilesTex)
         super();
+        
         // Set up texture film with high-res tile size
         this.tileset = new TextureFilm(texture, SIZE, SIZE);
-        // Scale down to match the visual size of regular tiles
-        scale.set(SCALE_FACTOR);
+        
+        // We don't apply additional scaling here
+        // The game's camera system handles the visual sizing
+        
         instance = this;
     }
 

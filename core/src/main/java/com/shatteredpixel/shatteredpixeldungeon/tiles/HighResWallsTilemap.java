@@ -42,10 +42,16 @@ public class HighResWallsTilemap extends DungeonWallsTilemap {
      * Constructor for the high-resolution walls tilemap
      */
     public HighResWallsTilemap() {
+        // Call parent no-arg constructor
         super();
+        
         // Set high-resolution scaling for tiles
         this.tileset = new TextureFilm(texture, HighResDungeonTilemap.SIZE, HighResDungeonTilemap.SIZE);
-        scale.set(HighResDungeonTilemap.SCALE_FACTOR);
+        
+        // We don't apply additional scaling here
+        // The game's camera system handles the visual sizing
+        
+        // skipCells is initialized in super()
     }
 
     // Static method for creating high-res wall tiles for images

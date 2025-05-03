@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
+import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.tweeners.ScaleTweener;
@@ -50,16 +51,19 @@ public class HighResTerrainFeaturesTilemap extends TerrainFeaturesTilemap {
      * Constructor for high-resolution terrain features tilemap
      */
     public HighResTerrainFeaturesTilemap(SparseArray<Plant> plants, SparseArray<Trap> traps) {
-        super(Assets.Environment.TILES_PURGATORY_FEATURES);
+        // The parent constructor needs the features asset path
+        // For high-res we use the Purgatory features
+        super(plants, traps);
         
-        this.plants = plants;
-        this.traps = traps;
+        // We need to recreate the texture with the high-res version
+        // First, get the texture from the TextureCache using the high-res path
+        texture = TextureCache.get(Assets.Environment.TILES_PURGATORY_FEATURES);
         
         // Create a TextureFilm that uses 64x64 tiles instead of 16x16
         tileset = new TextureFilm(texture, TILE_SIZE, TILE_SIZE);
         
-        // Scale the tilemap down so the tiles appear the same size as 16x16 tiles
-        scale.set(SCALE_FACTOR, SCALE_FACTOR);
+        // We don't apply additional scaling here
+        // The game's camera system handles the visual sizing
         
         if (Dungeon.level != null) {
             map(Dungeon.level.map, Dungeon.level.width());

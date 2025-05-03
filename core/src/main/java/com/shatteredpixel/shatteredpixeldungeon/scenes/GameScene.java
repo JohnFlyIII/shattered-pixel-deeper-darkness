@@ -88,6 +88,7 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.GridTileMap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.RaisedTerrainTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.TerrainFeaturesTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.TilemapFactory;
+import com.shatteredpixel.shatteredpixeldungeon.tiles.HighResDungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.WallBlockingTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
@@ -237,9 +238,14 @@ public class GameScene extends PixelScene {
 		terrain = new Group();
 		add( terrain );
 
+		// Check if we're using high-resolution tilemaps for this level
+		boolean highRes = TilemapFactory.isHighResLevel();
+		int tileSize = highRes ? HighResDungeonTilemap.SIZE : DungeonTilemap.SIZE;
+		float scaleFactor = 1.0f; // We don't apply additional scaling in either case
+		
 		water = new SkinnedBlock(
-			Dungeon.level.width() * DungeonTilemap.SIZE,
-			Dungeon.level.height() * DungeonTilemap.SIZE,
+			Dungeon.level.width() * tileSize,
+			Dungeon.level.height() * tileSize,
 			Dungeon.level.waterTex() ){
 
 			@Override
@@ -256,6 +262,10 @@ public class GameScene extends PixelScene {
 			}
 		};
 		water.autoAdjust = true;
+		// Apply scaling if using high-resolution tiles
+		if (highRes) {
+			water.scale.set(scaleFactor);
+		}
 		terrain.add( water );
 
 		ripples = new Group();
@@ -310,7 +320,7 @@ public class GameScene extends PixelScene {
 			addMobSprite( mob );
 		}
 		
-		raisedTerrain = new RaisedTerrainTilemap();
+		raisedTerrain = TilemapFactory.createRaisedTerrainTilemap();
 		add( raisedTerrain );
 
 		walls = TilemapFactory.createWallsTilemap();
@@ -459,10 +469,12 @@ public class GameScene extends PixelScene {
 
 		switch (InterlevelScene.mode){
 			case FALL: case DESCEND: case CONTINUE:
-				Camera.main.snapTo(hero.center().x, hero.center().y - DungeonTilemap.SIZE * (defaultZoom/Camera.main.zoom));
+				// Use tileSize and scaleFactor for proper positioning in both standard and high-res modes
+				Camera.main.snapTo(hero.center().x, hero.center().y - tileSize * scaleFactor * (defaultZoom/Camera.main.zoom));
 				break;
 			case ASCEND:
-				Camera.main.snapTo(hero.center().x, hero.center().y + DungeonTilemap.SIZE * (defaultZoom/Camera.main.zoom));
+				// Use tileSize and scaleFactor for proper positioning in both standard and high-res modes
+				Camera.main.snapTo(hero.center().x, hero.center().y + tileSize * scaleFactor * (defaultZoom/Camera.main.zoom));
 				break;
 			default:
 				Camera.main.snapTo(hero.center().x, hero.center().y);

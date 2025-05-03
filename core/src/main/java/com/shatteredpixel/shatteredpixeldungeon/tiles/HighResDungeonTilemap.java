@@ -35,23 +35,23 @@ import com.watabou.utils.PointF;
 public abstract class HighResDungeonTilemap extends DungeonTilemap {
 
     public static final int SIZE = 64; // 64x64 instead of 16x16
-    public static final float SCALE_FACTOR = 0.25f; // Scale down by 4x to match standard size
+    public static final float SCALE_FACTOR = 1.0f; // Don't apply additional scaling
     
     public HighResDungeonTilemap(String tex) {
         super(tex);
         // Set up texture film with high-res tile size
         this.tileset = new TextureFilm(tex, SIZE, SIZE);
-        // Scale down to match the visual size of regular tiles
-        scale.set(SCALE_FACTOR);
+        
+        // We don't apply any additional scaling at this level
+        // The camera and default zoom handle scaling the visual size
     }
     
     @Override
     public int screenToTile(int x, int y, boolean wallAssist) {
-        // Adjust for the scaling factor
+        // Convert from screen to world coordinates
         PointF p = camera().screenToCamera(x, y)
                 .offset(this.point().negate())
-                .scale(1/SCALE_FACTOR) // Invert our scaling
-                .invScale(SIZE);
+                .invScale(SIZE); // Simply divide by tile size
         
         // Snap to the edges of the tilemap
         p.x = GameMath.gate(0, p.x, Dungeon.level.width()-0.001f);
@@ -90,27 +90,27 @@ public abstract class HighResDungeonTilemap extends DungeonTilemap {
         });
     }
     
-    // Convert tile coordinates to world coordinates (scaled up for high-res)
+    // Convert tile coordinates to world coordinates
     public static PointF tileToWorld(int pos) {
         return new PointF(
-                (pos % Dungeon.level.width()) * SIZE * SCALE_FACTOR,
-                (pos / Dungeon.level.width()) * SIZE * SCALE_FACTOR
+                (pos % Dungeon.level.width()) * SIZE,
+                (pos / Dungeon.level.width()) * SIZE
         );
     }
     
-    // Convert tile center to world coordinates (scaled up for high-res)
+    // Convert tile center to world coordinates
     public static PointF tileCenterToWorld(int pos) {
         return new PointF(
-                ((pos % Dungeon.level.width()) + 0.5f) * SIZE * SCALE_FACTOR,
-                ((pos / Dungeon.level.width()) + 0.5f) * SIZE * SCALE_FACTOR
+                ((pos % Dungeon.level.width()) + 0.5f) * SIZE,
+                ((pos / Dungeon.level.width()) + 0.5f) * SIZE
         );
     }
     
-    // Convert raised tile center to world coordinates (scaled up for high-res)
+    // Convert raised tile center to world coordinates
     public static PointF raisedTileCenterToWorld(int pos) {
         return new PointF(
-                ((pos % Dungeon.level.width()) + 0.5f) * SIZE * SCALE_FACTOR,
-                ((pos / Dungeon.level.width()) + 0.1f) * SIZE * SCALE_FACTOR
+                ((pos % Dungeon.level.width()) + 0.5f) * SIZE,
+                ((pos / Dungeon.level.width()) + 0.1f) * SIZE
         );
     }
 }

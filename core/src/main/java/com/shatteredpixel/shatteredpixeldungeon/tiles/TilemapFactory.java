@@ -92,6 +92,21 @@ public class TilemapFactory {
     }
     
     /**
+     * Creates the appropriate RaisedTerrainTilemap based on the current depth.
+     * 
+     * @return A RaisedTerrainTilemap implementation appropriate for the current level
+     */
+    public static RaisedTerrainTilemap createRaisedTerrainTilemap() {
+        if (isHighResLevel()) {
+            // High-resolution implementation for Purgatory levels
+            return new HighResRaisedTerrainTilemap();
+        } else {
+            // Standard implementation for regular levels
+            return new RaisedTerrainTilemap();
+        }
+    }
+    
+    /**
      * Determines if the current level should use high-resolution assets.
      * Checks if the level is a Purgatory level (depth 30+) or a specific Purgatory-related level.
      * Also checks if high-resolution mode has been forced for testing.
