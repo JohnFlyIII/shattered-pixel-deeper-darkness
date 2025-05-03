@@ -46,7 +46,16 @@ public class Piranha extends Mob {
 
 		baseSpeed = 2f;
 		
-		EXP = 0;
+		// Base stats for scaling system
+		baseHT = 10;
+		baseDefenseSkill = 10;
+		baseAttackSkill = 20;
+		baseDamageMin = 1;  // Will scale with depth
+		baseDamageMax = 4;  // Will scale with depth
+		baseMaxDR = 1;      // Will scale with depth
+		baseEXP = 0;        // Piranhas give no XP by design
+		
+		EXP = baseEXP;
 		
 		loot = MysteryMeat.class;
 		lootChance = 1f;
@@ -62,8 +71,8 @@ public class Piranha extends Mob {
 	public Piranha() {
 		super();
 		
-		HP = HT = 10 + Dungeon.depth * 5;
-		defenseSkill = 10 + Dungeon.depth * 2;
+		// Scale stats based on depth using the scaling system
+		scaleStatsByDepth();
 	}
 	
 	@Override
@@ -82,17 +91,20 @@ public class Piranha extends Mob {
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( Dungeon.depth, 4 + Dungeon.depth * 2 );
+		// Use the scaled damage system from Mob class
+		return super.damageRoll();
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 20 + Dungeon.depth * 2;
+		if (target == null) return baseAttackSkill;
+		return super.attackSkill(target);
 	}
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, Dungeon.depth);
+		// Use the scaled DR system from Mob class
+		return super.drRoll();
 	}
 
 	@Override

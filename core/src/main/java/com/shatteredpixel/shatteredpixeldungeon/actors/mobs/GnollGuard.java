@@ -37,16 +37,23 @@ public class GnollGuard extends Mob {
 	{
 		spriteClass = GnollGuardSprite.class;
 
-		HP = HT = 35;
-		defenseSkill = 15;
-
-		EXP = 7;
+		baseHT = 35;
+		baseDefenseSkill = 15;
+		baseAttackSkill = 20;
+		baseDamageMin = 6;
+		baseDamageMax = 22; // Using max from ranged attack
+		baseMaxDR = 6;
+		baseEXP = 7;
+		
 		maxLvl = -2;
 
 		loot = Spear.class;
 		lootChance = 0.1f;
 
 		WANDERING = new Wandering();
+		
+		// Initialize stats based on dungeon depth
+		scaleStatsByDepth();
 	}
 
 	private int sapperID = -1;
@@ -81,10 +88,18 @@ public class GnollGuard extends Mob {
 
 	@Override
 	public int damageRoll() {
+		// Base scaling applied to both melee and ranged attacks
+		int[] scaledDamage = getScaledDamage();
+		
 		if (enemy != null && !Dungeon.level.adjacent(pos, enemy.pos)){
-			return Random.NormalIntRange( 16, 22 );
+			// Ranged attack (stronger)
+			return Random.NormalIntRange(
+				Math.round(scaledDamage[0] * 2.0f), 
+				Math.round(scaledDamage[1] * 1.5f)
+			);
 		} else {
-			return Random.NormalIntRange( 6, 12 );
+			// Melee attack (normal)
+			return Random.NormalIntRange(scaledDamage[0], scaledDamage[1]);
 		}
 	}
 
@@ -99,12 +114,26 @@ public class GnollGuard extends Mob {
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 20;
+		// If called by scaling system
+		if (target == null) {
+			return baseAttackSkill;
+		}
+		// Otherwise return the already scaled value
+		return super.attackSkill(target);
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 6);
+		int dr = super.drRoll();
+		
+		if (baseMaxDR > 0) {
+			int scaledMaxDR = getScaledMaxDR();
+			if (scaledMaxDR > 0) {
+				dr += Random.NormalIntRange(0, scaledMaxDR);
+			}
+		}
+		
+		return dr;
 	}
 
 	@Override

@@ -46,10 +46,18 @@ public class CrystalGuardian extends Mob{
 	{
 		spriteClass = CrystalGuardianSprite.class;
 
-		HP = HT = 100;
-		defenseSkill = 14;
+		// Set base stats for scaling
+		baseHT = 100;
+		HP = HT = baseHT;
+		baseDefenseSkill = 14;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 20;
+		baseDamageMin = 10;
+		baseDamageMax = 16;
+		baseMaxDR = 10; // 0-10 damage reduction
+		baseEXP = 10;
+		EXP = baseEXP;
 
-		EXP = 10;
 		maxLvl = -2;
 
 		SLEEPING = new Sleeping();
@@ -85,12 +93,13 @@ public class CrystalGuardian extends Mob{
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 10, 16 );
+		return super.damageRoll();
 	}
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 20;
+		if (target == null) return baseAttackSkill;
+		return super.attackSkill(target);
 	}
 
 	@Override
@@ -107,7 +116,7 @@ public class CrystalGuardian extends Mob{
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 10);
+		return super.drRoll();
 	}
 
 	@Override
@@ -171,6 +180,9 @@ public class CrystalGuardian extends Mob{
 				spriteClass = CrystalGuardianSprite.Red.class;
 				break;
 		}
+		
+		// Scale stats based on dungeon depth
+		scaleStatsByDepth();
 	}
 
 	@Override

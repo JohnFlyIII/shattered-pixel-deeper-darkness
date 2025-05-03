@@ -38,26 +38,37 @@ public class FetidRat extends Rat {
 	{
 		spriteClass = FetidRatSprite.class;
 
-		HP = HT = 20;
-		defenseSkill = 5;
-
-		EXP = 4;
+		// Set base stats for scaling
+		baseHT = 20;
+		HP = HT = baseHT;
+		baseDefenseSkill = 5;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 12;
+		baseDamageMin = 1;
+		baseDamageMax = 5; // Same as regular rat but higher
+		baseMaxDR = 2; // 0-2 damage reduction
+		baseEXP = 4;
+		EXP = baseEXP;
 
 		WANDERING = new Wandering();
 		state = WANDERING;
 
 		properties.add(Property.MINIBOSS);
 		properties.add(Property.DEMONIC);
+		
+		// Scale stats based on dungeon depth
+		scaleStatsByDepth();
 	}
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 12;
+		if (target == null) return baseAttackSkill;
+		return super.attackSkill(target);
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 2);
+		return super.drRoll();
 	}
 
 	@Override

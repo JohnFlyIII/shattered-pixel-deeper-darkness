@@ -64,10 +64,15 @@ import java.util.ArrayList;
 public class GnollGeomancer extends Mob {
 
 	{
-		HP = HT = 150;
+		baseHT = 150;
+		baseDefenseSkill = 15;
+		baseAttackSkill = 20;
+		baseDamageMin = 3;
+		baseDamageMax = 6;
+		baseMaxDR = 6;
+		baseEXP = 20;
+		
 		spriteClass = GnollGeomancerSprite.class;
-
-		EXP = 20;
 
 		//acts after other mobs, just like sappers
 		actPriority = MOB_PRIO-1;
@@ -83,6 +88,9 @@ public class GnollGeomancer extends Mob {
 
 		properties.add(Property.BOSS);
 		properties.add(Property.IMMOVABLE); //moves itself via ability, otherwise is static
+		
+		// Initialize stats based on dungeon depth
+		scaleStatsByDepth();
 	}
 
 	private int abilityCooldown = Random.NormalIntRange(3, 5);
@@ -147,12 +155,24 @@ public class GnollGeomancer extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 3, 6 );
+		// Use scaling system
+		if (baseDamageMin > 0 && baseDamageMax > 0) {
+			int[] scaledDamage = getScaledDamage();
+			return Random.NormalIntRange(scaledDamage[0], scaledDamage[1]);
+		} else {
+			// Fallback to original values
+			return Random.NormalIntRange(3, 6);
+		}
 	}
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 20;
+		// If called by scaling system
+		if (target == null) {
+			return baseAttackSkill;
+		}
+		// Otherwise return the already scaled value
+		return super.attackSkill(target);
 	}
 
 	@Override

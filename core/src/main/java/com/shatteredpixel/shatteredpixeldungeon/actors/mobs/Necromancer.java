@@ -49,10 +49,19 @@ public class Necromancer extends Mob {
 	{
 		spriteClass = NecromancerSprite.class;
 		
-		HP = HT = 40;
-		defenseSkill = 14;
+		// Base stats for scaling
+		baseHT = 40;
+		baseDefenseSkill = 14;
+		baseAttackSkill = 15; // Not used directly for attacks but good to define
+		baseDamageMin = 2; // Used for summon block damage
+		baseDamageMax = 10; // Used for summon block damage
+		baseMaxDR = 5; // For random 0-5 in drRoll
+		baseEXP = 7;
 		
-		EXP = 7;
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 		maxLvl = 14;
 		
 		loot = PotionOfHealing.class;
@@ -61,6 +70,9 @@ public class Necromancer extends Mob {
 		properties.add(Property.UNDEAD);
 		
 		HUNTING = new Hunting();
+		
+		// Apply depth scaling to all stats
+		scaleStatsByDepth();
 	}
 	
 	public boolean summoning = false;
@@ -92,7 +104,7 @@ public class Necromancer extends Mob {
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 5);
+		return super.drRoll(); // Use the scaled DR implementation from Mob which handles baseMaxDR
 	}
 	
 	@Override
@@ -241,6 +253,9 @@ public class Necromancer extends Mob {
 
 		mySkeleton = new NecroSkeleton();
 		mySkeleton.pos = summoningPos;
+		
+		// Apply depth scaling to the skeleton when it's summoned
+		mySkeleton.scaleStatsByDepth();
 		GameScene.add( mySkeleton );
 		Dungeon.level.occupyCell( mySkeleton );
 		((NecromancerSprite)sprite).finishSummoning();
@@ -252,6 +267,15 @@ public class Necromancer extends Mob {
 		}
 	}
 
+	// Helper method to get scaled damage for summoning block
+	protected int[] getScaledSummonDamage() {
+		// Scale damage based on depth
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		int minDmg = Math.round(baseDamageMin * depthScale);
+		int maxDmg = Math.round(baseDamageMax * depthScale);
+		return new int[]{minDmg, maxDmg};
+	}
+	
 	public static class SummoningBlockDamage{}
 	
 	private class Hunting extends Mob.Hunting{

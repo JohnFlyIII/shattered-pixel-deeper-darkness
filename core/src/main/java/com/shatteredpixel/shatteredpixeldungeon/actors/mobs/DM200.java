@@ -40,10 +40,18 @@ public class DM200 extends Mob {
 	{
 		spriteClass = DM200Sprite.class;
 
-		HP = HT = 80;
-		defenseSkill = 12;
+		// Set base stats for scaling
+		baseHT = 80;
+		HP = HT = baseHT;
+		baseDefenseSkill = 12;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 20;
+		baseDamageMin = 10;
+		baseDamageMax = 25;
+		baseMaxDR = 8; // 0-8 damage reduction
+		baseEXP = 9;
+		EXP = baseEXP;
 
-		EXP = 9;
 		maxLvl = 17;
 
 		loot = Random.oneOf(Generator.Category.WEAPON, Generator.Category.ARMOR);
@@ -57,17 +65,18 @@ public class DM200 extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 10, 25 );
+		return super.damageRoll();
 	}
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 20;
+		if (target == null) return baseAttackSkill;
+		return super.attackSkill(target);
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 8);
+		return super.drRoll();
 	}
 
 	@Override

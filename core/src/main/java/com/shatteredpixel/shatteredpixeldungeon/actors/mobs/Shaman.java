@@ -44,29 +44,41 @@ import com.watabou.utils.Random;
 public abstract class Shaman extends Mob {
 	
 	{
-		HP = HT = 35;
-		defenseSkill = 15;
+		// Base stats for scaling
+		baseHT = 35;
+		baseDefenseSkill = 15;
+		baseAttackSkill = 18;
+		baseDamageMin = 5;
+		baseDamageMax = 10;
+		baseMaxDR = 6; // For random 0-6 in drRoll
+		baseEXP = 8;
 		
-		EXP = 8;
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 		maxLvl = 16;
 		
 		loot = Generator.Category.WAND;
 		lootChance = 0.03f; //initially, see lootChance()
+		
+		// Apply depth scaling to all stats
+		scaleStatsByDepth();
 	}
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 5, 10 );
+		return super.damageRoll(); // Use the scaled damage implementation from Mob
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 18;
+		return super.attackSkill(target); // Use the scaled attack skill implementation from Mob
 	}
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 6);
+		return super.drRoll(); // Use the scaled DR implementation from Mob which handles baseMaxDR
 	}
 
 	@Override
@@ -110,6 +122,16 @@ public abstract class Shaman extends Mob {
 	//used so resistances can differentiate between melee and magical attacks
 	public static class EarthenBolt{}
 	
+	// Helper method to get scaled bolt damage
+	protected int[] getScaledBoltDamage() {
+		// Scale bolt damage based on depth
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		// Base damage multiplied by 1.5 for bolt attacks (they're stronger than melee)
+		int minDmg = Math.round(baseDamageMin * 1.5f * depthScale);
+		int maxDmg = Math.round(baseDamageMax * 1.5f * depthScale);
+		return new int[]{minDmg, maxDmg};
+	}
+	
 	private void zap() {
 		spend( 1f );
 
@@ -122,7 +144,9 @@ public abstract class Shaman extends Mob {
 				if (enemy == Dungeon.hero) Sample.INSTANCE.play( Assets.Sounds.DEBUFF );
 			}
 			
-			int dmg = Random.NormalIntRange( 6, 15 );
+			// Use scaled bolt damage
+			int[] boltDamage = getScaledBoltDamage();
+			int dmg = Random.NormalIntRange(boltDamage[0], boltDamage[1]);
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
 			enemy.damage( dmg, new EarthenBolt() );
 			

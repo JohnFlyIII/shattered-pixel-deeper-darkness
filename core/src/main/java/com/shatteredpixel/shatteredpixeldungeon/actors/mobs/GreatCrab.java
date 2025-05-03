@@ -40,12 +40,22 @@ public class GreatCrab extends Crab {
 
 	{
 		spriteClass = GreatCrabSprite.class;
-
-		HP = HT = 25;
-		defenseSkill = 0; //see damage()
+		
+		// Base stats for scaling
+		baseHT = 25;
+		baseDefenseSkill = 0; // defenseSkill = 0 in special case, see damage()
+		baseAttackSkill = 12; // Approximated from Crab
+		baseDamageMin = 3;
+		baseDamageMax = 8;
+		baseMaxDR = 4;
+		baseEXP = 6;
+		
+		// Initial assignments
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill; 
+		EXP = baseEXP;
+		
 		baseSpeed = 1f;
-
-		EXP = 6;
 
 		WANDERING = new Wandering();
 		state = WANDERING;
@@ -54,6 +64,11 @@ public class GreatCrab extends Crab {
 		lootChance = 1f;
 
 		properties.add(Property.MINIBOSS);
+	}
+	
+	public GreatCrab() {
+		super();
+		scaleStatsByDepth();
 	}
 
 	private int moving = 0;

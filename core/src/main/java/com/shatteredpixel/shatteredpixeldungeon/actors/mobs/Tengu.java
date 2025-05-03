@@ -87,34 +87,52 @@ public class Tengu extends Mob {
 	{
 		spriteClass = TenguSprite.class;
 		
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 250 : 200;
-		EXP = 20;
-		defenseSkill = 15;
+		// Base stats for scaling
+		baseHT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 250 : 200;
+		baseDefenseSkill = 15;
+		baseAttackSkill = 20; // Higher for ranged attacks, 10 for melee (handled in attackSkill)
+		baseDamageMin = 6;
+		baseDamageMax = 12;
+		baseMaxDR = 5; // For random 0-5 in drRoll
+		baseEXP = 20;
+		
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 		
 		HUNTING = new Hunting();
 		
 		properties.add(Property.BOSS);
 		
 		viewDistance = 12;
+		
+		// Apply depth scaling to all stats based on boss property
+		scaleStatsByDepth();
 	}
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 6, 12 );
+		return super.damageRoll(); // Use the scaled damage implementation from Mob
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		
+		// Different attack skill for melee vs ranged attacks
 		if (Dungeon.level.adjacent(pos, target.pos)){
-			return 10;
+			// Melee: half of base value
+			return Math.round(baseAttackSkill * 0.5f * depthScale);
 		} else {
-			return 20;
+			// Ranged: full base value
+			return Math.round(baseAttackSkill * depthScale);
 		}
 	}
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 5);
+		return super.drRoll(); // Use the scaled DR implementation from Mob which handles baseMaxDR
 	}
 
 	boolean loading = false;

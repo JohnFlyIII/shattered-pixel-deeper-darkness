@@ -59,10 +59,18 @@ public class CrystalSpire extends Mob {
 
 	{
 		//this translates to roughly 33/27/23/20/18/16 pickaxe hits at +0/1/2/3/4/5
-		HP = HT = 300;
+		baseHT = 300;
+		HP = HT = baseHT;
 		spriteClass = CrystalSpireSprite.class;
 
-		EXP = 20;
+		// Set base stats for scaling
+		baseDefenseSkill = 0; // Cannot be attacked except with pickaxe
+		baseAttackSkill = 0;  // Auto-hit with spikes
+		baseDamageMin = 6;
+		baseDamageMax = 15;
+		baseMaxDR = 0;
+		baseEXP = 20;
+		EXP = baseEXP;
 
 		//acts after other mobs, which makes baiting crystal guardians more consistent
 		actPriority = MOB_PRIO-1;
@@ -123,11 +131,12 @@ public class CrystalSpire extends Mob {
 				Char ch = Actor.findChar(i);
 
 				if (ch != null && !(ch instanceof CrystalWisp || ch instanceof CrystalSpire)){
-					int dmg = Random.NormalIntRange(6, 15);
+					int[] scaledDamage = getScaledDamage();
+					int dmg = Random.NormalIntRange(scaledDamage[0], scaledDamage[1]);
 
 					//guardians are hit harder by the attack
 					if (ch instanceof CrystalGuardian) {
-						dmg += 12; //18-27 damage
+						dmg += scaleSpecialDamage(12); //additional scaled damage
 						Buff.prolong(ch, Cripple.class, 30f);
 					}
 					ch.damage(dmg, new SpireSpike());
@@ -461,6 +470,9 @@ public class CrystalSpire extends Mob {
 				spriteClass = CrystalSpireSprite.Red.class;
 				break;
 		}
+		
+		// Scale stats based on dungeon depth
+		scaleStatsByDepth();
 	}
 
 	@Override

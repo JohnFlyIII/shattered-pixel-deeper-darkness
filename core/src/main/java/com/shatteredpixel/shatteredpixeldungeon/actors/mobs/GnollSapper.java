@@ -41,10 +41,14 @@ public class GnollSapper extends Mob {
 
 		spriteClass = GnollSapperSprite.class;
 
-		HP = HT = 45;
-		defenseSkill = 15;
-
-		EXP = 10;
+		baseHT = 45;
+		baseDefenseSkill = 15;
+		baseAttackSkill = 20;
+		baseDamageMin = 5;
+		baseDamageMax = 10;
+		baseMaxDR = 8;
+		baseEXP = 10;
+		
 		maxLvl = -2;
 
 		properties.add(Property.MINIBOSS);
@@ -52,6 +56,9 @@ public class GnollSapper extends Mob {
 		HUNTING = new Hunting();
 		WANDERING = new Wandering();
 		state = SLEEPING;
+		
+		// Initialize stats based on dungeon depth
+		scaleStatsByDepth();
 	}
 
 	public int spawnPos;
@@ -96,12 +103,24 @@ public class GnollSapper extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 1, 6 );
+		// Use scaling system
+		if (baseDamageMin > 0 && baseDamageMax > 0) {
+			int[] scaledDamage = getScaledDamage();
+			return Random.NormalIntRange(scaledDamage[0], scaledDamage[1]);
+		} else {
+			// Fallback to original values
+			return Random.NormalIntRange(1, 6);
+		}
 	}
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 18;
+		// If called by scaling system
+		if (target == null) {
+			return baseAttackSkill;
+		}
+		// Otherwise return the already scaled value
+		return super.attackSkill(target);
 	}
 
 	@Override
@@ -112,7 +131,16 @@ public class GnollSapper extends Mob {
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 6);
+		int dr = super.drRoll();
+		
+		if (baseMaxDR > 0) {
+			int scaledMaxDR = getScaledMaxDR();
+			if (scaledMaxDR > 0) {
+				dr += Random.NormalIntRange(0, scaledMaxDR);
+			}
+		}
+		
+		return dr;
 	}
 
 	@Override

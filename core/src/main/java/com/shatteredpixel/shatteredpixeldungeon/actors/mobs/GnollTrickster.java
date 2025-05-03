@@ -44,10 +44,13 @@ public class GnollTrickster extends Gnoll {
 	{
 		spriteClass = GnollTricksterSprite.class;
 
-		HP = HT = 20;
-		defenseSkill = 5;
-
-		EXP = 5;
+		baseHT = 20;
+		baseDefenseSkill = 5;
+		baseAttackSkill = 16;
+		baseDamageMin = 2;
+		baseDamageMax = 8;
+		baseMaxDR = 2;
+		baseEXP = 5;
 
 		WANDERING = new Wandering();
 		state = WANDERING;
@@ -57,13 +60,21 @@ public class GnollTrickster extends Gnoll {
 		lootChance = 1f;
 
 		properties.add(Property.MINIBOSS);
+		
+		// Initialize stats based on dungeon depth
+		scaleStatsByDepth();
 	}
 
 	private int combo = 0;
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 16;
+		// If called by scaling system
+		if (target == null) {
+			return baseAttackSkill;
+		}
+		// Otherwise return the already scaled value
+		return super.attackSkill(target);
 	}
 
 	@Override

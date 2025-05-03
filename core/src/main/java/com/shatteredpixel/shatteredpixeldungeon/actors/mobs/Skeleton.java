@@ -42,10 +42,19 @@ public class Skeleton extends Mob {
 	{
 		spriteClass = SkeletonSprite.class;
 		
-		HP = HT = 25;
-		defenseSkill = 9;
+		// Base stats for scaling
+		baseHT = 25;
+		baseDefenseSkill = 9;
+		baseAttackSkill = 12;
+		baseDamageMin = 2;
+		baseDamageMax = 10;
+		baseMaxDR = 5; // For random 0-5 in drRoll
+		baseEXP = 5;
 		
-		EXP = 5;
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 		maxLvl = 10;
 
 		loot = Generator.Category.WEAPON;
@@ -53,11 +62,14 @@ public class Skeleton extends Mob {
 
 		properties.add(Property.UNDEAD);
 		properties.add(Property.INORGANIC);
+		
+		// Apply depth scaling to all stats
+		scaleStatsByDepth();
 	}
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 2, 10 );
+		return super.damageRoll(); // Use the scaled damage implementation from Mob
 	}
 	
 	@Override
@@ -125,12 +137,12 @@ public class Skeleton extends Mob {
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 12;
+		return super.attackSkill(target); // Use the scaled attack skill implementation from Mob
 	}
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 5);
+		return super.drRoll(); // Use the scaled DR implementation from Mob which handles baseMaxDR
 	}
 
 }

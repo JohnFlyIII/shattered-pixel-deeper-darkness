@@ -1,0 +1,21 @@
+// Updated NewbornFireElemental.damageRoll method
+@Override
+public int damageRoll() {
+    if (!summonedALly) {
+        float depthScale = calculateDepthScaling(Dungeon.depth);
+        return Random.NormalIntRange(Math.round(10 * depthScale), Math.round(12 * depthScale));
+    } else {
+        return super.damageRoll();
+    }
+}
+
+// Updated NewbornFireElemental.attackSkill method
+@Override
+public int attackSkill(Char target) {
+    if (!summonedALly) {
+        float depthScale = calculateDepthScaling(Dungeon.depth);
+        return Math.round(15 * depthScale);
+    } else {
+        return super.attackSkill(target);
+    }
+}

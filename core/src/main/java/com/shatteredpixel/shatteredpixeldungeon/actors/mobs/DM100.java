@@ -44,10 +44,18 @@ public class DM100 extends Mob implements Callback {
 	{
 		spriteClass = DM100Sprite.class;
 		
-		HP = HT = 20;
-		defenseSkill = 8;
+		// Set base stats for scaling
+		baseHT = 20;
+		HP = HT = baseHT;
+		baseDefenseSkill = 8;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 11;
+		baseDamageMin = 2;
+		baseDamageMax = 8;
+		baseMaxDR = 4; // 0-4 damage reduction
+		baseEXP = 6;
+		EXP = baseEXP;
 		
-		EXP = 6;
 		maxLvl = 13;
 		
 		loot = Generator.Category.SCROLL;
@@ -59,17 +67,18 @@ public class DM100 extends Mob implements Callback {
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 2, 8 );
+		return super.damageRoll();
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 11;
+		if (target == null) return baseAttackSkill;
+		return super.attackSkill(target);
 	}
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 4);
+		return super.drRoll();
 	}
 
 	@Override

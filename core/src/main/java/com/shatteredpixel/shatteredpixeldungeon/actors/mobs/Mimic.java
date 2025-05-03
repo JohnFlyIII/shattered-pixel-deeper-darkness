@@ -227,16 +227,25 @@ public class Mimic extends Mob {
 
 	@Override
 	public int damageRoll() {
+		float depthScale = calculateDepthScaling(level);
+		
 		if (alignment == Alignment.NEUTRAL){
-			return Random.NormalIntRange( 2 + 2*level, 2 + 2*level);
+			// Ambush damage - always maximum
+			int scaledDamage = Math.round((2 + 2*level) * depthScale);
+			return Random.NormalIntRange(scaledDamage, scaledDamage);
 		} else {
-			return Random.NormalIntRange( 1 + level, 2 + 2*level);
+			// Normal damage range
+			int minDamage = Math.round((1 + level) * depthScale);
+			int maxDamage = Math.round((2 + 2*level) * depthScale);
+			return Random.NormalIntRange(minDamage, maxDamage);
 		}
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 1 + level/2);
+		float depthScale = calculateDepthScaling(level);
+		int scaledMaxDR = Math.round(baseMaxDR * depthScale) + level/2;
+		return super.drRoll() + Random.NormalIntRange(0, scaledMaxDR);
 	}
 
 	@Override
@@ -249,7 +258,8 @@ public class Mimic extends Mob {
 		if (target != null && alignment == Alignment.NEUTRAL && target.invisible <= 0){
 			return INFINITE_ACCURACY;
 		} else {
-			return 6 + level;
+			float depthScale = calculateDepthScaling(level);
+			return Math.round(baseAttackSkill * depthScale) + level;
 		}
 	}
 
@@ -259,8 +269,21 @@ public class Mimic extends Mob {
 	}
 	
 	public void adjustStats( int level ) {
-		HP = HT = (1 + level) * 6;
-		defenseSkill = 2 + level/2;
+		// Base stats for scaling
+		baseHT = 6;
+		baseDefenseSkill = 2;
+		baseAttackSkill = 6; // For attackSkill method
+		baseMaxDR = 1; // For drRoll random 0-1 + level/2
+		
+		// Apply scaling appropriate for mimics (based on level parameter)
+		float depthScale = calculateDepthScaling(level);
+		
+		// Scale health by level plus our scaling factor
+		HT = Math.round((1 + level) * baseHT * depthScale);
+		HP = HT;
+		
+		// Scale defense based on level/2 plus scaling factor
+		defenseSkill = Math.round(baseDefenseSkill * depthScale) + level/2;
 		
 		enemySeen = true;
 	}

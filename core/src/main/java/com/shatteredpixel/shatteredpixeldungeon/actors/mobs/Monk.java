@@ -39,26 +39,38 @@ public class Monk extends Mob {
 	{
 		spriteClass = MonkSprite.class;
 		
-		HP = HT = 70;
-		defenseSkill = 30;
+		// Base stats for scaling
+		baseHT = 70;
+		baseDefenseSkill = 30;
+		baseAttackSkill = 30;
+		baseDamageMin = 12;
+		baseDamageMax = 25;
+		baseMaxDR = 2; // For random 0-2 in drRoll
+		baseEXP = 11;
 		
-		EXP = 11;
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 		maxLvl = 21;
 		
 		loot = Food.class;
 		lootChance = 0.083f;
 
 		properties.add(Property.UNDEAD);
+		
+		// Apply depth scaling to all stats
+		scaleStatsByDepth();
 	}
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 12, 25 );
+		return super.damageRoll(); // Use the scaled damage implementation from Mob
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 30;
+		return super.attackSkill(target); // Use the scaled attack skill implementation from Mob
 	}
 	
 	@Override
@@ -68,7 +80,7 @@ public class Monk extends Mob {
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 2);
+		return super.drRoll(); // Use the scaled DR implementation from Mob which handles baseMaxDR
 	}
 	
 	@Override

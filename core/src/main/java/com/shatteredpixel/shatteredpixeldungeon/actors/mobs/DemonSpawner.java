@@ -44,10 +44,18 @@ public class DemonSpawner extends Mob {
 	{
 		spriteClass = SpawnerSprite.class;
 
-		HP = HT = 120;
-		defenseSkill = 0;
+		// Set base stats for scaling
+		baseHT = 120;
+		HP = HT = baseHT;
+		baseDefenseSkill = 0;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 0;
+		baseDamageMin = 0;
+		baseDamageMax = 0;
+		baseMaxDR = 12; // 0-12 damage reduction
+		baseEXP = 15;
+		EXP = baseEXP;
 
-		EXP = 15;
 		maxLvl = 29;
 
 		state = PASSIVE;
@@ -59,11 +67,14 @@ public class DemonSpawner extends Mob {
 		properties.add(Property.MINIBOSS);
 		properties.add(Property.DEMONIC);
 		properties.add(Property.STATIC);
+		
+		// Scale stats based on dungeon depth
+		scaleStatsByDepth();
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 12);
+		return super.drRoll();
 	}
 
 	@Override

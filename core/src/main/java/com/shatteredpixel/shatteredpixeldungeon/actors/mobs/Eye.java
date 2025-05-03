@@ -51,11 +51,20 @@ public class Eye extends Mob {
 	{
 		spriteClass = EyeSprite.class;
 		
-		HP = HT = 100;
-		defenseSkill = 20;
+		// Base stats for scaling
+		baseHT = 100;
+		baseDefenseSkill = 20;
+		baseAttackSkill = 30;
+		baseDamageMin = 20;
+		baseDamageMax = 30;
+		baseMaxDR = 10;
+		baseEXP = 13;
+		
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
 		viewDistance = Light.DISTANCE;
 		
-		EXP = 13;
+		EXP = baseEXP;
 		maxLvl = 26;
 		
 		flying = true;
@@ -66,21 +75,27 @@ public class Eye extends Mob {
 		lootChance = 1f;
 
 		properties.add(Property.DEMONIC);
+		
+		// Scale stats based on depth
+		scaleStatsByDepth();
 	}
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange(20, 30);
+		// Use the parent class's scaling implementation
+		return super.damageRoll();
 	}
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 30;
+		// Use the parent class's scaling implementation
+		return super.attackSkill(target);
 	}
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 10);
+		// Use the parent class's scaling implementation
+		return super.drRoll();
 	}
 	
 	private Ballistica beam;
@@ -191,7 +206,9 @@ public class Eye extends Mob {
 			}
 
 			if (hit( this, ch, true )) {
-				int dmg = Random.NormalIntRange( 30, 50 );
+				// Scale death gaze damage based on depth
+				int baseDmg = Random.NormalIntRange( 30, 50 );
+				int dmg = scaleSpecialDamage(baseDmg);
 				dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
 
 				//logic for fists or Yog-Dzewa taking 1/2 or 1/4 damage from aggression stoned minions

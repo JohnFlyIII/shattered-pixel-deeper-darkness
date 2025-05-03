@@ -35,11 +35,22 @@ public class FungalSpinner extends Spinner {
 	{
 		spriteClass = FungalSpinnerSprite.class;
 
-		HP = HT = 40;
-		defenseSkill = 16;
+		// Set base stats for scaling
+		baseHT = 40;
+		HP = HT = baseHT;
+		baseDefenseSkill = 16;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 22; // Same as regular Spinner
+		baseDamageMin = 10;   // Same as regular Spinner
+		baseDamageMax = 20;   // Same as regular Spinner
+		baseMaxDR = 6;        // Same as regular Spinner
+		baseEXP = 7;
+		EXP = baseEXP;
 
-		EXP = 7;
 		maxLvl = -2;
+		
+		// Scale stats based on dungeon depth
+		scaleStatsByDepth();
 	}
 
 	@Override

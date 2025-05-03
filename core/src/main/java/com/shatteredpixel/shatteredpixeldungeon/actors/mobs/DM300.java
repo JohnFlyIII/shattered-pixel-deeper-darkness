@@ -81,13 +81,26 @@ public class DM300 extends Mob {
 	{
 		spriteClass = DM300Sprite.class;
 
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 400 : 300;
-		EXP = 30;
-		defenseSkill = 15;
+		// Base stats for scaling
+		baseHT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 400 : 300;
+		baseDefenseSkill = 15;
+		baseAttackSkill = 20;
+		baseDamageMin = 15;
+		baseDamageMax = 25;
+		baseMaxDR = 10; // For random 0-10 in drRoll
+		baseEXP = 30;
+		
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 
 		properties.add(Property.BOSS);
 		properties.add(Property.INORGANIC);
 		properties.add(Property.LARGE);
+		
+		// Apply depth scaling to all stats based on boss property
+		scaleStatsByDepth();
 	}
 
 	@Override

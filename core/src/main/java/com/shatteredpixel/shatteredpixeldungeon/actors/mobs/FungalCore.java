@@ -27,15 +27,26 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.FungalCoreSprite;
 public class FungalCore extends Mob {
 
 	{
-		HP = HT = 300;
+		// Set base stats for scaling
+		baseHT = 300;
+		HP = HT = baseHT;
+		baseDefenseSkill = 0;
+		baseAttackSkill = 0;
+		baseDamageMin = 0;
+		baseDamageMax = 0;
+		baseMaxDR = 0;
+		baseEXP = 20;
+		EXP = baseEXP;
+		
 		spriteClass = FungalCoreSprite.class;
-
-		EXP = 20;
 
 		state = PASSIVE;
 
 		properties.add(Property.IMMOVABLE);
 		properties.add(Property.BOSS);
+		
+		// Scale stats based on dungeon depth
+		scaleStatsByDepth();
 	}
 
 	@Override

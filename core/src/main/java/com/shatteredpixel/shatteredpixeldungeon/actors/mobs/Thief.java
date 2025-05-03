@@ -43,10 +43,18 @@ public class Thief extends Mob {
 	{
 		spriteClass = ThiefSprite.class;
 		
-		HP = HT = 20;
-		defenseSkill = 12;
+		// Set base stats for scaling
+		baseHT = 20;
+		HP = HT = baseHT;
+		baseDefenseSkill = 12;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 12;
+		baseDamageMin = 1;
+		baseDamageMax = 10;
+		baseMaxDR = 3; // 0-3 damage reduction
+		baseEXP = 5;
+		EXP = baseEXP;
 		
-		EXP = 5;
 		maxLvl = 11;
 
 		loot = Random.oneOf(Generator.Category.RING, Generator.Category.ARTIFACT);
@@ -80,7 +88,7 @@ public class Thief extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 1, 10 );
+		return super.damageRoll();
 	}
 
 	@Override
@@ -114,12 +122,13 @@ public class Thief extends Mob {
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 12;
+		if (target == null) return baseAttackSkill;
+		return super.attackSkill(target);
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 3);
+		return super.drRoll();
 	}
 
 	@Override

@@ -42,33 +42,56 @@ public class Brute extends Mob {
 	{
 		spriteClass = BruteSprite.class;
 		
-		HP = HT = 40;
-		defenseSkill = 15;
+		// Base stats for scaling
+		baseHT = 40;
+		baseDefenseSkill = 15;
+		baseAttackSkill = 20;
+		// Brute has special damage handling in damageRoll
+		// Normal: 5-25, Enraged: 15-40
+		baseDamageMin = 5;
+		baseDamageMax = 25;
+		baseMaxDR = 8; // For random 0-8 in drRoll
+		baseEXP = 8;
 		
-		EXP = 8;
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 		maxLvl = 16;
 		
 		loot = Gold.class;
 		lootChance = 0.5f;
+		
+		// Apply depth scaling to all stats
+		scaleStatsByDepth();
 	}
 	
 	protected boolean hasRaged = false;
 	
 	@Override
 	public int damageRoll() {
-		return buff(BruteRage.class) != null ?
-				Random.NormalIntRange( 15, 40 ) :
-				Random.NormalIntRange( 5, 25 );
+		// Get scaled damage values from base class
+		int[] scaledDamage = getScaledDamage();
+		
+		if (buff(BruteRage.class) != null) {
+			// When enraged, increase damage by 3x for minimum and 1.6x for maximum
+			return Random.NormalIntRange(
+					Math.round(scaledDamage[0] * 3.0f), 
+					Math.round(scaledDamage[1] * 1.6f));
+		} else {
+			// Normal damage
+			return Random.NormalIntRange(scaledDamage[0], scaledDamage[1]);
+		}
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 20;
+		return super.attackSkill(target); // Use the scaled attack skill implementation from Mob
 	}
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 8);
+		return super.drRoll(); // Use the scaled DR implementation from Mob which handles baseMaxDR
 	}
 
 	@Override
@@ -93,8 +116,10 @@ public class Brute extends Mob {
 	}
 	
 	protected void triggerEnrage(){
-		Buff.affect(this, BruteRage.class).setShield(HT/2 + 4);
-		sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(HT/2 + 4), FloatingText.SHIELDING );
+		// Shield is half of current HT (which is already scaled) plus 4
+		int shieldAmount = HT/2 + 4;
+		Buff.affect(this, BruteRage.class).setShield(shieldAmount);
+		sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(shieldAmount), FloatingText.SHIELDING );
 		if (Dungeon.level.heroFOV[pos]) {
 			SpellSprite.show( this, SpellSprite.BERSERK);
 		}

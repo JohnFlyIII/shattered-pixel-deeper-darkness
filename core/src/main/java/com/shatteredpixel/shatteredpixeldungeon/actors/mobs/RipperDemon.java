@@ -46,20 +46,33 @@ public class RipperDemon extends Mob {
 
 	{
 		spriteClass = RipperSprite.class;
-
-		HP = HT = 60;
-		defenseSkill = 22;
+		
+		// Base stats for scaling
+		baseHT = 60;
+		baseDefenseSkill = 22;
+		baseAttackSkill = 30;
+		baseDamageMin = 15;
+		baseDamageMax = 25;
+		baseMaxDR = 4; // For random 0-4 in drRoll
+		baseEXP = 9;
+		
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
 		viewDistance = Light.DISTANCE;
-
-		EXP = 9; //for corrupting
+		
+		EXP = baseEXP; //for corrupting
 		maxLvl = -2;
-
+		
 		HUNTING = new Hunting();
-
+		
 		baseSpeed = 1f;
-
+		
 		properties.add(Property.DEMONIC);
 		properties.add(Property.UNDEAD);
+		
+		// Apply depth scaling to all stats
+		scaleStatsByDepth();
 	}
 
 	@Override
@@ -69,22 +82,22 @@ public class RipperDemon extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 15, 25 );
+		return super.damageRoll(); // Use the scaled damage implementation from Mob
 	}
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 30;
+		return super.attackSkill(target); // Use the scaled attack skill implementation from Mob
 	}
 
 	@Override
 	public float attackDelay() {
-		return super.attackDelay()*0.5f;
+		return super.attackDelay()*0.5f; // Preserve the faster attack speed for RipperDemon
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 4);
+		return super.drRoll(); // Use the scaled DR implementation from Mob which handles baseMaxDR
 	}
 
 	private static final String LAST_ENEMY_POS = "last_enemy_pos";
@@ -192,7 +205,9 @@ public class RipperDemon extends Mob {
 
 						if (leapVictim != null && alignment != leapVictim.alignment){
 							if (hit(RipperDemon.this, leapVictim, Char.INFINITE_ACCURACY, false)) {
-								Buff.affect(leapVictim, Bleeding.class).set(0.75f * damageRoll());
+								// Apply bleeding damage scaled appropriately using the scaled damageRoll
+								int bleedDamage = Math.round(0.75f * damageRoll());
+								Buff.affect(leapVictim, Bleeding.class).set(bleedDamage);
 								leapVictim.sprite.flash();
 								Sample.INSTANCE.play(Assets.Sounds.HIT);
 							} else {

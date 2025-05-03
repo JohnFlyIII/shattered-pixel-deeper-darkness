@@ -65,19 +65,35 @@ import com.watabou.utils.Random;
 public abstract class YogFist extends Mob {
 
 	{
-		HP = HT = 300;
-		defenseSkill = 20;
-
+		// Base stats for scaling
+		baseHT = 300;
+		baseDefenseSkill = 20;
+		baseAttackSkill = 36;
+		baseDamageMin = 18;
+		baseDamageMax = 36;
+		baseMaxDR = 15;
+		baseEXP = 25;
+		
+		// Initial values will be overridden by scaling
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
+		
 		viewDistance = Light.DISTANCE;
-
-		//for doomed resistance
-		EXP = 25;
 		maxLvl = -2;
-
 		state = HUNTING;
 
 		properties.add(Property.BOSS);
 		properties.add(Property.DEMONIC);
+	}
+	
+	@Override
+	protected void onAdd() {
+		// Call parent method to initialize base stats if needed
+		super.onAdd();
+		
+		// Scale stats based on depth
+		scaleStatsByDepth();
 	}
 
 	private float rangedCooldown;
@@ -177,17 +193,20 @@ public abstract class YogFist extends Mob {
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 36;
+		if (target == null) return baseAttackSkill;
+		return super.attackSkill(target);
 	}
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 18, 36 );
+		int[] scaledDamage = getScaledDamage();
+		return Random.NormalIntRange(scaledDamage[0], scaledDamage[1]);
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 15);
+		int scaledMaxDR = getScaledMaxDR();
+		return super.drRoll() + Random.NormalIntRange(0, scaledMaxDR);
 	}
 
 	{
@@ -509,7 +528,12 @@ public abstract class YogFist extends Mob {
 			Char enemy = this.enemy;
 			if (hit( this, enemy, true )) {
 
-				enemy.damage( Random.NormalIntRange(10, 20), new LightBeam() );
+				// Scale light beam damage based on depth
+				int lightBeamBaseDamage = 15; // Average of original 10-20 range
+				int scaledDamage = scaleSpecialDamage(lightBeamBaseDamage);
+				enemy.damage( Random.NormalIntRange(Math.round(scaledDamage * 0.67f), 
+													Math.round(scaledDamage * 1.33f)), 
+								new LightBeam() );
 				Buff.prolong( enemy, Blindness.class, Blindness.DURATION/2f );
 
 				if (!enemy.isAlive() && enemy == Dungeon.hero) {
@@ -575,7 +599,12 @@ public abstract class YogFist extends Mob {
 			Char enemy = this.enemy;
 			if (hit( this, enemy, true )) {
 
-				enemy.damage( Random.NormalIntRange(10, 20), new DarkBolt() );
+				// Scale dark bolt damage based on depth
+				int darkBoltBaseDamage = 15; // Average of original 10-20 range
+				int scaledDamage = scaleSpecialDamage(darkBoltBaseDamage);
+				enemy.damage( Random.NormalIntRange(Math.round(scaledDamage * 0.67f), 
+													Math.round(scaledDamage * 1.33f)), 
+								new DarkBolt() );
 
 				Light l = enemy.buff(Light.class);
 				if (l != null){

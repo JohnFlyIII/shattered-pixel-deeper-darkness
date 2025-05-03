@@ -36,16 +36,27 @@ public class DM201 extends DM200 {
 	{
 		spriteClass = DM201Sprite.class;
 
-		HP = HT = 120;
+		// Set base stats for scaling
+		baseHT = 120;
+		HP = HT = baseHT;
+		baseDefenseSkill = 12; // Inherit from DM200
+		baseAttackSkill = 20;  // Inherit from DM200
+		baseDamageMin = 15;
+		baseDamageMax = 25;
+		baseMaxDR = 8;  // Inherit from DM200
+		baseEXP = 9;    // Inherit from DM200
 
 		properties.add(Property.IMMOVABLE);
 
 		HUNTING = new Hunting();
+		
+		// Scale stats based on dungeon depth
+		scaleStatsByDepth();
 	}
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 15, 25 );
+		return super.damageRoll();
 	}
 
 	private boolean threatened = false;

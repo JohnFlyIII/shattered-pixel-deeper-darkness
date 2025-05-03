@@ -74,17 +74,35 @@ public class Wraith extends Mob {
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 1 + level/2, 2 + level );
+		float depthScale = calculateDepthScaling(level);
+		int minDamage = Math.round((1 + level/2) * depthScale);
+		int maxDamage = Math.round((2 + level) * depthScale);
+		return Random.NormalIntRange(minDamage, maxDamage);
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 10 + level;
+		// If called from adjustStats with null target, return the base value
+		if (target == null) {
+			return baseAttackSkill;
+		}
+		
+		float depthScale = calculateDepthScaling(level);
+		return Math.round(baseAttackSkill * depthScale) + level;
 	}
 	
 	public void adjustStats( int level ) {
+		// Base stats for scaling
+		baseHT = 1; // Wraiths always have 1 HP
+		baseAttackSkill = 10; // Base for attackSkill
+		
+		// Apply scaling based on level
 		this.level = level;
-		defenseSkill = attackSkill( null ) * 5;
+		float depthScale = calculateDepthScaling(level);
+		
+		// For wraiths, attackSkill is baseAttackSkill * depthScale + level
+		// defenseSkill is 5x attackSkill
+		defenseSkill = (Math.round(baseAttackSkill * depthScale) + level) * 5;
 		enemySeen = true;
 	}
 

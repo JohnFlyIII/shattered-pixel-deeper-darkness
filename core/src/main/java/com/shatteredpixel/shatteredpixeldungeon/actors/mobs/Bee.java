@@ -42,7 +42,7 @@ public class Bee extends Mob {
 		
 		viewDistance = 4;
 
-		EXP = 0;
+		baseEXP = 1;
 		
 		flying = true;
 		state = WANDERING;

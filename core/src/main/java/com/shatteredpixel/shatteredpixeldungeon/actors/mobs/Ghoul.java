@@ -45,10 +45,15 @@ public class Ghoul extends Mob {
 	{
 		spriteClass = GhoulSprite.class;
 		
-		HP = HT = 45;
-		defenseSkill = 20;
+		// Base stats for scaling
+		baseHT = 45;
+		baseDefenseSkill = 20;
+		baseAttackSkill = 24;
+		baseDamageMin = 16;
+		baseDamageMax = 22;
+		baseMaxDR = 4;
+		baseEXP = 5;
 		
-		EXP = 5;
 		maxLvl = 20;
 		
 		SLEEPING = new Sleeping();
@@ -63,22 +68,28 @@ public class Ghoul extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 16, 22 );
+		int[] scaledDamage = getScaledDamage();
+		return Random.NormalIntRange(scaledDamage[0], scaledDamage[1]);
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
-		return 24;
+	public int attackSkill(Char target) {
+		return super.attackSkill(target); // Using the inherited implementation which scales baseAttackSkill
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 4);
+		return super.drRoll() + Random.NormalIntRange(0, getScaledMaxDR());
 	}
 
 	@Override
 	public float spawningWeight() {
 		return 0.5f;
+	}
+	
+	public Ghoul() {
+		super();
+		scaleStatsByDepth();
 	}
 
 	private int timesDowned = 0;

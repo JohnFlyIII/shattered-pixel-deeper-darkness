@@ -42,11 +42,21 @@ public class Spinner extends Mob {
 
 	{
 		spriteClass = SpinnerSprite.class;
-
-		HP = HT = 50;
-		defenseSkill = 17;
-
-		EXP = 9;
+		
+		// Base stats for scaling
+		baseHT = 50;
+		baseDefenseSkill = 17;
+		baseAttackSkill = 22;     // From attackSkill below
+		baseDamageMin = 10;       // From damageRoll below
+		baseDamageMax = 20;       // From damageRoll below
+		baseMaxDR = 6;            // From drRoll below
+		baseEXP = 9;
+		
+		// Initial assignments
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
+		
 		maxLvl = 17;
 
 		loot = MysteryMeat.class;
@@ -55,20 +65,34 @@ public class Spinner extends Mob {
 		HUNTING = new Hunting();
 		FLEEING = new Fleeing();
 	}
+	
+	public Spinner() {
+		super();
+		scaleStatsByDepth();
+	}
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange(10, 20);
+		// Use the scaled damage system
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		int minDamage = Math.round(baseDamageMin * depthScale);
+		int maxDamage = Math.round(baseDamageMax * depthScale);
+		return Random.NormalIntRange(minDamage, maxDamage);
 	}
 
 	@Override
 	public int attackSkill(Char target) {
-		return 22;
+		// Use the scaled attack skill
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		return Math.round(baseAttackSkill * depthScale);
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 6);
+		// Use the scaled DR system
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		int maxDR = Math.round(baseMaxDR * depthScale);
+		return super.drRoll() + Random.NormalIntRange(0, maxDR);
 	}
 
 	private int webCoolDown = 0;

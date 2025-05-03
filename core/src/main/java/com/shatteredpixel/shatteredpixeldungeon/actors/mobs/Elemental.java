@@ -67,13 +67,25 @@ import java.util.ArrayList;
 public abstract class Elemental extends Mob {
 
 	{
-		HP = HT = 60;
-		defenseSkill = 20;
+		// Base stats for scaling
+		baseHT = 60;
+		baseDefenseSkill = 20;
+		baseAttackSkill = 25;
+		baseDamageMin = 20;
+		baseDamageMax = 25;
+		baseMaxDR = 5; // For random 0-5 in drRoll
+		baseEXP = 10;
 		
-		EXP = 10;
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 		maxLvl = 20;
 		
 		flying = true;
+		
+		// Apply depth scaling to all stats
+		scaleStatsByDepth();
 	}
 
 	protected boolean summonedALly;
@@ -81,8 +93,10 @@ public abstract class Elemental extends Mob {
 	@Override
 	public int damageRoll() {
 		if (!summonedALly) {
-			return Random.NormalIntRange(20, 25);
+			// Use the scaled damage implementation from Mob
+			return super.damageRoll();
 		} else {
+			// Special handling for ally summons with region scaling
 			int regionScale = Math.max(2, (1 + Dungeon.scalingDepth()/5));
 			return Random.NormalIntRange(5*regionScale, 5 + 5*regionScale);
 		}
@@ -91,8 +105,10 @@ public abstract class Elemental extends Mob {
 	@Override
 	public int attackSkill( Char target ) {
 		if (!summonedALly) {
-			return 25;
+			// Use the scaled attack skill implementation from Mob
+			return super.attackSkill(target);
 		} else {
+			// Special handling for ally summons with region scaling
 			int regionScale = Math.max(2, (1 + Dungeon.scalingDepth()/5));
 			return 5 + 5*regionScale;
 		}
@@ -108,7 +124,7 @@ public abstract class Elemental extends Mob {
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 5);
+		return super.drRoll(); // Use the scaled DR implementation from Mob which handles baseMaxDR
 	}
 	
 	protected int rangedCooldown = Random.NormalIntRange( 3, 5 );

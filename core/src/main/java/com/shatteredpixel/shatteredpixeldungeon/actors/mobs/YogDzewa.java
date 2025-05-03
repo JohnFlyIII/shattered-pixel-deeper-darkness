@@ -68,9 +68,16 @@ public class YogDzewa extends Mob {
 	{
 		spriteClass = YogSprite.class;
 
-		HP = HT = 1000;
+		// Base stats for scaling
+		baseHT = 1000;
+		baseDefenseSkill = 0; // Yogg has INFINITE_ACCURACY, so no need for baseAttackSkill
+		baseDamageMin = 20; // For death gaze base damage
+		baseDamageMax = 30; // For death gaze base damage
+		baseMaxDR = 0;
+		baseEXP = 50;
 
-		EXP = 50;
+		HP = HT = baseHT;
+		EXP = baseEXP;
 
 		//so that allies can attack it. States are never actually used.
 		state = HUNTING;
@@ -150,6 +157,15 @@ public class YogDzewa extends Mob {
 	}
 
 	private ArrayList<Integer> targetedCells = new ArrayList<>();
+	
+	@Override
+	protected void onAdd() {
+		// Call parent method to initialize base stats if needed
+		super.onAdd();
+		
+		// Scale death gaze damage based on depth
+		scaleStatsByDepth();
+	}
 
 	@Override
 	public int attackSkill(Char target) {
@@ -220,10 +236,15 @@ public class YogDzewa extends Mob {
 					}
 
 					if (hit( this, ch, true )) {
+						// Use scaled damage from the base values
+						int[] scaledDamage = getScaledDamage();
 						if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)) {
-							ch.damage(Random.NormalIntRange(30, 50), new Eye.DeathGaze());
+							// Apply 1.5x multiplier for stronger bosses challenge
+							ch.damage(Random.NormalIntRange(Math.round(scaledDamage[0] * 1.5f), 
+															Math.round(scaledDamage[1] * 1.5f)), 
+										new Eye.DeathGaze());
 						} else {
-							ch.damage(Random.NormalIntRange(20, 30), new Eye.DeathGaze());
+							ch.damage(Random.NormalIntRange(scaledDamage[0], scaledDamage[1]), new Eye.DeathGaze());
 						}
 						if (Dungeon.level.heroFOV[pos]) {
 							ch.sprite.flash();
@@ -439,6 +460,9 @@ public class YogDzewa extends Mob {
 	public void addFist(YogFist fist){
 		fist.pos = Dungeon.level.exit();
 
+		// Ensure the fist's stats are properly scaled on creation
+		fist.scaleStatsByDepth();
+
 		CellEmitter.get(Dungeon.level.exit()-1).burst(ShadowParticle.UP, 25);
 		CellEmitter.get(Dungeon.level.exit()).burst(ShadowParticle.UP, 100);
 		CellEmitter.get(Dungeon.level.exit()+1).burst(ShadowParticle.UP, 25);
@@ -644,30 +668,52 @@ public class YogDzewa extends Mob {
 		{
 			spriteClass = LarvaSprite.class;
 
-			HP = HT = 20;
-			defenseSkill = 12;
+			// Base stats for scaling
+			baseHT = 20;
+			baseDefenseSkill = 12;
+			baseAttackSkill = 30;
+			baseDamageMin = 15;
+			baseDamageMax = 25;
+			baseMaxDR = 4;
+			baseEXP = 5;
+			
+			// Initial values will be overridden by scaling
+			HP = HT = baseHT;
+			defenseSkill = baseDefenseSkill;
+			EXP = baseEXP;
+			
 			viewDistance = Light.DISTANCE;
-
-			EXP = 5;
 			maxLvl = -2;
 
 			properties.add(Property.DEMONIC);
 			properties.add(Property.BOSS_MINION);
 		}
+		
+		@Override
+		protected void onAdd() {
+			// Call parent method to initialize base stats if needed
+			super.onAdd();
+			
+			// Scale stats based on depth
+			scaleStatsByDepth();
+		}
 
 		@Override
 		public int attackSkill( Char target ) {
-			return 30;
+			if (target == null) return baseAttackSkill;
+			return super.attackSkill(target);
 		}
 
 		@Override
 		public int damageRoll() {
-			return Random.NormalIntRange( 15, 25 );
+			int[] scaledDamage = getScaledDamage();
+			return Random.NormalIntRange(scaledDamage[0], scaledDamage[1]);
 		}
 
 		@Override
 		public int drRoll() {
-			return super.drRoll() + Random.NormalIntRange(0, 4);
+			int scaledMaxDR = getScaledMaxDR();
+			return super.drRoll() + Random.NormalIntRange(0, scaledMaxDR);
 		}
 
 	}

@@ -80,27 +80,54 @@ public class DwarfKing extends Mob {
 	{
 		spriteClass = KingSprite.class;
 
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 450 : 300;
-		EXP = 40;
-		defenseSkill = 22;
+		// Base stats for scaling
+		baseHT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 450 : 300;
+		baseDefenseSkill = 22;
+		baseAttackSkill = 26;
+		baseDamageMin = 15;
+		baseDamageMax = 25;
+		baseMaxDR = 10; // For random 0-10 in drRoll
+		baseEXP = 40;
+		
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 
 		properties.add(Property.BOSS);
 		properties.add(Property.UNDEAD);
+		
+		// Apply depth scaling to all stats based on boss property
+		scaleStatsByDepth();
 	}
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 15, 25 );
+		// Get base scaled values from our scaling system
+		int[] scaledDamage = getScaledDamage();
+		return Random.NormalIntRange(scaledDamage[0], scaledDamage[1]);
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
-		return 26;
+	public int attackSkill(Char target) {
+		// Calculate the scaled attack skill directly
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		int scaledAttackSkill = Math.round(baseAttackSkill * depthScale);
+		return scaledAttackSkill;
+	}
+
+	@Override
+	public int defenseSkill(Char enemy) {
+		// Use scaled defense skill from parent (which uses baseDefenseSkill)
+		return super.defenseSkill(enemy);
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 10);
+		// Use the scaled DR implementation from Mob which handles baseMaxDR
+		// The original implementation added Random.NormalIntRange(0, 10) 
+		// but this is now handled by baseMaxDR=10 in our scaling system
+		return super.drRoll();
 	}
 
 	private int phase = 1;

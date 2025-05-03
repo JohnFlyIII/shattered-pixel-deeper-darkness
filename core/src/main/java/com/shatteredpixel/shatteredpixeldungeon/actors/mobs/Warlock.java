@@ -49,31 +49,43 @@ public class Warlock extends Mob implements Callback {
 	{
 		spriteClass = WarlockSprite.class;
 		
-		HP = HT = 70;
-		defenseSkill = 18;
+		// Base stats for scaling
+		baseHT = 70;
+		baseDefenseSkill = 18;
+		baseAttackSkill = 25;
+		baseDamageMin = 12;
+		baseDamageMax = 18;
+		baseMaxDR = 8; // For random 0-8 in drRoll
+		baseEXP = 11;
 		
-		EXP = 11;
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 		maxLvl = 21;
 		
 		loot = Generator.Category.POTION;
 		lootChance = 0.5f;
 
 		properties.add(Property.UNDEAD);
+		
+		// Apply depth scaling to all stats
+		scaleStatsByDepth();
 	}
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 12, 18 );
+		return super.damageRoll(); // Use the scaled damage implementation from Mob
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 25;
+		return super.attackSkill(target); // Use the scaled attack skill implementation from Mob
 	}
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 8);
+		return super.drRoll(); // Use the scaled DR implementation from Mob which handles baseMaxDR
 	}
 	
 	@Override
@@ -104,6 +116,16 @@ public class Warlock extends Mob implements Callback {
 	//used so resistances can differentiate between melee and magical attacks
 	public static class DarkBolt{}
 	
+	// Helper method to get scaled bolt damage
+	protected int[] getScaledBoltDamage() {
+		// Scale bolt damage based on depth
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		// Use the same damage values as melee for the bolt
+		int minDmg = Math.round(baseDamageMin * depthScale);
+		int maxDmg = Math.round(baseDamageMax * depthScale);
+		return new int[]{minDmg, maxDmg};
+	}
+	
 	protected void zap() {
 		spend( TIME_TO_ZAP );
 
@@ -116,7 +138,9 @@ public class Warlock extends Mob implements Callback {
 				Sample.INSTANCE.play( Assets.Sounds.DEGRADE );
 			}
 			
-			int dmg = Random.NormalIntRange( 12, 18 );
+			// Use scaled bolt damage
+			int[] boltDamage = getScaledBoltDamage();
+			int dmg = Random.NormalIntRange(boltDamage[0], boltDamage[1]);
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
 
 			//logic for DK taking 1/2 damage from aggression stoned minions

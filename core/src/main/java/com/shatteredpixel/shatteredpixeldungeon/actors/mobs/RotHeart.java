@@ -38,17 +38,31 @@ public class RotHeart extends Mob {
 
 	{
 		spriteClass = RotHeartSprite.class;
-
-		HP = HT = 80;
-		defenseSkill = 0;
-
-		EXP = 4;
+		
+		// Base stats for scaling
+		baseHT = 80;
+		baseDefenseSkill = 0;  // Immobile
+		baseAttackSkill = 0;   // Doesn't attack directly
+		baseDamageMin = 0;     // No direct attacks
+		baseDamageMax = 0;     // No direct attacks  
+		baseMaxDR = 5;         // Basic protection
+		baseEXP = 4;
+		
+		// Initial assignments
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 
 		state = PASSIVE;
 
 		properties.add(Property.IMMOVABLE);
 		properties.add(Property.MINIBOSS);
 		properties.add(Property.STATIC);
+	}
+	
+	public RotHeart() {
+		super();
+		scaleStatsByDepth();
 	}
 
 	@Override

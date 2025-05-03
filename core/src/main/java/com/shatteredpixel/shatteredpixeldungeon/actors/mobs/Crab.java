@@ -31,11 +31,19 @@ public class Crab extends Mob {
 	{
 		spriteClass = CrabSprite.class;
 		
-		HP = HT = 15;
-		defenseSkill = 5;
-		baseSpeed = 2f;
+		// Set base stats for scaling
+		baseHT = 15;
+		HP = HT = baseHT;
+		baseDefenseSkill = 5;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 12;
+		baseDamageMin = 1;
+		baseDamageMax = 7;
+		baseMaxDR = 4; // 0-4 damage reduction
+		baseEXP = 4;
+		EXP = baseEXP;
 		
-		EXP = 4;
+		baseSpeed = 2f;
 		maxLvl = 9;
 		
 		loot = MysteryMeat.class;
@@ -44,16 +52,17 @@ public class Crab extends Mob {
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 1, 7 );
+		return super.damageRoll();
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 12;
+		if (target == null) return baseAttackSkill;
+		return super.attackSkill(target);
 	}
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 4);
+		return super.drRoll();
 	}
 }

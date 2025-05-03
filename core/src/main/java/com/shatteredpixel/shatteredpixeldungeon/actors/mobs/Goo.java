@@ -51,14 +51,27 @@ import com.watabou.utils.Random;
 public class Goo extends Mob {
 
 	{
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 120 : 100;
-		EXP = 10;
-		defenseSkill = 8;
+		// Base stats for scaling
+		baseHT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 120 : 100;
+		baseDefenseSkill = 8;
+		baseAttackSkill = 10; // Base attack skill, enraged/pumped up modifiers applied later
+		baseDamageMin = 1;   // Base damage range
+		baseDamageMax = 8;   // Enraged will be 12 instead
+		baseMaxDR = 2;       // For random 0-2 in drRoll
+		baseEXP = 10;
+		
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 		spriteClass = GooSprite.class;
 
 		properties.add(Property.BOSS);
 		properties.add(Property.DEMONIC);
 		properties.add(Property.ACIDIC);
+		
+		// Apply depth scaling to all stats based on boss property
+		scaleStatsByDepth();
 	}
 
 	private int pumpedUp = 0;
@@ -66,26 +79,41 @@ public class Goo extends Mob {
 
 	@Override
 	public int damageRoll() {
-		int min = 1;
-		int max = (HP*2 <= HT) ? 12 : 8;
+		// Get base scaled values from our scaling system
+		int[] scaledDamage = getScaledDamage();
+		int min = scaledDamage[0];
+		
+		// Apply enraged state modifier - 12 instead of 8 for max damage when enraged
+		int max = (HP*2 <= HT) ? 
+				Math.round(scaledDamage[1] * 1.5f) : // Enraged: 50% more max damage
+				scaledDamage[1];                     // Normal: standard max damage
+		
+		// Apply pumped up modifier - 3x damage
 		if (pumpedUp > 0) {
 			pumpedUp = 0;
 			if (enemy == Dungeon.hero) {
 				Statistics.qualifiedForBossChallengeBadge = false;
 				Statistics.bossScores[0] -= 100;
 			}
-			return Random.NormalIntRange( min*3, max*3 );
+			return Random.NormalIntRange(min*3, max*3);
 		} else {
-			return Random.NormalIntRange( min, max );
+			return Random.NormalIntRange(min, max);
 		}
 	}
 
 	@Override
 	public int attackSkill( Char target ) {
-		int attack = 10;
-		if (HP*2 <= HT) attack = 15;
-		if (pumpedUp > 0) attack *= 2;
-		return attack;
+		// Special logic for boss, we need to calculate base attack skill directly
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		int scaledAttackSkill = Math.round(baseAttackSkill * depthScale);
+		
+		// Apply enraged state modifier (+50% attack skill)
+		if (HP*2 <= HT) scaledAttackSkill = Math.round(scaledAttackSkill * 1.5f);
+		
+		// Apply pumped up modifier (2x attack skill)
+		if (pumpedUp > 0) scaledAttackSkill *= 2;
+		
+		return scaledAttackSkill;
 	}
 
 	@Override
@@ -95,7 +123,7 @@ public class Goo extends Mob {
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 2);
+		return super.drRoll(); // Use the scaled DR implementation from Mob which handles baseMaxDR
 	}
 
 	@Override

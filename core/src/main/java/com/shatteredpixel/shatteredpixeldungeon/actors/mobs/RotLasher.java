@@ -37,11 +37,20 @@ public class RotLasher extends Mob {
 
 	{
 		spriteClass = RotLasherSprite.class;
-
-		HP = HT = 80;
-		defenseSkill = 0;
-
-		EXP = 1;
+		
+		// Base stats for scaling
+		baseHT = 80;
+		baseDefenseSkill = 0;     // Immobile
+		baseAttackSkill = 25;     // Very accurate
+		baseDamageMin = 10;       // Good damage
+		baseDamageMax = 20;       // Good damage
+		baseMaxDR = 8;            // Good protection
+		baseEXP = 1;
+		
+		// Initial assignments
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 
 		loot = Generator.Category.SEED;
 		lootChance = 0.75f;
@@ -51,6 +60,11 @@ public class RotLasher extends Mob {
 
 		properties.add(Property.IMMOVABLE);
 		properties.add(Property.MINIBOSS);
+	}
+	
+	public RotLasher() {
+		super();
+		scaleStatsByDepth();
 	}
 
 	@Override
@@ -96,17 +110,26 @@ public class RotLasher extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange(10, 20);
+		// Use the scaled damage system
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		int minDamage = Math.round(baseDamageMin * depthScale);
+		int maxDamage = Math.round(baseDamageMax * depthScale);
+		return Random.NormalIntRange(minDamage, maxDamage);
 	}
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 25;
+		// Use the scaled attack skill
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		return Math.round(baseAttackSkill * depthScale);
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 8);
+		// Use the scaled DR system
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		int maxDR = Math.round(baseMaxDR * depthScale);
+		return super.drRoll() + Random.NormalIntRange(0, maxDR);
 	}
 	
 	{

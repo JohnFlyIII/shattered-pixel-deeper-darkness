@@ -48,10 +48,19 @@ public class Guard extends Mob {
 	{
 		spriteClass = GuardSprite.class;
 
-		HP = HT = 40;
-		defenseSkill = 10;
-
-		EXP = 7;
+		// Base stats for scaling
+		baseHT = 40;
+		baseDefenseSkill = 10;
+		baseAttackSkill = 12;
+		baseDamageMin = 4;
+		baseDamageMax = 12;
+		baseMaxDR = 7; // For random 0-7 in drRoll
+		baseEXP = 7;
+		
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 		maxLvl = 14;
 
 		loot = Generator.Category.ARMOR;
@@ -60,11 +69,14 @@ public class Guard extends Mob {
 		properties.add(Property.UNDEAD);
 		
 		HUNTING = new Hunting();
+		
+		// Apply depth scaling to all stats
+		scaleStatsByDepth();
 	}
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange(4, 12);
+		return super.damageRoll(); // Use the scaled damage implementation from Mob
 	}
 
 	private boolean chain(int target){
@@ -132,12 +144,12 @@ public class Guard extends Mob {
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 12;
+		return super.attackSkill(target); // Use the scaled attack skill implementation from Mob
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 7);
+		return super.drRoll(); // Use the scaled DR implementation from Mob which handles baseMaxDR
 	}
 
 	@Override

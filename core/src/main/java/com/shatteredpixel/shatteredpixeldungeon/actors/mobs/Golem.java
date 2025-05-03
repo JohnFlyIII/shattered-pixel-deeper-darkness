@@ -42,10 +42,19 @@ public class Golem extends Mob {
 	{
 		spriteClass = GolemSprite.class;
 		
-		HP = HT = 120;
-		defenseSkill = 15;
+		// Base stats for scaling
+		baseHT = 120;
+		baseDefenseSkill = 15;
+		baseAttackSkill = 28;
+		baseDamageMin = 25;
+		baseDamageMax = 30;
+		baseMaxDR = 12; // For random 0-12 in drRoll
+		baseEXP = 12;
 		
-		EXP = 12;
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
 		maxLvl = 22;
 
 		loot = Random.oneOf(Generator.Category.WEAPON, Generator.Category.ARMOR);
@@ -56,21 +65,24 @@ public class Golem extends Mob {
 
 		WANDERING = new Wandering();
 		HUNTING = new Hunting();
+		
+		// Apply depth scaling to all stats
+		scaleStatsByDepth();
 	}
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 25, 30 );
+		return super.damageRoll(); // Use the scaled damage implementation from Mob
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 28;
+		return super.attackSkill(target); // Use the scaled attack skill implementation from Mob
 	}
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 12);
+		return super.drRoll(); // Use the scaled DR implementation from Mob which handles baseMaxDR
 	}
 
 	@Override

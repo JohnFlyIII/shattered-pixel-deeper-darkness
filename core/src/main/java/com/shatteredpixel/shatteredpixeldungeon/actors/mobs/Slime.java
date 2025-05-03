@@ -35,10 +35,18 @@ public class Slime extends Mob {
 	{
 		spriteClass = SlimeSprite.class;
 		
-		HP = HT = 20;
-		defenseSkill = 5;
+		// Set base stats for scaling
+		baseHT = 20;
+		HP = HT = baseHT;
+		baseDefenseSkill = 5;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 12;
+		baseDamageMin = 2;
+		baseDamageMax = 5;
+		baseMaxDR = 0; // No damage reduction
+		baseEXP = 4;
+		EXP = baseEXP;
 		
-		EXP = 4;
 		maxLvl = 9;
 		
 		lootChance = 0.2f; //by default, see lootChance()
@@ -46,12 +54,13 @@ public class Slime extends Mob {
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 2, 5 );
+		return super.damageRoll();
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 12;
+		if (target == null) return baseAttackSkill;
+		return super.attackSkill(target);
 	}
 	
 	@Override

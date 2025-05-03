@@ -41,32 +41,44 @@ public class Scorpio extends Mob {
 	{
 		spriteClass = ScorpioSprite.class;
 		
-		HP = HT = 110;
-		defenseSkill = 24;
-		viewDistance = Light.DISTANCE;
+		// Base stats for scaling
+		baseHT = 110;
+		baseDefenseSkill = 24;
+		baseAttackSkill = 36;
+		baseDamageMin = 30;
+		baseDamageMax = 40;
+		baseMaxDR = 16; // For random 0-16 in drRoll
+		baseEXP = 14;
 		
-		EXP = 14;
+		// Initialize with base values (will be properly scaled in scaleStatsByDepth)
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		EXP = baseEXP;
+		viewDistance = Light.DISTANCE;
 		maxLvl = 27;
 		
 		loot = Generator.Category.POTION;
 		lootChance = 0.5f;
 
 		properties.add(Property.DEMONIC);
+		
+		// Apply depth scaling to all stats
+		scaleStatsByDepth();
 	}
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 30, 40 );
+		return super.damageRoll(); // Use the scaled damage implementation from Mob
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 36;
+		return super.attackSkill(target); // Use the scaled attack skill implementation from Mob
 	}
 	
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 16);
+		return super.drRoll(); // Use the scaled DR implementation from Mob which handles baseMaxDR
 	}
 	
 	@Override

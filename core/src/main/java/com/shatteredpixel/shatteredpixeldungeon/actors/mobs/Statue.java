@@ -55,8 +55,29 @@ public class Statue extends Mob {
 	public Statue() {
 		super();
 		
-		HP = HT = 15 + Dungeon.depth * 5;
-		defenseSkill = 4 + Dungeon.depth;
+		// Base stats for scaling
+		baseHT = 15;
+		baseDefenseSkill = 4;
+		baseAttackSkill = 9; // Base for attackSkill method
+		baseMaxDR = 0; // Will use a custom drRoll that includes weapon.defenseFactor
+		
+		// Set initial values - these will be properly scaled based on depth in adjustStats
+		HP = HT = baseHT;
+		defenseSkill = baseDefenseSkill;
+		
+		// Now adjust stats based on depth
+		adjustStats(Dungeon.depth);
+	}
+	
+	// Custom method to adjust statue stats based on depth
+	protected void adjustStats(int depth) {
+		float depthScale = calculateDepthScaling(depth);
+		
+		// For statues, we'll continue to use the linear scaling
+		// but with our unified system
+		HT = Math.round(baseHT * depthScale) + depth * 5;
+		HP = HT;
+		defenseSkill = Math.round(baseDefenseSkill * depthScale) + depth;
 	}
 
 	public void createWeapon( boolean useDecks ){
@@ -91,7 +112,9 @@ public class Statue extends Mob {
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return (int)((9 + Dungeon.depth) * weapon.accuracyFactor( this, target ));
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		int scaledAttackSkill = Math.round(baseAttackSkill * depthScale) + Dungeon.depth;
+		return (int)(scaledAttackSkill * weapon.accuracyFactor(this, target));
 	}
 	
 	@Override
@@ -106,7 +129,9 @@ public class Statue extends Mob {
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, Dungeon.depth + weapon.defenseFactor(this));
+		float depthScale = calculateDepthScaling(Dungeon.depth);
+		int scaledMaxDR = Math.round(Dungeon.depth * depthScale);
+		return super.drRoll() + Random.NormalIntRange(0, scaledMaxDR + weapon.defenseFactor(this));
 	}
 	
 	@Override

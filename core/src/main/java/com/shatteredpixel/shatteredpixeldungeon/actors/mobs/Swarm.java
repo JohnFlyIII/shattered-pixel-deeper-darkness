@@ -42,10 +42,17 @@ public class Swarm extends Mob {
 	{
 		spriteClass = SwarmSprite.class;
 		
-		HP = HT = 50;
-		defenseSkill = 5;
-
-		EXP = 3;
+		// Set base stats directly for clarity
+		baseHT = 50;
+		HP = HT = baseHT;
+		baseDefenseSkill = 5;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 10;
+		baseDamageMin = 1;
+		baseDamageMax = 4;
+		baseMaxDR = 0; // No damage reduction
+		baseEXP = 3;
+		EXP = baseEXP;
 		maxLvl = 9;
 		
 		flying = true;
@@ -70,7 +77,16 @@ public class Swarm extends Mob {
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
 		generation = bundle.getInt( GENERATION );
-		if (generation > 0) EXP = 0;
+		
+		// For swarms that have generated from splitting
+		if (generation > 0) {
+			// Swarm clones don't give experience
+			EXP = 0;
+			
+			// Since we're manually setting EXP to 0, we need to ensure base stats are preserved
+			// They may have been modified during the initial scaling
+			if (baseEXP == 0) baseEXP = 3;
+		}
 	}
 
 	@Override
@@ -81,7 +97,13 @@ public class Swarm extends Mob {
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 1, 4 );
+		if (baseDamageMin > 0 && baseDamageMax > 0) {
+			int[] scaledDamage = getScaledDamage();
+			return Random.NormalIntRange(scaledDamage[0], scaledDamage[1]);
+		} else {
+			// Fallback if base values aren't set
+			return Random.NormalIntRange(1, 4);
+		}
 	}
 	
 	@Override
@@ -121,13 +143,20 @@ public class Swarm extends Mob {
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 10;
+		// Pass null to get the base implementation from parent
+		if (target == null) return baseAttackSkill;
+		// Otherwise use the parent's scaled implementation
+		return super.attackSkill(target);
 	}
 	
 	private Swarm split() {
 		Swarm clone = new Swarm();
 		clone.generation = generation + 1;
 		clone.EXP = 0;
+		
+		// Apply scaling to the new clone
+		clone.scaleStatsByDepth();
+		
 		if (buff( Burning.class ) != null) {
 			Buff.affect( clone, Burning.class ).reignite( clone );
 		}

@@ -39,10 +39,18 @@ public class CrystalWisp extends Mob{
 	{
 		spriteClass = CrystalWispSprite.class;
 
-		HP = HT = 30;
-		defenseSkill = 16;
+		// Set base stats for scaling
+		baseHT = 30;
+		HP = HT = baseHT;
+		baseDefenseSkill = 16;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 18;
+		baseDamageMin = 5;
+		baseDamageMax = 10;
+		baseMaxDR = 5; // 0-5 damage reduction
+		baseEXP = 7;
+		EXP = baseEXP;
 
-		EXP = 7;
 		maxLvl = -2;
 
 		flying = true;
@@ -63,6 +71,9 @@ public class CrystalWisp extends Mob{
 				spriteClass = CrystalWispSprite.Red.class;
 				break;
 		}
+		
+		// Scale stats based on dungeon depth
+		scaleStatsByDepth();
 	}
 
 	@Override
@@ -75,17 +86,18 @@ public class CrystalWisp extends Mob{
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 5, 10 );
+		return super.damageRoll();
 	}
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 18;
+		if (target == null) return baseAttackSkill;
+		return super.attackSkill(target);
 	}
 
 	@Override
 	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 5);
+		return super.drRoll();
 	}
 
 	@Override
@@ -128,8 +140,9 @@ public class CrystalWisp extends Mob{
 		Invisibility.dispel(this);
 		Char enemy = this.enemy;
 		if (hit( this, enemy, true )) {
-
-			int dmg = Random.NormalIntRange( 5, 10 );
+			
+			int[] scaledDamage = getScaledDamage();
+			int dmg = Random.NormalIntRange( scaledDamage[0], scaledDamage[1] );
 			enemy.damage( dmg, new LightBeam() );
 
 			if (!enemy.isAlive() && enemy == Dungeon.hero) {

@@ -45,6 +45,15 @@ public class GoldenMimic extends Mimic {
 
 	{
 		spriteClass = MimicSprite.Golden.class;
+		
+		// Golden mimics are stronger than regular mimics
+		baseHT = 8;              // More health than regular mimic
+		baseDefenseSkill = 3;    // Better defense skill
+		baseAttackSkill = 8;     // Better attack skill
+		baseDamageMin = 2;       // Higher min damage
+		baseDamageMax = 3;       // Higher max damage  
+		baseMaxDR = 2;           // Higher DR
+		baseEXP = 0;             // Maintains no XP like regular mimics
 	}
 
 	@Override
@@ -84,6 +93,7 @@ public class GoldenMimic extends Mimic {
 	@Override
 	public void setLevel(int level) {
 		super.setLevel(Math.round(level*1.33f));
+		scaleStatsByDepth();
 	}
 
 	@Override

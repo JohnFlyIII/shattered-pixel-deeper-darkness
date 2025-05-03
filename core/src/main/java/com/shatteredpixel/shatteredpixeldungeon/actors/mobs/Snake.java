@@ -34,10 +34,18 @@ public class Snake extends Mob {
 	{
 		spriteClass = SnakeSprite.class;
 		
-		HP = HT = 4;
-		defenseSkill = 25;
+		// Set base stats for scaling
+		baseHT = 4;
+		HP = HT = baseHT;
+		baseDefenseSkill = 25;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 10;
+		baseDamageMin = 1;
+		baseDamageMax = 4;
+		baseMaxDR = 0; // No damage reduction
+		baseEXP = 2;
+		EXP = baseEXP;
 		
-		EXP = 2;
 		maxLvl = 7;
 		
 		loot = Generator.Category.SEED;
@@ -46,12 +54,13 @@ public class Snake extends Mob {
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 1, 4 );
+		return super.damageRoll();
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 10;
+		if (target == null) return baseAttackSkill;
+		return super.attackSkill(target);
 	}
 
 	private static int dodges = 0;

@@ -34,16 +34,27 @@ public class FungalSentry extends Mob {
 	{
 		spriteClass = FungalSentrySprite.class;
 
-		HP = HT = 200;
-		defenseSkill = 12;
+		// Set base stats for scaling
+		baseHT = 200;
+		HP = HT = baseHT;
+		baseDefenseSkill = 12;
+		defenseSkill = baseDefenseSkill;
+		baseAttackSkill = 50;
+		baseDamageMin = 5;
+		baseDamageMax = 10;
+		baseMaxDR = 0;
+		baseEXP = 10;
+		EXP = baseEXP;
 
-		EXP = 10;
 		maxLvl = -2;
 
 		state = WANDERING = new Waiting();
 
 		properties.add(Property.IMMOVABLE);
 		properties.add(Property.MINIBOSS);
+		
+		// Scale stats based on dungeon depth
+		scaleStatsByDepth();
 	}
 
 	@Override
@@ -68,7 +79,7 @@ public class FungalSentry extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange(5, 10);
+		return super.damageRoll();
 	}
 
 	@Override
@@ -88,7 +99,8 @@ public class FungalSentry extends Mob {
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 50;
+		if (target == null) return baseAttackSkill;
+		return super.attackSkill(target);
 	}
 
 	{

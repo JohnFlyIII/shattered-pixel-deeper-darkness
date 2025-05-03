@@ -41,9 +41,19 @@ public class PhantomPiranha extends Piranha {
 
 	{
 		spriteClass = PhantomPiranhaSprite.class;
-
+		
+		// Phantom piranhas are slightly stronger but inherit base stats from Piranha class
+		baseHT = 12;              // Slightly more HP
+		baseDefenseSkill = 11;    // Slightly better defense
+		baseAttackSkill = 22;     // Better attack skill
+		
 		loot = PhantomMeat.class;
 		lootChance = 1f;
+	}
+	
+	public PhantomPiranha() {
+		super();
+		scaleStatsByDepth();
 	}
 
 	@Override

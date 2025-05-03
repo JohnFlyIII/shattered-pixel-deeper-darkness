@@ -50,9 +50,19 @@ public class Pylon extends Mob {
 
 	{
 		spriteClass = PylonSprite.class;
-
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 80 : 50;
-
+		
+		// Base stats for scaling
+		baseHT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 80 : 50;
+		baseDefenseSkill = 0;  // Immobile object doesn't dodge
+		baseAttackSkill = 0;   // Doesn't make conventional attacks
+		baseDamageMin = 10;    // For lightning attack damage
+		baseDamageMax = 20;    // For lightning attack damage
+		baseMaxDR = 5;         // Sturdy structure
+		baseEXP = 0;           // No XP for pylons
+		
+		// Initial assignments
+		HP = HT = baseHT;
+		
 		maxLvl = -2;
 
 		properties.add(Property.MINIBOSS);
@@ -64,6 +74,11 @@ public class Pylon extends Mob {
 
 		state = PASSIVE;
 		alignment = Alignment.NEUTRAL;
+	}
+	
+	public Pylon() {
+		super();
+		scaleStatsByDepth();
 	}
 
 	private int targetNeighbor = Random.Int(8);
@@ -135,7 +150,12 @@ public class Pylon extends Mob {
 	private void shockChar( Char ch ){
 		if (ch != null && !(ch instanceof DM300)){
 			ch.sprite.flash();
-			ch.damage(Random.NormalIntRange(10, 20), new Electricity());
+			
+			// Use the scaled damage system based on our min/max damage values
+			float depthScale = calculateDepthScaling(Dungeon.depth);
+			int minDamage = Math.round(baseDamageMin * depthScale);
+			int maxDamage = Math.round(baseDamageMax * depthScale);
+			ch.damage(Random.NormalIntRange(minDamage, maxDamage), new Electricity());
 
 			if (ch == Dungeon.hero) {
 				Statistics.qualifiedForBossChallengeBadge = false;
