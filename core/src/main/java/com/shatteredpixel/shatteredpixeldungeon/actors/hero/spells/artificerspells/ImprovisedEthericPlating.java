@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
+import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
@@ -40,11 +41,11 @@ public class ImprovisedEthericPlating extends ArtificerSpell {
 
 	public static final ImprovisedEthericPlating INSTANCE = new ImprovisedEthericPlating();
 	
-	private final int imageIndex = ItemSpriteSheet.ARMOR_CLOTH;
+	private static final int ICON_INDEX = HeroIcon.IMPROVISED_ETHERIC_PLATING;
 	
 	@Override
 	public int icon() {
-		return imageIndex;
+		return ICON_INDEX;
 	}
 
 	@Override

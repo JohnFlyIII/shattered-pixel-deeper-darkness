@@ -42,6 +42,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
+import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ItemButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
@@ -56,11 +57,11 @@ public class AdaptiveIntegration extends ArtificerSpell {
 
     public static final AdaptiveIntegration INSTANCE = new AdaptiveIntegration();
     
-    private int imageIndex = ItemSpriteSheet.ARTIFACT_TOOLKIT;
+    private static final int ICON_INDEX = HeroIcon.ADAPTIVE_INTEGRATION;
     
     @Override
     public int icon() {
-        return imageIndex;
+        return ICON_INDEX;
     }
 
     @Override

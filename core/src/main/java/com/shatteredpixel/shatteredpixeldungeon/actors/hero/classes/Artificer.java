@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.classes;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
+import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.PocketWorkshop;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -92,6 +93,7 @@ public class Artificer extends HeroBase {
         
         // Add the Amulet of Yendor to the Artificer's starting inventory
         new Amulet().collect();
+        new TengusMask().collect();
 
         Dungeon.quickslot.setSlot(0, relay);
 

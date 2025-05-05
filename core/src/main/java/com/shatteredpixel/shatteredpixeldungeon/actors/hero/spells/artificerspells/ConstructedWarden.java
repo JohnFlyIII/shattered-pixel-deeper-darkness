@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
@@ -47,11 +48,11 @@ public class ConstructedWarden extends TargetedArtificerSpell {
 
 	public static final ConstructedWarden INSTANCE = new ConstructedWarden();
 	
-	private int imageIndex = ItemSpriteSheet.WAND_WARDING;
+	private static final int ICON_INDEX = HeroIcon.CONSTRUCTED_WARDEN;
 	
 	@Override
 	public int icon() {
-		return imageIndex;
+		return ICON_INDEX;
 	}
 
 	@Override

@@ -103,6 +103,11 @@ public class HeroIcon extends Image {
 	public static final int BEAMING_RAY     = 64;
 	public static final int LIFE_LINK       = 65;
 	public static final int STASIS          = 66;
+	
+	//artificer spells
+	public static final int IMPROVISED_ETHERIC_PLATING = 70;
+	public static final int CONSTRUCTED_WARDEN = 71;
+	public static final int ADAPTIVE_INTEGRATION = 72;
 
 	//all cleric spells have a separate icon with no background for the action indicator
 	public static final int SPELL_ACTION_OFFSET      = 32;
