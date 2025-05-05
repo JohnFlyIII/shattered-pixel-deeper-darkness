@@ -102,6 +102,15 @@ public abstract class ArtificerSpell {
 			}
 		} else if (tier == 3) {
 			// Tier 3 spells will go here
+			if (artificer.hasTalent(Talent.CONSTRUCTED_WARDEN)) {
+				spells.add(ConstructedWarden.INSTANCE);
+			}
+			if (artificer.hasTalent(Talent.IMPROVISED_ETHERIC_PLATING)) {
+				spells.add(ImprovisedEthericPlating.INSTANCE);
+			}
+			if (artificer.hasTalent(Talent.ADAPTIVE_INTEGRATION)) {
+				spells.add(AdaptiveIntegration.INSTANCE);
+			}
 		} else if (tier == 4) {
 			// Tier 4 spells will go here
 		}
@@ -117,6 +126,9 @@ public abstract class ArtificerSpell {
 		spells.add(ClockworkCompanion.INSTANCE);
 		spells.add(AethericScanner.INSTANCE);
 		spells.add(InfuseEssence.INSTANCE);
+		spells.add(ConstructedWarden.INSTANCE);
+		spells.add(ImprovisedEthericPlating.INSTANCE);
+		spells.add(AdaptiveIntegration.INSTANCE);
 		// Add all other spells as they are implemented
 		return spells;
 	}

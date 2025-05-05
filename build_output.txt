@@ -1,0 +1,8 @@
+> Task :services:compileJava UP-TO-DATE
+> Task :SPD-classes:compileJava UP-TO-DATE
+
+> Task :core:compileJava
+
+> Task :core:compileJava FAILED
+[Incubating] Problems report is available at: file:///Users/johnfly/develop/johnflyiii/shattered-pixel-deeper-darkness/build/reports/problems/problems-report.html
+3 actionable tasks: 1 executed, 2 up-to-date

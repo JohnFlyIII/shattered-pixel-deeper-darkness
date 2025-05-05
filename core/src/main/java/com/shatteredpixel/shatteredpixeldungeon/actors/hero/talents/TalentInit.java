@@ -224,7 +224,7 @@ public class TalentInit {
                 Collections.addAll(tierTalents, Talent.VARIED_CHARGE, Talent.ENHANCED_RINGS, Talent.WAND_PRESERVATION);
                 break;
             case MACHINIST:
-                Collections.addAll(tierTalents, Talent.FARSIGHT, Talent.RUNIC_TRANSFERENCE, Talent.WIDE_SEARCH);
+                Collections.addAll(tierTalents, Talent.IMPROVISED_ETHERIC_PLATING, Talent.CONSTRUCTED_WARDEN, Talent.ADAPTIVE_INTEGRATION);
                 break;
         }
         for (Talent talent : tierTalents) {
