@@ -25,6 +25,7 @@ import com.watabou.glwrap.Blending;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Visual;
+import com.watabou.utils.ObjectPool;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
@@ -143,27 +144,22 @@ public class Emitter extends Group {
 	}
 
 	protected void emit( int index ) {
+		float px, py;
+		
 		if (target == null) {
-			factory.emit(
-				this,
-				index,
-				x + Random.Float( width ),
-				y + Random.Float( height ) );
+			px = x + Random.Float( width );
+			py = y + Random.Float( height );
 		} else {
 			if (fillTarget) {
-				factory.emit(
-						this,
-						index,
-						target.x + Random.Float( target.width ),
-						target.y + Random.Float( target.height ) );
+				px = target.x + Random.Float( target.width );
+				py = target.y + Random.Float( target.height );
 			} else {
-				factory.emit(
-						this,
-						index,
-						target.x + x + Random.Float( width ),
-						target.y + y + Random.Float( height ) );
+				px = target.x + x + Random.Float( width );
+				py = target.y + y + Random.Float( height );
 			}
 		}
+		
+		factory.emit(this, index, px, py);
 	}
 	
 	@Override

@@ -45,6 +45,15 @@ public class EbonyMimic extends Mimic {
 
 	{
 		spriteClass = MimicSprite.Ebony.class;
+		
+		// Ebony mimics are the strongest mimic type
+		baseHT = 12;              // Highest health of all mimics
+		baseDefenseSkill = 4;     // Better defense skill
+		baseAttackSkill = 10;     // Better attack skill
+		baseDamageMin = 3;        // Higher min damage
+		baseDamageMax = 5;        // Higher max damage  
+		baseMaxDR = 3;            // Higher DR
+		baseEXP = 0;              // Maintains no XP like regular mimics
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.Tilemap;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.GameMath;
+import com.watabou.utils.ObjectPool;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
 
@@ -82,9 +83,13 @@ public abstract class DungeonTilemap extends Tilemap {
 	// If the pressed tile is a wall tile, the tap can be 'bumped' down into a none-wall tile.
 	// currently this happens if the bottom 1/4 of the wall tile is pressed.
 	public int screenToTile(int x, int y, boolean wallAssist ) {
-		PointF p = camera().screenToCamera( x, y ).
-			offset( this.point().negate() ).
-			invScale( SIZE );
+		PointF p = ObjectPool.obtainPointF();
+		// Use the original method and assign result to p
+		PointF screenToCamera = camera().screenToCamera(x, y);
+		p.set(screenToCamera);
+		ObjectPool.recyclePointF(screenToCamera); // Recycle the temporary PointF
+		
+		p.offset( this.point().negate() ).invScale( SIZE );
 		
 		//snap to the edges of the tilemap
 		p.x = GameMath.gate(0, p.x, Dungeon.level.width()-0.001f);
@@ -103,7 +108,8 @@ public abstract class DungeonTilemap extends Tilemap {
 			}
 
 		}
-
+		
+		ObjectPool.recyclePointF(p);
 		return cell;
 	}
 	
@@ -119,7 +125,10 @@ public abstract class DungeonTilemap extends Tilemap {
 		
 		final Image tile = new Image( texture );
 		tile.frame( tileset.get( getTileVisual( pos, oldValue, false)));
-		tile.point( tileToWorld( pos ) );
+		
+		PointF worldCoords = tileToWorld( pos );
+		tile.point( worldCoords );
+		ObjectPool.recyclePointF( worldCoords ); // Recycle the PointF after using it
 
 		parent.add( tile );
 		
@@ -132,19 +141,50 @@ public abstract class DungeonTilemap extends Tilemap {
 	}
 	
 	public static PointF tileToWorld( int pos ) {
-		return new PointF( pos % Dungeon.level.width(), pos / Dungeon.level.width()  ).scale( SIZE );
+		PointF result = ObjectPool.obtainPointF();
+		result.set(pos % Dungeon.level.width(), pos / Dungeon.level.width()).scale(SIZE);
+		return result;
+	}
+	
+	// Overload that uses a provided target PointF
+	public static PointF tileToWorld( int pos, PointF target ) {
+		if (target == null) target = ObjectPool.obtainPointF();
+		target.set(pos % Dungeon.level.width(), pos / Dungeon.level.width()).scale(SIZE);
+		return target;
 	}
 	
 	public static PointF tileCenterToWorld( int pos ) {
-		return new PointF(
+		PointF result = ObjectPool.obtainPointF();
+		result.set(
 			(pos % Dungeon.level.width() + 0.5f) * SIZE,
-			(pos / Dungeon.level.width() + 0.5f) * SIZE );
+			(pos / Dungeon.level.width() + 0.5f) * SIZE);
+		return result;
+	}
+	
+	// Overload that uses a provided target PointF
+	public static PointF tileCenterToWorld( int pos, PointF target ) {
+		if (target == null) target = ObjectPool.obtainPointF();
+		target.set(
+			(pos % Dungeon.level.width() + 0.5f) * SIZE,
+			(pos / Dungeon.level.width() + 0.5f) * SIZE);
+		return target;
 	}
 
 	public static PointF raisedTileCenterToWorld( int pos ) {
-		return new PointF(
-				(pos % Dungeon.level.width() + 0.5f) * SIZE,
-				(pos / Dungeon.level.width() + 0.1f) * SIZE );
+		PointF result = ObjectPool.obtainPointF();
+		result.set(
+			(pos % Dungeon.level.width() + 0.5f) * SIZE,
+			(pos / Dungeon.level.width() + 0.1f) * SIZE);
+		return result;
+	}
+	
+	// Overload that uses a provided target PointF
+	public static PointF raisedTileCenterToWorld( int pos, PointF target ) {
+		if (target == null) target = ObjectPool.obtainPointF();
+		target.set(
+			(pos % Dungeon.level.width() + 0.5f) * SIZE,
+			(pos / Dungeon.level.width() + 0.1f) * SIZE);
+		return target;
 	}
 	
 	@Override

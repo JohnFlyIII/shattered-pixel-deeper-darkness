@@ -229,14 +229,20 @@ public class Mimic extends Mob {
 	public int damageRoll() {
 		float depthScale = calculateDepthScaling(level);
 		
+		// Additional damage modifier for Purgatory levels
+		float damageMultiplier = 1.0f;
+		if (level >= 30) {
+			damageMultiplier = 1.5f; // 50% more damage in Purgatory
+		}
+		
 		if (alignment == Alignment.NEUTRAL){
 			// Ambush damage - always maximum
-			int scaledDamage = Math.round((2 + 2*level) * depthScale);
+			int scaledDamage = Math.round((2 + 2*level) * depthScale * damageMultiplier);
 			return Random.NormalIntRange(scaledDamage, scaledDamage);
 		} else {
 			// Normal damage range
-			int minDamage = Math.round((1 + level) * depthScale);
-			int maxDamage = Math.round((2 + 2*level) * depthScale);
+			int minDamage = Math.round((1 + level) * depthScale * damageMultiplier);
+			int maxDamage = Math.round((2 + 2*level) * depthScale * damageMultiplier);
 			return Random.NormalIntRange(minDamage, maxDamage);
 		}
 	}
@@ -244,7 +250,14 @@ public class Mimic extends Mob {
 	@Override
 	public int drRoll() {
 		float depthScale = calculateDepthScaling(level);
-		int scaledMaxDR = Math.round(baseMaxDR * depthScale) + level/2;
+		
+		// Additional DR modifier for Purgatory levels
+		float drMultiplier = 1.0f;
+		if (level >= 30) {
+			drMultiplier = 1.5f; // 50% more DR in Purgatory
+		}
+		
+		int scaledMaxDR = Math.round(baseMaxDR * depthScale * drMultiplier) + level/2;
 		return super.drRoll() + Random.NormalIntRange(0, scaledMaxDR);
 	}
 
@@ -269,17 +282,24 @@ public class Mimic extends Mob {
 	}
 	
 	public void adjustStats( int level ) {
-		// Base stats for scaling
-		baseHT = 6;
-		baseDefenseSkill = 2;
-		baseAttackSkill = 6; // For attackSkill method
-		baseMaxDR = 1; // For drRoll random 0-1 + level/2
+		// Enhanced base stats for mimics (especially for deeper levels)
+		// Increased from 6 to 10 to make mimics more threatening
+		baseHT = 10;
+		baseDefenseSkill = 3;
+		baseAttackSkill = 8; // For attackSkill method
+		baseMaxDR = 2; // For drRoll random 0-2 + level/2
 		
 		// Apply scaling appropriate for mimics (based on level parameter)
 		float depthScale = calculateDepthScaling(level);
 		
 		// Scale health by level plus our scaling factor
-		HT = Math.round((1 + level) * baseHT * depthScale);
+		// For Purgatory levels (30+), add additional HP multiplier
+		float healthMod = 1.0f;
+		if (level >= 30) {
+			healthMod = 1.5f; // 50% more health in Purgatory
+		}
+		
+		HT = Math.round((1 + level) * baseHT * depthScale * healthMod);
 		HP = HT;
 		
 		// Scale defense based on level/2 plus scaling factor

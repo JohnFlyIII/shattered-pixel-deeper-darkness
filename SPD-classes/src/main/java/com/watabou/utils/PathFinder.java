@@ -23,6 +23,7 @@ package com.watabou.utils;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class PathFinder {
 	
@@ -80,7 +81,7 @@ public class PathFinder {
 			return null;
 		}
 		
-		Path result = new Path();
+		Path result = Path.get(); // Get a path from the pool
 		int s = from;
 
 		// From the starting position we are moving downwards,
@@ -207,6 +208,25 @@ public class PathFinder {
 			return false;
 		}
 
+		// Calculate map area to process (limited to a reasonable search area)
+		int fromX = from % width;
+		int fromY = from / width;
+		int toX = to % width;
+		int toY = to / width;
+		
+		// Determine bounds with padding
+		int left = Math.max(0, Math.min(fromX, toX) - 5);
+		int right = Math.min(width - 1, Math.max(fromX, toX) + 5);
+		int top = Math.max(0, Math.min(fromY, toY) - 5);
+		int bottom = Math.min(size / width - 1, Math.max(fromY, toY) + 5);
+		
+		// Fast path for nearby locations
+		boolean useOptimized = false;
+		if (right - left < width / 2 && bottom - top < size / width / 2) {
+			useOptimized = true;
+		}
+		
+		// Reset the distance map
 		System.arraycopy(maxVal, 0, distance, 0, maxVal.length);
 		
 		boolean pathFound = false;
@@ -228,17 +248,57 @@ public class PathFinder {
 			}
 			int nextDistance = distance[step] + 1;
 			
-			int start = (step % width == 0 ? 3 : 0);
-			int end   = ((step+1) % width == 0 ? 3 : 0);
+			// Optimize border checks based on position (for both full map and optimized area)
+			int start, end;
+			
+			if (useOptimized) {
+				int stepX = step % width;
+				int stepY = step / width;
+				
+				// Skip neighbors outside our search area
+				if (stepX < left || stepX > right || stepY < top || stepY > bottom) {
+					continue;
+				}
+				
+				// Border checks as before
+				start = (stepX == 0 ? 3 : 0);
+				end   = ((stepX+1) == width ? 3 : 0);
+			} else {
+				// Original border checks
+				start = (step % width == 0 ? 3 : 0);
+				end   = ((step+1) % width == 0 ? 3 : 0);
+			}
+			
 			for (int i = start; i < dirLR.length - end; i++) {
-
 				int n = step + dirLR[i];
-				if (n == from || (n >= 0 && n < size && passable[n] && (distance[n] > nextDistance))) {
+				
+				// Quick check for from to optimize common case
+				if (n == from) {
+					queue[tail++] = n;
+					distance[n] = nextDistance;
+					pathFound = true;
+					break;
+				} 
+				// Normal validity check
+				else if (n >= 0 && n < size && passable[n] && (distance[n] > nextDistance)) {
+					// Skip if outside our optimized area
+					if (useOptimized) {
+						int nX = n % width;
+						int nY = n / width;
+						if (nX < left || nX > right || nY < top || nY > bottom) {
+							continue;
+						}
+					}
+					
 					// Add to queue
 					queue[tail++] = n;
 					distance[n] = nextDistance;
 				}
-					
+			}
+			
+			// Early exit if we found the path
+			if (pathFound) {
+				break;
 			}
 		}
 		
@@ -413,5 +473,35 @@ public class PathFinder {
 	
 	@SuppressWarnings("serial")
 	public static class Path extends LinkedList<Integer> {
+		private static final ArrayList<Path> pathPool = new ArrayList<>(10);
+		
+		// Get a path from the pool or create a new one
+		public static Path get() {
+			synchronized (pathPool) {
+				if (pathPool.isEmpty()) {
+					return new Path();
+				} else {
+					Path result = pathPool.remove(pathPool.size() - 1);
+					return result;
+				}
+			}
+		}
+		
+		// Return a path to the pool
+		public void recycle() {
+			clear(); // Clear the path data
+			synchronized (pathPool) {
+				if (pathPool.size() < 20) { // Limit pool size
+					pathPool.add(this);
+				}
+			}
+		}
+		
+		// Clear the pool
+		public static void clearPool() {
+			synchronized (pathPool) {
+				pathPool.clear();
+			}
+		}
 	}
 }

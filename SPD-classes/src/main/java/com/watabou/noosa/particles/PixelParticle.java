@@ -24,6 +24,8 @@ package com.watabou.noosa.particles;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.PseudoPixel;
 
+import java.util.ArrayList;
+
 public class PixelParticle extends PseudoPixel {
 
 	protected float size;
@@ -31,10 +33,80 @@ public class PixelParticle extends PseudoPixel {
 	protected float lifespan;
 	protected float left;
 	
+	// Particle pooling system
+	private static final ArrayList<PixelParticle> regularPool = new ArrayList<>(50);
+	private static final ArrayList<Shrinking> shrinkingPool = new ArrayList<>(50);
+	
+	// Pool size limit to prevent memory bloat
+	private static final int POOL_LIMIT = 300;
+	
 	public PixelParticle() {
 		super();
 		
 		origin.set( +0.5f );
+	}
+	
+	/**
+	 * Get a regular particle from the pool or create a new one
+	 */
+	public static PixelParticle get() {
+		synchronized (regularPool) {
+			if (regularPool.isEmpty()) {
+				return new PixelParticle();
+			} else {
+				return regularPool.remove(regularPool.size() - 1);
+			}
+		}
+	}
+	
+	/**
+	 * Get a shrinking particle from the pool or create a new one
+	 */
+	public static Shrinking getShrinking() {
+		synchronized (shrinkingPool) {
+			if (shrinkingPool.isEmpty()) {
+				return new Shrinking();
+			} else {
+				return shrinkingPool.remove(shrinkingPool.size() - 1);
+			}
+		}
+	}
+	
+	/**
+	 * Return this particle to the appropriate pool
+	 */
+	@Override
+	public void kill() {
+		super.kill();
+		recycle();
+	}
+	
+	/**
+	 * Recycle this particle into the pool
+	 */
+	protected void recycle() {
+		// Only add to pool if it's not too big
+		if (this instanceof Shrinking) {
+			synchronized (shrinkingPool) {
+				if (shrinkingPool.size() < POOL_LIMIT) {
+					shrinkingPool.add((Shrinking)this);
+				}
+			}
+		} else if (getClass() == PixelParticle.class) { // Only base class, not other subclasses
+			synchronized (regularPool) {
+				if (regularPool.size() < POOL_LIMIT) {
+					regularPool.add(this);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Clear all particle pools
+	 */
+	public static void clearPools() {
+		synchronized (regularPool) { regularPool.clear(); }
+		synchronized (shrinkingPool) { shrinkingPool.clear(); }
 	}
 	
 	public void reset( float x, float y, int color, float size, float lifespan ) {

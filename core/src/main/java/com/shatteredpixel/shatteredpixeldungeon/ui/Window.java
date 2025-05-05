@@ -33,6 +33,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.PointerArea;
+import com.watabou.utils.ObjectPool;
 import com.watabou.utils.Point;
 import com.watabou.utils.Signal;
 
@@ -133,11 +134,15 @@ public class Window extends Group implements Signal.Listener<KeyEvent> {
 	}
 
 	public Point getOffset(){
-		return new Point(xOffset, yOffset);
+		Point result = ObjectPool.obtainPoint();
+		result.set(xOffset, yOffset);
+		return result;
 	}
 
 	public final void offset( Point offset ){
 		offset(offset.x, offset.y);
+		// We recycle the offset point since we no longer need it
+		ObjectPool.recyclePoint(offset);
 	}
 
 	//windows with scroll panes will likely need to override this and refresh them when offset changes

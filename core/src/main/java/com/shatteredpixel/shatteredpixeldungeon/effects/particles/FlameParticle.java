@@ -27,16 +27,50 @@ import com.watabou.noosa.particles.PixelParticle;
 
 public class FlameParticle extends PixelParticle.Shrinking {
 	
+	// Particle pool for FlameParticles
+	private static final java.util.ArrayList<FlameParticle> flamePool = new java.util.ArrayList<>(50);
+	private static final int FLAME_POOL_LIMIT = 100;
+	
 	public static final Emitter.Factory FACTORY = new Factory() {
 		@Override
 		public void emit( Emitter emitter, int index, float x, float y ) {
-			((FlameParticle)emitter.recycle( FlameParticle.class )).reset( x, y );
+			FlameParticle p = getFlameParticle();
+			p.reset( x, y );
+			emitter.add( p );
 		}
 		@Override
 		public boolean lightMode() {
 			return true;
 		}
 	};
+	
+	// Get a particle from the pool or create a new one
+	private static FlameParticle getFlameParticle() {
+		synchronized (flamePool) {
+			if (flamePool.isEmpty()) {
+				return new FlameParticle();
+			} else {
+				return flamePool.remove(flamePool.size() - 1);
+			}
+		}
+	}
+	
+	@Override
+	protected void recycle() {
+		// Add to flame pool instead of parent class pool
+		synchronized (flamePool) {
+			if (flamePool.size() < FLAME_POOL_LIMIT) {
+				flamePool.add(this);
+			}
+		}
+	}
+	
+	// Clear the pool (called when game is paused or reset)
+	public static void clearPool() {
+		synchronized (flamePool) {
+			flamePool.clear();
+		}
+	}
 	
 	public FlameParticle() {
 		super();

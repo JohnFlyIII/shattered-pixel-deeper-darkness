@@ -92,8 +92,9 @@ public class GoldenMimic extends Mimic {
 
 	@Override
 	public void setLevel(int level) {
+		// Apply 33% increased level without double-scaling
 		super.setLevel(Math.round(level*1.33f));
-		scaleStatsByDepth();
+		// Removed the second call to scaleStatsByDepth() as it was causing double scaling
 	}
 
 	@Override
