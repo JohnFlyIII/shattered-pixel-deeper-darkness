@@ -973,9 +973,9 @@ public class GameScene extends PixelScene {
 	public static void sortMobSprites(){
 		if (scene != null){
 			synchronized (scene) {
-				scene.mobs.sort(new Comparator() {
+				scene.mobs.sort(new Comparator<Gizmo>() {
 					@Override
-					public int compare(Object a, Object b) {
+					public int compare(Gizmo a, Gizmo b) {
 						//elements that aren't visual go to the end of the list
 						if (a instanceof Visual && b instanceof Visual) {
 							return (int) Math.signum((((Visual) a).y + ((Visual) a).height())

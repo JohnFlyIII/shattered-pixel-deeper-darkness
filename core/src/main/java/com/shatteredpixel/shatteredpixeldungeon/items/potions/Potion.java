@@ -514,7 +514,12 @@ public class Potion extends Item {
 			ArrayList<Class<?extends Plant.Seed>> seeds = new ArrayList<>();
 			for (Item i : ingredients) {
 				if (!seeds.contains(i.getClass())) {
-					seeds.add((Class<? extends Plant.Seed>) i.getClass());
+					Class<?> itemClass = i.getClass();
+					if (Plant.Seed.class.isAssignableFrom(itemClass)) {
+						@SuppressWarnings("unchecked")
+						Class<? extends Plant.Seed> seedClass = (Class<? extends Plant.Seed>) itemClass;
+						seeds.add(seedClass);
+					}
 				}
 			}
 			

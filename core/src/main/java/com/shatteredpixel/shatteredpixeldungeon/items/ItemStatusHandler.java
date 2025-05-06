@@ -193,7 +193,12 @@ public class ItemStatusHandler<T extends Item> {
 	}
 	
 	public void know( T item ) {
-		known.add( (Class<? extends T>)item.getClass() );
+		Class<?> itemClass = item.getClass();
+		if (itemClass != null) {
+			@SuppressWarnings("unchecked")
+			Class<? extends T> typedClass = (Class<? extends T>) itemClass;
+			known.add(typedClass);
+		}
 	}
 	
 	public void know( Class<?extends T> itemCls ){

@@ -208,6 +208,7 @@ public class WandOfCorruption extends Wand {
 		}
 		
 		//all buffs with a > 0 chance are flavor buffs
+		@SuppressWarnings("unchecked")
 		Class<?extends FlavourBuff> debuffCls = (Class<? extends FlavourBuff>) Random.chances(debuffs);
 		
 		if (debuffCls != null){

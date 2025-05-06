@@ -602,7 +602,9 @@ public class Notes {
 		ArrayList<T> filtered = new ArrayList<>();
 		for (Record rec : records){
 			if (recordType.isInstance(rec)){
-				filtered.add((T)rec);
+				@SuppressWarnings("unchecked")
+				T typedRecord = (T)rec;
+				filtered.add(typedRecord);
 			}
 		}
 		return filtered;

@@ -286,7 +286,12 @@ public class PixelScene extends Scene {
 		savedClass = getClass();
 		for (Gizmo g : members.toArray(new Gizmo[0])){
 			if (g instanceof Window){
-				savedWindows.add((Class<? extends Window>) g.getClass());
+				Class<?> windowClass = g.getClass();
+				if (Window.class.isAssignableFrom(windowClass)) {
+					@SuppressWarnings("unchecked")
+					Class<? extends Window> typedWindowClass = (Class<? extends Window>) windowClass;
+					savedWindows.add(typedWindowClass);
+				}
 			}
 		}
 	}

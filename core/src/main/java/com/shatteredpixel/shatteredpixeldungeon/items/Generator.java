@@ -653,7 +653,8 @@ public class Generator {
 		undoDrop(item.getClass());
 	}
 
-	public static void undoDrop(Class cls){
+	@SuppressWarnings("unchecked")
+	public static void undoDrop(Class<?> cls){
 		for (Category cat : Category.values()){
 			if (cls.isAssignableFrom(cat.superClass)){
 				if (cat.defaultProbs == null) continue;
@@ -868,7 +869,10 @@ public class Generator {
 		}
 
 		cat.probs[i]--;
-		return (Artifact) Reflection.newInstance((Class<? extends Artifact>) cat.classes[i]).random();
+		// This warning is suppressed because we know these classes are Artifact subclasses
+		@SuppressWarnings("unchecked")
+		Class<? extends Artifact> artifactClass = (Class<? extends Artifact>) cat.classes[i];
+		return (Artifact) Reflection.newInstance(artifactClass).random();
 
 	}
 
