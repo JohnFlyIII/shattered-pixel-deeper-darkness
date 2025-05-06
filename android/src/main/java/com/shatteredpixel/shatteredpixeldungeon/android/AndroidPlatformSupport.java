@@ -29,6 +29,9 @@ import android.net.NetworkInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.WindowManager;
 
 import com.badlogic.gdx.Gdx;
@@ -116,6 +119,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void updateSystemUI() {
 		
 		AndroidLauncher.instance.runOnUiThread(new Runnable() {
@@ -125,23 +129,44 @@ public class AndroidPlatformSupport extends PlatformSupport {
 				boolean fullscreen = Build.VERSION.SDK_INT < Build.VERSION_CODES.N
 						|| !AndroidLauncher.instance.isInMultiWindowMode();
 				
-				if (fullscreen){
-					AndroidLauncher.instance.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-							WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-				} else {
-					AndroidLauncher.instance.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
-							WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-				}
+				Window window = AndroidLauncher.instance.getWindow();
 				
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+					// Use the newer APIs on Android 11+
 					if (SPDSettings.fullscreen()) {
-						AndroidLauncher.instance.getWindow().getDecorView().setSystemUiVisibility(
-								View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-										| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN
-										| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY );
+						window.setDecorFitsSystemWindows(false);
+						WindowInsetsController controller = window.getInsetsController();
+						if (controller != null) {
+							controller.hide(WindowInsets.Type.systemBars());
+							controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+						}
 					} else {
-						AndroidLauncher.instance.getWindow().getDecorView().setSystemUiVisibility(
-								View.SYSTEM_UI_FLAG_LAYOUT_STABLE );
+						window.setDecorFitsSystemWindows(true);
+						WindowInsetsController controller = window.getInsetsController();
+						if (controller != null) {
+							controller.show(WindowInsets.Type.systemBars());
+						}
+					}
+				} else {
+					// For Android versions before 11, use the old methods
+					if (fullscreen){
+						window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+								WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+					} else {
+						window.setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
+								WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+					}
+					
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+						if (SPDSettings.fullscreen()) {
+							window.getDecorView().setSystemUiVisibility(
+									View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+											| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN
+											| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY );
+						} else {
+							window.getDecorView().setSystemUiVisibility(
+									View.SYSTEM_UI_FLAG_LAYOUT_STABLE );
+						}
 					}
 				}
 			}

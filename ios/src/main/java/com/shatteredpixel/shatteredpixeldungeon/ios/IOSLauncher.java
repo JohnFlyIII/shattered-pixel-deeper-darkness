@@ -45,6 +45,8 @@ import org.robovm.apple.foundation.NSString;
 import org.robovm.apple.glkit.GLKViewDrawableColorFormat;
 import org.robovm.apple.glkit.GLKViewDrawableDepthFormat;
 import org.robovm.apple.uikit.UIApplication;
+import org.robovm.apple.uikit.UIStatusBarManager;
+import org.robovm.apple.uikit.UIStatusBarStyle;
 
 import java.io.File;
 
@@ -101,14 +103,13 @@ public class IOSLauncher extends IOSApplication.Delegate {
 		config.hideHomeIndicator = SPDSettings.fullscreen();
 		config.overrideRingerSwitch = SPDSettings.ignoreSilentMode();
 
-		CGRect statusBarFrame = UIApplication.getSharedApplication().getStatusBarFrame();
-		double statusBarHeight = Math.min(statusBarFrame.getWidth(), statusBarFrame.getHeight());
-
-		//if the application has a short status bar (no notch), then hide it
-		//TODO we do this check elsewhere now, can this be removed?
-		if (statusBarHeight <= 24) {
-			UIApplication.getSharedApplication().setStatusBarHidden(true);
-		}
+		// Status bar handling has been moved to IOSPlatformSupport
+		// The previous code used deprecated methods:
+		// - UIApplication.getSharedApplication().getStatusBarFrame()
+		// - UIApplication.getSharedApplication().setStatusBarHidden(true)
+		// 
+		// Modern status bar handling now happens in IOSPlatformSupport
+		// where we use UIWindow.getSafeAreaInsets() for notch detection
 
 		config.useAccelerometer = false;
 		config.useCompass = false;

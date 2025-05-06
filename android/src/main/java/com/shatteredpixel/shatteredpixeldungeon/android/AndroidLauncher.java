@@ -25,10 +25,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.ViewConfiguration;
+import android.view.WindowManager;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -80,7 +83,14 @@ public class AndroidLauncher extends AndroidApplication {
 				Game.version = "???";
 			}
 			try {
-				Game.versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+				PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+					Game.versionCode = (int) packageInfo.getLongVersionCode();
+				} else {
+					@SuppressWarnings("deprecation")
+					int versionCode = packageInfo.versionCode;
+					Game.versionCode = versionCode;
+				}
 			} catch (PackageManager.NameNotFoundException e) {
 				Game.versionCode = 0;
 			}
@@ -158,9 +168,14 @@ public class AndroidLauncher extends AndroidApplication {
 		super.onResume();
 	}
 
+	// Override onKeyDown instead of onBackPressed (which is deprecated)
 	@Override
-	public void onBackPressed() {
-		//do nothing, game should catch all back presses
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			//do nothing, game should catch all back presses
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
@@ -169,7 +184,10 @@ public class AndroidLauncher extends AndroidApplication {
 		support.updateSystemUI();
 	}
 	
+	// Use onApplyWindowInsets or similar when needed, but for now just override
+	// with @SuppressWarnings to silence the warning
 	@Override
+	@SuppressWarnings("deprecation")
 	public void onMultiWindowModeChanged(boolean isInMultiWindowMode) {
 		super.onMultiWindowModeChanged(isInMultiWindowMode);
 		support.updateSystemUI();

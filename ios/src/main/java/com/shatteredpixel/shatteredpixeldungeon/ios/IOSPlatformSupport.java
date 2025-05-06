@@ -38,6 +38,10 @@ import org.robovm.apple.audiotoolbox.AudioServices;
 import org.robovm.apple.systemconfiguration.SCNetworkReachability;
 import org.robovm.apple.systemconfiguration.SCNetworkReachabilityFlags;
 import org.robovm.apple.uikit.UIApplication;
+import org.robovm.apple.uikit.UIDevice;
+import org.robovm.apple.uikit.UIScreen;
+import org.robovm.apple.uikit.UIStatusBarAnimation;
+import org.robovm.apple.uikit.UIStatusBarStyle;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -50,9 +54,16 @@ public class IOSPlatformSupport extends PlatformSupport {
 		if (Gdx.graphics.getSafeInsetTop() != 0
 				|| Gdx.graphics.getSafeInsetLeft() != 0
 				|| Gdx.graphics.getSafeInsetRight() != 0){
-			UIApplication.getSharedApplication().setStatusBarHidden(false);
+			// Since we're targeting modern iOS versions, we'll just suppress the deprecation warning
+			// We could use the WindowScene API, but it requires additional setup and iOS 13+
+			@SuppressWarnings("deprecation")
+			UIApplication sharedApp1 = UIApplication.getSharedApplication();
+			sharedApp1.setStatusBarHidden(false);
 		} else {
-			UIApplication.getSharedApplication().setStatusBarHidden(true);
+			// Hide status bar for devices without notches
+			@SuppressWarnings("deprecation")
+			UIApplication sharedApp2 = UIApplication.getSharedApplication();
+			sharedApp2.setStatusBarHidden(true);
 		}
 
 		if (!SPDSettings.fullscreen()) {

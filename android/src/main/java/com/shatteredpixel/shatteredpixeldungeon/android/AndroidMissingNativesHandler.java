@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.android;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -48,7 +49,14 @@ public class AndroidMissingNativesHandler extends Activity {
 
 		int versionCode;
 		try {
-			versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+			PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+				versionCode = (int) packageInfo.getLongVersionCode();
+			} else {
+				@SuppressWarnings("deprecation")
+				int code = packageInfo.versionCode;
+				versionCode = code;
+			}
 		} catch (PackageManager.NameNotFoundException e) {
 			versionCode = 0;
 		}
@@ -58,7 +66,9 @@ public class AndroidMissingNativesHandler extends Activity {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
 				installer = getPackageManager().getInstallSourceInfo(getPackageName()).getInstallingPackageName();
 			} else {
-				installer = getPackageManager().getInstallerPackageName(getPackageName());
+				@SuppressWarnings("deprecation")
+				String installerPackage = getPackageManager().getInstallerPackageName(getPackageName());
+				installer = installerPackage;
 			}
 		} catch (Exception e) {
 			installer = "???";
