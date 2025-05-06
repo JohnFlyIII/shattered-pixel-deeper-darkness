@@ -56,7 +56,7 @@ public class ShockingBrew extends Brew {
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
 		
 		{
-			inputs =  new Class[]{PotionOfParalyticGas.class};
+			inputs = itemClasses(PotionOfParalyticGas.class);
 			inQuantity = new int[]{1};
 			
 			cost = 10;

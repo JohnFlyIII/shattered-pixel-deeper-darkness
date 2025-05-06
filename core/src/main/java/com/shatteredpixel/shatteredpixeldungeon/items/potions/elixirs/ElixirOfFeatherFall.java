@@ -94,7 +94,7 @@ public class ElixirOfFeatherFall extends Elixir {
 		private static final int OUT_QUANTITY = 1;
 
 		{
-			inputs =  new Class[]{PotionOfLevitation.class};
+			inputs = itemClasses(PotionOfLevitation.class);
 			inQuantity = new int[]{1};
 
 			cost = 10;

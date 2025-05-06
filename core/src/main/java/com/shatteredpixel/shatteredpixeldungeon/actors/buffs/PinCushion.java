@@ -82,7 +82,7 @@ public class PinCushion extends Buff {
 
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
-		items = new ArrayList<>((Collection<MissileWeapon>) ((Collection<?>) bundle.getCollection(ITEMS)));
+		items = new ArrayList<>(bundle.getCollectionTyped(ITEMS, MissileWeapon.class));
 		super.restoreFromBundle( bundle );
 	}
 

@@ -103,7 +103,7 @@ public class TrinketCatalyst extends Item {
 		super.restoreFromBundle(bundle);
 		rolledTrinkets.clear();
 		if (bundle.contains(ROLLED_TRINKETS)){
-			rolledTrinkets.addAll((Collection<Trinket>) ((Collection<?>)bundle.getCollection( ROLLED_TRINKETS )));
+			rolledTrinkets.addAll(bundle.getCollectionTyped(ROLLED_TRINKETS, Trinket.class));
 		}
 	}
 

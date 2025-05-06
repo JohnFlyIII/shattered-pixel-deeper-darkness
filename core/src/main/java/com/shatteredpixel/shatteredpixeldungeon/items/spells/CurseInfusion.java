@@ -113,7 +113,7 @@ public class CurseInfusion extends InventorySpell {
 		private static final int OUT_QUANTITY = 4;
 		
 		{
-			inputs =  new Class[]{ScrollOfRemoveCurse.class, MetalShard.class};
+			inputs = itemClasses(ScrollOfRemoveCurse.class, MetalShard.class);
 			inQuantity = new int[]{1, 1};
 			
 			cost = 6;

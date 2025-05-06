@@ -364,6 +364,35 @@ public class Bundle {
 
 		return list;
 	}
+	
+	/**
+	 * Returns a collection of items of the specified type from the bundle.
+	 * This is a type-safe alternative to getCollection.
+	 * 
+	 * @param <T> The expected type of the collection items
+	 * @param key The key for the collection in the bundle
+	 * @param itemType The class that the collection items should be instances of
+	 * @return A collection of the specified type, or an empty collection if not found
+	 */
+	public <T extends Bundlable> Collection<T> getCollectionTyped(String key, Class<T> itemType) {
+		ArrayList<T> result = new ArrayList<>();
+		if (contains(key)) {
+			try {
+				JSONArray array = data.getJSONArray(key);
+				for (int i = 0; i < array.length(); i++) {
+					Bundlable item = new Bundle(array.getJSONObject(i)).get();
+					if (item != null && itemType.isInstance(item)) {
+						@SuppressWarnings("unchecked")
+						T typedItem = (T) item;
+						result.add(typedItem);
+					}
+				}
+			} catch (JSONException e) {
+				Game.reportException(e);
+			}
+		}
+		return result;
+	}
 
 	public void put( String key, boolean value ) {
 		try {

@@ -80,7 +80,7 @@ public class PhaseShift extends TargetedSpell {
 		private static final int OUT_QUANTITY = 6;
 		
 		{
-			inputs =  new Class[]{ScrollOfTeleportation.class};
+			inputs = itemClasses(ScrollOfTeleportation.class);
 			inQuantity = new int[]{1};
 			
 			cost = 10;

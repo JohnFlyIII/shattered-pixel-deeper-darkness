@@ -401,7 +401,7 @@ public class Blacksmith extends NPC {
 				smiths = node.getInt( SMITHS );
 
 				if (node.contains( SMITH_REWARDS )){
-					smithRewards = new ArrayList<>((Collection<Item>) ((Collection<?>) node.getCollection( SMITH_REWARDS )));
+					smithRewards = new ArrayList<>(node.getCollectionTyped( SMITH_REWARDS, Item.class ));
 					if (node.contains(ENCHANT)) {
 						smithEnchant = (Weapon.Enchantment) node.get(ENCHANT);
 						smithGlyph   = (Armor.Glyph) node.get(GLYPH);

@@ -69,7 +69,7 @@ public class CausticBrew extends Brew {
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
 		
 		{
-			inputs =  new Class[]{PotionOfToxicGas.class, GooBlob.class};
+			inputs = itemClasses(PotionOfToxicGas.class, GooBlob.class);
 			inQuantity = new int[]{1, 1};
 			
 			cost = 1;

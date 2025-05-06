@@ -46,7 +46,7 @@ public class ElixirOfArcaneArmor extends Elixir {
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
 		
 		{
-			inputs =  new Class[]{PotionOfEarthenArmor.class, GooBlob.class};
+			inputs = itemClasses(PotionOfEarthenArmor.class, GooBlob.class);
 			inQuantity = new int[]{1, 1};
 			
 			cost = 8;

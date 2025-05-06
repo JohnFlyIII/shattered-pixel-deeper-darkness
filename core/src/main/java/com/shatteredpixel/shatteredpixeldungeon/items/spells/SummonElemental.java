@@ -234,7 +234,7 @@ public class SummonElemental extends Spell {
 		private static final int OUT_QUANTITY = 6;
 
 		{
-			inputs =  new Class[]{Embers.class};
+			inputs = itemClasses(Embers.class);
 			inQuantity = new int[]{1};
 
 			cost = 10;

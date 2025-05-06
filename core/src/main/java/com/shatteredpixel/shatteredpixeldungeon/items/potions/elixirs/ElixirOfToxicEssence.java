@@ -43,7 +43,7 @@ public class ElixirOfToxicEssence extends Elixir {
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
 		
 		{
-			inputs =  new Class[]{PotionOfCorrosiveGas.class};
+			inputs = itemClasses(PotionOfCorrosiveGas.class);
 			inQuantity = new int[]{1};
 			
 			cost = 8;

@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -178,7 +179,14 @@ public class Succubus extends Mob {
 	public Item createLoot() {
 		Class<?extends Scroll> loot;
 		do{
-			loot = (Class<? extends Scroll>) Random.oneOf(Generator.Category.SCROLL.classes);
+			Class<?> scrollClass = Random.oneOf(Generator.Category.SCROLL.classes);
+			if (Scroll.class.isAssignableFrom(scrollClass)) {
+				@SuppressWarnings("unchecked")
+				Class<? extends Scroll> typedClass = (Class<? extends Scroll>) scrollClass;
+				loot = typedClass;
+			} else {
+				loot = ScrollOfRemoveCurse.class; // Fallback if something goes wrong
+			}
 		} while (loot == ScrollOfIdentify.class || loot == ScrollOfUpgrade.class);
 
 		return Reflection.newInstance(loot);

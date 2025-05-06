@@ -107,7 +107,7 @@ public class Recycle extends InventorySpell {
 		private static final int OUT_QUANTITY = 12;
 		
 		{
-			inputs =  new Class[]{ScrollOfTransmutation.class};
+			inputs = itemClasses(ScrollOfTransmutation.class);
 			inQuantity = new int[]{1};
 			
 			cost = 12;

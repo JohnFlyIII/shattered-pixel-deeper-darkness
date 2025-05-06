@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfParalyticGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ScorpioSprite;
@@ -118,7 +119,14 @@ public class Scorpio extends Mob {
 	public Item createLoot() {
 		Class<?extends Potion> loot;
 		do{
-			loot = (Class<? extends Potion>) Random.oneOf(Generator.Category.POTION.classes);
+			Class<?> potionClass = Random.oneOf(Generator.Category.POTION.classes);
+			if (Potion.class.isAssignableFrom(potionClass)) {
+				@SuppressWarnings("unchecked")
+				Class<? extends Potion> typedClass = (Class<? extends Potion>) potionClass;
+				loot = typedClass;
+			} else {
+				loot = PotionOfParalyticGas.class; // Fallback if something goes wrong
+			}
 		} while (loot == PotionOfHealing.class || loot == PotionOfStrength.class);
 
 		return Reflection.newInstance(loot);

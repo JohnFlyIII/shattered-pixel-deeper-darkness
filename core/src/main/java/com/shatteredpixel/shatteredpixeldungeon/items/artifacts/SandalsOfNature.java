@@ -348,7 +348,8 @@ public class SandalsOfNature extends Artifact {
 					Splash.at(DungeonTilemap.tileCenterToWorld( cell ), -PointF.PI/2, PointF.PI/2, seedColors.get(curSeedEffect), 6);
 					Invisibility.dispel(curUser);
 
-					Plant plant = ((Plant.Seed) Reflection.newInstance(curSeedEffect)).couch(cell, null);
+					Plant.Seed seed = Reflection.newInstanceSafe(curSeedEffect, Plant.Seed.class);
+					Plant plant = seed != null ? seed.couch(cell, null) : null;
 					plant.activate(Actor.findChar(cell));
 					Sample.INSTANCE.play(Assets.Sounds.PLANT);
 					Sample.INSTANCE.playDelayed(Assets.Sounds.TRAMPLE, 0.25f, 1, Random.Float( 0.96f, 1.05f ) );

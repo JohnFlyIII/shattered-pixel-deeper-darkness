@@ -420,7 +420,7 @@ public class Notes {
 				case DEPTH:
 					return Icons.STAIRS.get();
 				case ITEM:
-					Item i = (Item) Reflection.newInstance(itemClass);
+					Item i = Reflection.newInstanceSafe(itemClass, Item.class);
 					return new ItemSprite(i);
 			}
 		}
@@ -435,7 +435,7 @@ public class Notes {
 					text.measure();
 					return text;
 				case ITEM:
-					Item item = (Item) Reflection.newInstance(itemClass);
+					Item item = Reflection.newInstanceSafe(itemClass, Item.class);
 					if (item.isIdentified() && item.icon != -1) {
 						Image secondIcon = new Image(Assets.Sprites.ITEM_ICONS);
 						secondIcon.frame(ItemSpriteSheet.Icons.film.get(item.icon));

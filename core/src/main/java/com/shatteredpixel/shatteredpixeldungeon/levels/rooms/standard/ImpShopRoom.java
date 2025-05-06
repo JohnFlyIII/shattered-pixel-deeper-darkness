@@ -118,8 +118,8 @@ public class ImpShopRoom extends ShopRoom {
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
 		impSpawned = bundle.getBoolean(IMP);
-		if (bundle.contains( ITEMS )) {
-			itemsToSpawn = new ArrayList<>((Collection<Item>) ((Collection<?>) bundle.getCollection(ITEMS)));
+		if (bundle.contains(ITEMS)) {
+			itemsToSpawn = new ArrayList<>(bundle.getCollectionTyped(ITEMS, Item.class));
 		}
 	}
 

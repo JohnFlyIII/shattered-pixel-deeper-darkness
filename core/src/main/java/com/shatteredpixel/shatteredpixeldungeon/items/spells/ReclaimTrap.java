@@ -169,7 +169,7 @@ public class ReclaimTrap extends TargetedSpell {
 		private static final int OUT_QUANTITY = 5;
 		
 		{
-			inputs =  new Class[]{ScrollOfMagicMapping.class, MetalShard.class};
+			inputs = itemClasses(ScrollOfMagicMapping.class, MetalShard.class);
 			inQuantity = new int[]{1, 1};
 			
 			cost = 8;

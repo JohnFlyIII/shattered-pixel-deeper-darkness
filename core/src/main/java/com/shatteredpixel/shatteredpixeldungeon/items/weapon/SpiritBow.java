@@ -112,7 +112,8 @@ public class SpiritBow extends Weapon {
 				protected boolean act() {
 
 					if (Random.Int(12) < ((Hero)attacker).pointsInTalent(Talent.NATURES_WRATH)){
-						Plant plant = (Plant) Reflection.newInstance(Random.element(harmfulPlants));
+						Class<?> plantClass = Random.element(harmfulPlants);
+						Plant plant = Reflection.newInstanceSafe(plantClass, Plant.class);
 						plant.pos = defender.pos;
 						plant.activate( defender.isAlive() ? defender : null );
 					}

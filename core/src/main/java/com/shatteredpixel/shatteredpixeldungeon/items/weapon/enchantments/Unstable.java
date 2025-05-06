@@ -31,7 +31,8 @@ public class Unstable extends Weapon.Enchantment {
 
 	private static final ItemSprite.Glowing GREY = new ItemSprite.Glowing( 0x999999 );
 
-	private static final Class<?extends Weapon.Enchantment>[] randomEnchants = new Class[]{
+	@SuppressWarnings("unchecked")
+	private static final Class<? extends Weapon.Enchantment>[] randomEnchants = new Class[]{
 			Blazing.class,
 			Blocking.class,
 			Blooming.class,
