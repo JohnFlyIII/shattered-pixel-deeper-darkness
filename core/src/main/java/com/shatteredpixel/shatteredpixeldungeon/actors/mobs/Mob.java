@@ -1045,14 +1045,11 @@ public abstract class Mob extends Char {
 				
 				// Clockwork Reclamation talent for Artificer
 				if (Dungeon.hero.hasTalent(Talent.CLOCKWORK_RECLAMATION)) {
-					GLog.d("clockwork_reclamation_proc check start");
 					int talentLevel = Dungeon.hero.pointsInTalent(Talent.CLOCKWORK_RECLAMATION);
 					float chance = talentLevel == 1 ? 0.33f : 0.66f;
 					float roll = Random.Float();
-					GLog.d("clockwork_reclamation_proc check start with chance: " + chance +" and check: " + roll);
-					
+
 					if (Random.Float() < chance) {
-						GLog.d("clockwork_reclamation_proc check success");
 						// Calculate max potential parts based on talent level
 						// T1: up to 50% of exp, T2: up to 100% of exp
 						float maxPercent = talentLevel == 1 ? 0.5f : 1.0f;
@@ -1061,7 +1058,6 @@ public abstract class Mob extends Char {
 						// Find PocketWorkshop and add parts
 						PocketWorkshop workshop = Dungeon.hero.belongings.getItem(PocketWorkshop.class);
   						if (workshop != null) {
-								GLog.d("clockwork_reclamation_proc found workshop ");
 								workshop.addSpareParts(parts);
 								
 								// Show visual effect and message
