@@ -256,12 +256,12 @@ public class SandalsOfNature extends Artifact {
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle(bundle);
-		if (bundle.contains(SEEDS) && bundle.getClassArray(SEEDS) != null) {
-			for (Class<?> cls : bundle.getClassArray(SEEDS)) {
+		if (bundle.contains(SEEDS) && bundle.getClassArraySafe(SEEDS, Plant.Seed.class) != null) {
+			for (Class<?> cls : bundle.getClassArraySafe(SEEDS, Plant.Seed.class)) {
 				seeds.add(cls);
 			}
 		}
-		curSeedEffect = bundle.getClass(CUR_SEED_EFFECT);
+		curSeedEffect = bundle.getClassSafe(CUR_SEED_EFFECT, Plant.Seed.class);
 
 		if (level() == 1)  image = ItemSpriteSheet.ARTIFACT_SHOES;
 		else if (level() == 2)  image = ItemSpriteSheet.ARTIFACT_BOOTS;

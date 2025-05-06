@@ -77,14 +77,27 @@ public abstract class Recipe {
 	public static abstract class SimpleRecipe extends Recipe {
 		
 		//*** These elements must be filled in by subclasses
-		protected Class<?extends Item>[] inputs; //each class should be unique
+		protected Class<? extends Item>[] inputs; //each class should be unique
 		protected int[] inQuantity;
 		
 		protected int cost;
 		
-		protected Class<?extends Item> output;
+		protected Class<? extends Item> output;
 		protected int outQuantity;
 		//***
+		
+		/**
+		 * Helper method to create a properly typed array of classes.
+		 * This should be used in recipe initialization blocks like:
+		 * inputs = itemClasses(PotionOfHealing.class, Honeypot.ShatteredPot.class);
+		 * 
+		 * @param classes The item classes to include in the array
+		 * @return A properly typed array of the specified classes
+		 */
+		@SafeVarargs
+		protected static Class<? extends Item>[] itemClasses(Class<? extends Item>... classes) {
+			return classes;
+		}
 		
 		//gets a simple list of items based on inputs
 		public ArrayList<Item> getIngredients() {

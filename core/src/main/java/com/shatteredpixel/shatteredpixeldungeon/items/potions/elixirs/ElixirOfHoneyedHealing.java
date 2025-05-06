@@ -70,7 +70,7 @@ public class ElixirOfHoneyedHealing extends Elixir {
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
 		
 		{
-			inputs =  new Class[]{PotionOfHealing.class, Honeypot.ShatteredPot.class};
+			inputs = itemClasses(PotionOfHealing.class, Honeypot.ShatteredPot.class);
 			inQuantity = new int[]{1, 1};
 			
 			cost = 4;

@@ -212,7 +212,7 @@ public class Statistics {
 		ankhsUsed		= bundle.getInt( ANKHS );
 
 		if (bundle.contains( ITEM_TYPES_DISCOVERED )) {
-			Class<?>[] classes = bundle.getClassArray(ITEM_TYPES_DISCOVERED);
+			Class<?>[] classes = bundle.getClassArraySafe(ITEM_TYPES_DISCOVERED, Object.class);
 			itemTypesDiscovered.clear();
 			for (Class<?> cls : classes) {
 				itemTypesDiscovered.add(cls);

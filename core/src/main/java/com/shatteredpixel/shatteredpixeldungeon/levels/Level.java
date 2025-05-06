@@ -443,7 +443,7 @@ public abstract class Level implements Bundlable {
 		}
 
 		if (bundle.contains( "mobs_to_spawn" )) {
-			for (Class<? extends Mob> mob : bundle.getClassArray("mobs_to_spawn")) {
+			for (Class<? extends Mob> mob : bundle.getClassArraySafe("mobs_to_spawn", Mob.class)) {
 				if (mob != null) mobsToSpawn.add(mob);
 			}
 		}

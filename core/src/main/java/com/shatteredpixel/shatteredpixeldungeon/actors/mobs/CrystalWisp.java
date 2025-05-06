@@ -171,6 +171,6 @@ public class CrystalWisp extends Mob{
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		spriteClass = bundle.getClass(SPRITE);
+		spriteClass = bundle.getClassSafe(SPRITE, CrystalWispSprite.class);
 	}
 }

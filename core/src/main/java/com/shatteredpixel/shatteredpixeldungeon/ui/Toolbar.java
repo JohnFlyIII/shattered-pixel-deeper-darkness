@@ -416,7 +416,7 @@ public class Toolbar extends Component {
 						public void onSelect(int idx, boolean alt) {
 							super.onSelect(idx, alt);
 							Bag bag = bags.get(idx);
-							ArrayList<Item> items = (ArrayList<Item>) bag.items.clone();
+							ArrayList<Item> items = new ArrayList<>(bag.items);
 
 							for(Item i : bag.items){
 								if (i instanceof Bag) items.remove(i);

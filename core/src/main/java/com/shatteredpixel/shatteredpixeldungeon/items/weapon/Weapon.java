@@ -582,7 +582,7 @@ abstract public class Weapon extends KindOfWeapon {
 		
 		public abstract ItemSprite.Glowing glowing();
 		
-		@SuppressWarnings("unchecked")
+		@SafeVarargs
 		public static Enchantment random( Class<? extends Enchantment> ... toIgnore ) {
 			switch(Random.chances(typeChances)){
 				case 0: default:
@@ -594,7 +594,7 @@ abstract public class Weapon extends KindOfWeapon {
 			}
 		}
 		
-		@SuppressWarnings("unchecked")
+		@SafeVarargs
 		public static Enchantment randomCommon( Class<? extends Enchantment> ... toIgnore ) {
 			ArrayList<Class<?>> enchants = new ArrayList<>(Arrays.asList(common));
 			enchants.removeAll(Arrays.asList(toIgnore));
@@ -605,7 +605,7 @@ abstract public class Weapon extends KindOfWeapon {
 			}
 		}
 		
-		@SuppressWarnings("unchecked")
+		@SafeVarargs
 		public static Enchantment randomUncommon( Class<? extends Enchantment> ... toIgnore ) {
 			ArrayList<Class<?>> enchants = new ArrayList<>(Arrays.asList(uncommon));
 			enchants.removeAll(Arrays.asList(toIgnore));
@@ -616,7 +616,7 @@ abstract public class Weapon extends KindOfWeapon {
 			}
 		}
 		
-		@SuppressWarnings("unchecked")
+		@SafeVarargs
 		public static Enchantment randomRare( Class<? extends Enchantment> ... toIgnore ) {
 			ArrayList<Class<?>> enchants = new ArrayList<>(Arrays.asList(rare));
 			enchants.removeAll(Arrays.asList(toIgnore));
@@ -627,7 +627,7 @@ abstract public class Weapon extends KindOfWeapon {
 			}
 		}
 
-		@SuppressWarnings("unchecked")
+		@SafeVarargs
 		public static Enchantment randomCurse( Class<? extends Enchantment> ... toIgnore ){
 			ArrayList<Class<?>> enchants = new ArrayList<>(Arrays.asList(curses));
 			enchants.removeAll(Arrays.asList(toIgnore));

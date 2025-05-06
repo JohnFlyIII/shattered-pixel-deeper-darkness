@@ -125,7 +125,7 @@ public class Bundle {
 		return data.optString( key );
 	}
 
-	public Class getClass( String key ) {
+	public Class<?> getClass( String key ) {
 		String clName =  getString(key).replace("class ", "");
 		if (!clName.equals("")){
 			if (aliases.containsKey( clName )) {
@@ -133,6 +133,27 @@ public class Bundle {
 			}
 
 			return Reflection.forName( clName );
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns a class of the specified type from the bundle.
+	 * This is a type-safe alternative to getClass.
+	 * 
+	 * @param <T> The expected type of the class
+	 * @param key The key for the class in the bundle
+	 * @param superType The superclass or interface that the returned class should extend or implement
+	 * @return A class object of the specified type, or null if not found or not of the right type
+	 */
+	public <T> Class<? extends T> getClassSafe( String key, Class<T> superType ) {
+		String clName = getString(key).replace("class ", "");
+		if (!clName.equals("")){
+			if (aliases.containsKey( clName )) {
+				clName = aliases.get( clName );
+			}
+
+			return Reflection.forNameSafe( clName, superType );
 		}
 		return null;
 	}
@@ -254,18 +275,52 @@ public class Bundle {
 		}
 	}
 
-	public Class[] getClassArray( String key ) {
+	public Class<?>[] getClassArray( String key ) {
 		try {
 			JSONArray array = data.getJSONArray( key );
 			int length = array.length();
-			Class[] result = new Class[length];
+			Class<?>[] result = new Class<?>[length];
 			for (int i=0; i < length; i++) {
 				String clName = array.getString( i ).replace("class ", "");
 				if (aliases.containsKey( clName )) {
 					clName = aliases.get( clName );
 				}
-				Class cl = Reflection.forName( clName );
+				Class<?> cl = Reflection.forName( clName );
 				result[i] = cl;
+			}
+			return result;
+		} catch (JSONException e) {
+			Game.reportException(e);
+			return null;
+		}
+	}
+	
+	/**
+	 * Returns an array of classes of the specified type from the bundle.
+	 * This is a type-safe alternative to getClassArray.
+	 * 
+	 * @param <T> The expected type of the classes
+	 * @param key The key for the classes in the bundle
+	 * @param superType The superclass or interface that the returned classes should extend or implement
+	 * @return An array of class objects of the specified type, or null if not found
+	 */
+	public <T> Class<? extends T>[] getClassArraySafe( String key, Class<T> superType ) {
+		try {
+			JSONArray array = data.getJSONArray( key );
+			int length = array.length();
+			@SuppressWarnings("unchecked")
+			Class<? extends T>[] result = new Class[length];
+			for (int i=0; i < length; i++) {
+				String clName = array.getString( i ).replace("class ", "");
+				if (aliases.containsKey( clName )) {
+					clName = aliases.get( clName );
+				}
+				Class<?> cl = Reflection.forName( clName );
+				if (cl != null && superType.isAssignableFrom(cl)) {
+					@SuppressWarnings("unchecked")
+					Class<? extends T> typedClass = (Class<? extends T>) cl;
+					result[i] = typedClass;
+				}
 			}
 			return result;
 		} catch (JSONException e) {
@@ -350,7 +405,7 @@ public class Bundle {
 		}
 	}
 
-	public void put( String key, Class value ){
+	public void put( String key, Class<?> value ){
 		try {
 			data.put( key, value );
 		} catch (JSONException e) {
@@ -449,7 +504,7 @@ public class Bundle {
 		}
 	}
 
-	public void put( String key, Class[] array ){
+	public void put( String key, Class<?>[] array ){
 		try {
 			JSONArray jsonArray = new JSONArray();
 			for (int i=0; i < array.length; i++) {

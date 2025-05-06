@@ -39,7 +39,7 @@ public class StewedMeat extends Food {
 	
 	public static class oneMeat extends Recipe.SimpleRecipe{
 		{
-			inputs =  new Class[]{MysteryMeat.class};
+			inputs = itemClasses(MysteryMeat.class);
 			inQuantity = new int[]{1};
 			
 			cost = 1;
@@ -51,7 +51,7 @@ public class StewedMeat extends Food {
 	
 	public static class twoMeat extends Recipe.SimpleRecipe{
 		{
-			inputs =  new Class[]{MysteryMeat.class};
+			inputs = itemClasses(MysteryMeat.class);
 			inQuantity = new int[]{2};
 			
 			cost = 2;
@@ -66,7 +66,7 @@ public class StewedMeat extends Food {
 	
 	public static class threeMeat extends Recipe.SimpleRecipe{
 		{
-			inputs =  new Class[]{MysteryMeat.class};
+			inputs = itemClasses(MysteryMeat.class);
 			inQuantity = new int[]{3};
 			
 			cost = 2;

@@ -102,7 +102,10 @@ public class Messages {
 			locale = Locale.ENGLISH;
 			bundleLocal = Locale.ROOT; //english is source, uses root locale for fetching bundle
 		} else {
-			locale = new Locale(language.code());
+			// Convert language code to standard format
+			String langCode = language.code();
+			// Use Locale.forLanguageTag which is the preferred API for newer Java versions
+			locale = Locale.forLanguageTag(langCode);
 			bundleLocal = locale;
 		}
 		formatters.clear();

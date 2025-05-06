@@ -111,8 +111,8 @@ public abstract class SpecialRoom extends Room {
 	public static void initForRun() {
 		runSpecials = new ArrayList<>();
 
-		ArrayList<Class<?extends Room>> runEquipSpecials = (ArrayList<Class<?extends Room>>)EQUIP_SPECIALS.clone();
-		ArrayList<Class<?extends Room>> runConsSpecials = (ArrayList<Class<?extends Room>>)CONSUMABLE_SPECIALS.clone();
+		ArrayList<Class<?extends Room>> runEquipSpecials = new ArrayList<>(EQUIP_SPECIALS);
+		ArrayList<Class<?extends Room>> runConsSpecials = new ArrayList<>(CONSUMABLE_SPECIALS);
 
 		Random.shuffle(runEquipSpecials);
 		Random.shuffle(runConsSpecials);
@@ -129,7 +129,7 @@ public abstract class SpecialRoom extends Room {
 	}
 	
 	public static void initForFloor(){
-		floorSpecials = (ArrayList<Class<?extends Room>>) runSpecials.clone();
+		floorSpecials = new ArrayList<>(runSpecials);
 		
 		//laboratory rooms spawn on floor 3 or 4 each chapter
 		if (Dungeon.labRoomNeeded()){
@@ -195,7 +195,7 @@ public abstract class SpecialRoom extends Room {
 	public static void restoreRoomsFromBundle( Bundle bundle ) {
 		runSpecials.clear();
 		if (bundle.contains( ROOMS )) {
-			for (Class<? extends Room> type : bundle.getClassArray(ROOMS)) {
+			for (Class<? extends Room> type : bundle.getClassArraySafe(ROOMS, Room.class)) {
 				runSpecials.add(type);
 			}
 		} else {

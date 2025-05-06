@@ -262,7 +262,7 @@ public class AlchemyScene extends PixelScene {
 								public void onSelect(int idx, boolean alt) {
 									super.onSelect(idx, alt);
 									Bag bag = bags.get(idx);
-									ArrayList<Item> items = (ArrayList<Item>) bag.items.clone();
+									ArrayList<Item> items = new ArrayList<>(bag.items);
 
 									for(Item i : bag.items){
 										if (Dungeon.hero.belongings.lostInventory() && !i.keptThroughLostInventory()) items.remove(i);
@@ -589,7 +589,7 @@ public class AlchemyScene extends PixelScene {
 		for (int i = 0; i < inputs.length; i++){
 			Item item = inputs[i].item();
 			if (item != null && itemClass.isInstance(item)){
-				filtered.add((T)item);
+				filtered.add(itemClass.cast(item));
 			}
 		}
 		return filtered;

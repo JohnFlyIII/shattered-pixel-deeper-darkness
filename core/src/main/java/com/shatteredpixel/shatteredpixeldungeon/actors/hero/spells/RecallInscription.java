@@ -159,7 +159,7 @@ public class RecallInscription extends ClericSpell {
 		@Override
 		public void restoreFromBundle(Bundle bundle) {
 			super.restoreFromBundle(bundle);
-			item = bundle.getClass(ITEM);
+			item = bundle.getClassSafe(ITEM, Item.class);
 		}
 	}
 

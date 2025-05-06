@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Dewdrop;
 import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Honeypot;
 import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
@@ -399,7 +400,7 @@ public enum Catalog {
 			}
 		}
 		if (bundle.contains(CATALOG_ITEMS)) {
-			for (Class<?> cls : Arrays.asList(bundle.getClassArray(CATALOG_ITEMS))){
+			for (Class<?> cls : Arrays.asList(bundle.getClassArraySafe(CATALOG_ITEMS, Object.class))){
 				for (Catalog cat : values()) {
 					if (cat.seen.containsKey(cls)) {
 						cat.seen.put(cls, true);
@@ -410,7 +411,7 @@ public enum Catalog {
 		//end of old logic
 
 		if (bundle.contains(CATALOG_CLASSES)){
-			Class<?>[] classes = bundle.getClassArray(CATALOG_CLASSES);
+			Class<?>[] classes = bundle.getClassArraySafe(CATALOG_CLASSES, Object.class);
 			boolean[] seen = bundle.getBooleanArray(CATALOG_SEEN);
 			int[] uses = bundle.getIntArray(CATALOG_USES);
 

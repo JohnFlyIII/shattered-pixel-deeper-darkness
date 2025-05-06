@@ -266,7 +266,7 @@ public class CrystalGuardian extends Mob{
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		spriteClass = bundle.getClass(SPRITE);
+		spriteClass = bundle.getClassSafe(SPRITE, CrystalGuardianSprite.class);
 		recovering = bundle.getBoolean(RECOVERING);
 	}
 }

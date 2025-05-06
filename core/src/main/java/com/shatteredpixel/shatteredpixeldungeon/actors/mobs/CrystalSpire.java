@@ -505,7 +505,7 @@ public class CrystalSpire extends Mob {
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		spriteClass = bundle.getClass(SPRITE);
+		spriteClass = bundle.getClassSafe(SPRITE, CrystalSpireSprite.class);
 		hits = bundle.getInt(HITS);
 
 		if (hits >= 3){

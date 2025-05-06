@@ -288,7 +288,7 @@ public class ChaoticCenser extends Trinket {
 			targetCell = bundle.getInt(CELL);
 			depth = bundle.getInt(DEPTH);
 			branch = bundle.getInt(BRANCH);
-			gasType = bundle.getClass(GAS_TYPE);
+			gasType = bundle.getClassSafe(GAS_TYPE, Blob.class);
 			gasQuantity = bundle.getInt(GAS_QUANTITY);
 		}
 	}

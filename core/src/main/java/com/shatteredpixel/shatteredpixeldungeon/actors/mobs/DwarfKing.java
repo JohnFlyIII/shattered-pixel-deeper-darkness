@@ -779,7 +779,7 @@ public class DwarfKing extends Mob {
 			super.restoreFromBundle(bundle);
 			delay = bundle.getInt(DELAY);
 			pos = bundle.getInt(POS);
-			summon = bundle.getClass(SUMMON);
+			summon = bundle.getClassSafe(SUMMON, Mob.class);
 		}
 	}
 

@@ -197,7 +197,7 @@ public static int secretsForFloor(int depth){
 	public static void restoreRoomsFromBundle( Bundle bundle ) {
 		runSecrets.clear();
 		if (bundle.contains( ROOMS )) {
-			for (Class<? extends SecretRoom> type : bundle.getClassArray(ROOMS)) {
+			for (Class<? extends SecretRoom> type : bundle.getClassArraySafe(ROOMS, SecretRoom.class)) {
 				if (type != null) runSecrets.add(type);
 			}
 			regionSecretsThisRun = bundle.getIntArray(REGIONS);

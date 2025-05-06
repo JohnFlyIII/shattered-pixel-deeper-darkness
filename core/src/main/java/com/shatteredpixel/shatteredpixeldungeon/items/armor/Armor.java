@@ -803,7 +803,7 @@ public class Armor extends EquipableItem {
 		
 		public abstract ItemSprite.Glowing glowing();
 
-		@SuppressWarnings("unchecked")
+		@SafeVarargs
 		public static Glyph random( Class<? extends Glyph> ... toIgnore ) {
 			switch(Random.chances(typeChances)){
 				case 0: default:
@@ -815,7 +815,7 @@ public class Armor extends EquipableItem {
 			}
 		}
 		
-		@SuppressWarnings("unchecked")
+		@SafeVarargs
 		public static Glyph randomCommon( Class<? extends Glyph> ... toIgnore ){
 			ArrayList<Class<?>> glyphs = new ArrayList<>(Arrays.asList(common));
 			glyphs.removeAll(Arrays.asList(toIgnore));
@@ -826,7 +826,7 @@ public class Armor extends EquipableItem {
 			}
 		}
 		
-		@SuppressWarnings("unchecked")
+		@SafeVarargs
 		public static Glyph randomUncommon( Class<? extends Glyph> ... toIgnore ){
 			ArrayList<Class<?>> glyphs = new ArrayList<>(Arrays.asList(uncommon));
 			glyphs.removeAll(Arrays.asList(toIgnore));
@@ -837,7 +837,7 @@ public class Armor extends EquipableItem {
 			}
 		}
 		
-		@SuppressWarnings("unchecked")
+		@SafeVarargs
 		public static Glyph randomRare( Class<? extends Glyph> ... toIgnore ){
 			ArrayList<Class<?>> glyphs = new ArrayList<>(Arrays.asList(rare));
 			glyphs.removeAll(Arrays.asList(toIgnore));
@@ -848,7 +848,7 @@ public class Armor extends EquipableItem {
 			}
 		}
 		
-		@SuppressWarnings("unchecked")
+		@SafeVarargs
 		public static Glyph randomCurse( Class<? extends Glyph> ... toIgnore ){
 			ArrayList<Class<?>> glyphs = new ArrayList<>(Arrays.asList(curses));
 			glyphs.removeAll(Arrays.asList(toIgnore));

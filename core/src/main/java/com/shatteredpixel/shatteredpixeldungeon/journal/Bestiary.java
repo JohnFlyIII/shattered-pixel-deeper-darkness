@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.PowerOfMany;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue.ShadowClone;
@@ -371,7 +372,7 @@ public enum Bestiary {
 		if (bundle.contains(BESTIARY_CLASSES)
 				&& bundle.contains(BESTIARY_SEEN)
 				&& bundle.contains(BESTIARY_ENCOUNTERS)){
-			Class<?>[] classes = bundle.getClassArray(BESTIARY_CLASSES);
+			Class<?>[] classes = bundle.getClassArraySafe(BESTIARY_CLASSES, Object.class);
 			boolean[] seen = bundle.getBooleanArray(BESTIARY_SEEN);
 			int[] encounters = bundle.getIntArray(BESTIARY_ENCOUNTERS);
 

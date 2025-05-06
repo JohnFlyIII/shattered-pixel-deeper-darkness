@@ -331,7 +331,7 @@ public class UnstableSpellbook extends Artifact {
 		super.restoreFromBundle(bundle);
 		scrolls.clear();
 		if (bundle.contains(SCROLLS)) {
-			for (Class<?> cls : bundle.getClassArray(SCROLLS)) {
+			for (Class<?> cls : bundle.getClassArraySafe(SCROLLS, Scroll.class)) {
 				scrolls.add(cls);
 			}
 		}

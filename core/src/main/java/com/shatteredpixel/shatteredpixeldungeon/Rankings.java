@@ -253,7 +253,7 @@ public enum Rankings {
 		Belongings belongings = Dungeon.hero.belongings;
 
 		//save the hero and belongings
-		ArrayList<Item> allItems = (ArrayList<Item>) belongings.backpack.items.clone();
+		ArrayList<Item> allItems = new ArrayList<>(belongings.backpack.items);
 		//remove items that won't show up in the rankings screen
 		for (Item item : belongings.backpack.items.toArray( new Item[0])) {
 			if (item instanceof Bag){

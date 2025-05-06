@@ -646,15 +646,15 @@ public class YogDzewa extends Mob {
 		summonCooldown = bundle.getFloat(SUMMON_CD);
 
 		fistSummons.clear();
-		for (Class<?> cls : bundle.getClassArray(FIST_SUMMONS)) {
+		for (Class<?> cls : bundle.getClassArraySafe(FIST_SUMMONS, Mob.class)) {
 			fistSummons.add(cls);
 		}
 		challengeSummons.clear();
-		for (Class<?> cls : bundle.getClassArray(CHALLENGE_SUMMONS)) {
+		for (Class<?> cls : bundle.getClassArraySafe(CHALLENGE_SUMMONS, Mob.class)) {
 			challengeSummons.add(cls);
 		}
 		regularSummons.clear();
-		for (Class<?> cls : bundle.getClassArray(REGULAR_SUMMONS)) {
+		for (Class<?> cls : bundle.getClassArraySafe(REGULAR_SUMMONS, Mob.class)) {
 			regularSummons.add(cls);
 		}
 
