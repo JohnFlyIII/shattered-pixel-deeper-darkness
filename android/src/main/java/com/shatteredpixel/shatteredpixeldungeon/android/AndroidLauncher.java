@@ -142,11 +142,28 @@ public class AndroidLauncher extends AndroidApplication {
 		if (support == null) support = new AndroidPlatformSupport();
 		else                 support.reloadGenerators();
 		
-		support.updateSystemUI();
+		// Delay system UI update to avoid early crashes
+		// support.updateSystemUI();
 
 		Button.longClick = ViewConfiguration.getLongPressTimeout()/1000f;
 		
 		initialize(new ShatteredPixelDungeon(support), config);
+		
+		// Update system UI after initialization
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					// Wait a bit to ensure everything is initialized
+					Thread.sleep(100);
+					if (support != null) {
+						support.updateSystemUI();
+					}
+				} catch (Exception e) {
+					// Swallow exceptions to prevent crashes
+				}
+			}
+		});
 		
 	}
 
@@ -181,7 +198,13 @@ public class AndroidLauncher extends AndroidApplication {
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		support.updateSystemUI();
+		try {
+			if (support != null) {
+				support.updateSystemUI();
+			}
+		} catch (Exception e) {
+			// Swallow exceptions to prevent crashes
+		}
 	}
 	
 	// Use onApplyWindowInsets or similar when needed, but for now just override
@@ -190,7 +213,13 @@ public class AndroidLauncher extends AndroidApplication {
 	@SuppressWarnings("deprecation")
 	public void onMultiWindowModeChanged(boolean isInMultiWindowMode) {
 		super.onMultiWindowModeChanged(isInMultiWindowMode);
-		support.updateSystemUI();
+		try {
+			if (support != null) {
+				support.updateSystemUI();
+			}
+		} catch (Exception e) {
+			// Swallow exceptions to prevent crashes
+		}
 	}
 	
 	@Override
