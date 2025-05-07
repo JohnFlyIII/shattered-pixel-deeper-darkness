@@ -91,20 +91,13 @@ public class WndArtificerSpells extends Window {
 		msg.setPos(0, title.bottom()+4);
 		add(msg);
 		
-		int top;
-		
-		// Add spare parts count text only in craft mode, not info mode
-		if (!info) {
-			// Add spare parts count text
-			RenderedTextBlock sparePartsText = PixelScene.renderTextBlock(Messages.get(this, "spare_parts", pocketWorkshop.getSpareParts()), 6);
-			sparePartsText.maxWidth(WIDTH);
-			sparePartsText.setPos(0, msg.bottom()+2);
-			add(sparePartsText);
-			
-			top = (int)sparePartsText.bottom()+4;
-		} else {
-			top = (int)msg.bottom()+4;
-		}
+		// Add spare parts count text
+		RenderedTextBlock sparePartsText = PixelScene.renderTextBlock(Messages.get(this, "spare_parts", pocketWorkshop.getSpareParts()), 6);
+		sparePartsText.maxWidth(WIDTH);
+		sparePartsText.setPos(0, msg.bottom()+2);
+		add(sparePartsText);
+
+		int top = (int)sparePartsText.bottom()+4;
 
 		for (int i = 1; i <= Talent.MAX_TALENT_TIERS; i++) {
 
